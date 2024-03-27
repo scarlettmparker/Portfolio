@@ -1,0 +1,54 @@
+.pageWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.gameWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    height: 600px;
+    width: 600px;
+    background-color: aqua;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+}
+
+.white {
+    background-color: #F0D9B5;
+    height: 75px;
+    width: 75px;
+}
+
+.black {
+    background-color: #B58863;
+    height: 75px;
+    width: 75px;
+}
+
+.square {
+    
+}
+
+.piece {
+    height: 75px;
+    width: 75px;
+}
+
+.buttonWrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.button {
+    box-shadow: 0px 7px 10px rgba(0, 0, 0, 0.3);
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    border-radius: 10px;
+    width: 100px;
+    height: 50px;
+    border: none;
+    background-color: #2D96AE;
+}
