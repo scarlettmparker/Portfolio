@@ -27,12 +27,28 @@
 }
 
 .square {
-    
+    position: relative;
 }
 
-.piece {
+.not {
+    color: white;
+    position: relative;
+    top: 70%;
+    left: 7%;
+}
+
+.blackPiece {
     height: 75px;
     width: 75px;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+.whitePiece {
+    height: 75px;
+    width: 75px;
+    background-color: rgba(255, 255, 255, 0.3);
+    z-index: 1;
 }
 
 .buttonWrapper {
@@ -51,4 +67,8 @@
     height: 50px;
     border: none;
     background-color: #2D96AE;
+}
+
+.notation {
+    color: white;
 }
