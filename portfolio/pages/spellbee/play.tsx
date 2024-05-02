@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import styles from './styles/play.module.css'
 import React, { useRef } from 'react';
+import styles from './styles/play.module.css'
+import Image from 'next/image'
 
 export default function Play() {
     // keep track of game points
     const [gamePoints, setPoints] = useState<number>(0);
+    const [totalPoints, setTotalPoints] = useState<number>(0);
     const [lettersWithoutMiddle, setLettersWithoutMiddle] = useState<string[]>([]);
     const [middleLetter, setMiddleLetter] = useState<string>("");
     const [currentWord, setCurrentWord] = useState<string>("");
@@ -12,10 +14,17 @@ export default function Play() {
     const [filteredWords, setFilteredWords] = useState<{ wordWithoutAccent: string, wordWithAccent: string }[]>([]);
     const [correctWords, setCorrectWords] = useState<{ wordWithoutAccent: string, wordWithAccent: string }[]>([]);
     const [showOverlay, setShowOverlay] = useState(false);
+    // used to close the win wrapper
+    const [isWinWrapperVisible, setIsWinWrapperVisible] = useState(true);
 
     const greekAlphabet = ['Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ',
             'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
     const wordIssueRef = useRef(null);
+
+    // allow win wrapper to close    
+    const closeWinWrapper = () => {
+        setIsWinWrapperVisible(false);
+    };
 
     // ensure that the game is reset when the component is mounted
     useEffect(() => {
@@ -37,7 +46,7 @@ export default function Play() {
 
     // get filtered words from the dictionary
     async function fetchFilteredWords(lettersWithMiddle: string[], invalidLetters: string[], middleLetter: string) {
-        const response = await fetch('/assets/greek_dictionary_filtered.txt');
+        const response = await fetch('/assets/spellbee/scripts/greek_dictionary_filtered.txt');
         const text = await response.text();
         // each word on new line
         const lines = text.split('\n');
@@ -51,13 +60,15 @@ export default function Play() {
             !invalidLetters.some(letter => wordWithoutAccent.includes(letter)) && 
             wordWithoutAccent.includes(middleLetter)
         );
+        const totalPoints = words.reduce((sum, { points }) => sum + (typeof points === 'boolean' ? 0 : points), 0);
+        setTotalPoints(totalPoints);
         setFilteredWords(words);
         console.log(words);
     }
 
     async function generateLetters() {
         // gets random line from the acceptable letter combinations
-        const fileContent = await fetch('/assets/acceptable_letters.txt').then(response => response.text());
+        const fileContent = await fetch('/assets/spellbee/scripts/acceptable_letters.txt').then(response => response.text());
         const lines = fileContent.split('\n');
         const randomLine = lines[Math.floor(Math.random() * lines.length)];
         // convert to array
@@ -151,10 +162,10 @@ export default function Play() {
 
         if (wordIssueRef.current) {
             // add it to the reference div
-            wordIssueRef.current.insertBefore(feedbackDiv, wordIssueRef.current.firstChild);
+            (wordIssueRef.current as HTMLElement).insertBefore(feedbackDiv, (wordIssueRef.current as HTMLElement).firstChild);
             setTimeout(() => {
                 if (wordIssueRef.current) {
-                    wordIssueRef.current.removeChild(feedbackDiv);
+                    (wordIssueRef.current as HTMLElement).removeChild(feedbackDiv);
                 }
             }, 3000); // appear only for 3 seconds
         }
@@ -195,6 +206,26 @@ export default function Play() {
     return (
         <div className={styles.pageWrapper}>
             <div className={styles.experienceWrapper}>
+                <div className={styles.winWrapper} style={{ visibility: (gamePoints === totalPoints && gamePoints !== 0 && isWinWrapperVisible) ? 'visible' : 'hidden' }}>
+                    <div className={styles.winTopSection}>
+                        Είσαι ιδυιοφυΐα!
+                        <div className={styles.closeButton} onClick={closeWinWrapper}>
+                            X
+                        </div>
+                    </div>
+                    <div className={styles.winMessage}>
+                        βρήκες όλες τις λέξεις!<br />
+                        🏆 <br /><br />
+                        <b>Στατιστικά:</b><br />
+                        Λέξεις: {correctWords.length}/{Object.keys(filteredWords).length}<br />
+                        Πόντοι: {gamePoints}/{totalPoints}<br />
+                    </div>
+                </div>
+                <div className={styles.pointsWrapper}>
+                    <div className={styles.points}>
+                        Έχεις <b>{gamePoints} / {totalPoints}</b> πόντους
+                    </div>
+                </div>
                 <div className={styles.correctWordsWrapper} onClick={() => setShowOverlay(true)}>
                     <div className={styles.correctWord}>
                         {gamePoints > 0 && correctWords.map(({ wordWithAccent }, index) => (
@@ -222,43 +253,30 @@ export default function Play() {
 
                 </div>
                 <div className={styles.currentWord}>
-                    {currentWord}
+                    {currentWord.split('').map((letter, index) => (
+                        <span key={index} style={{ color: letter === middleLetter ? '#2d83cc' : 'inherit' }}>
+                            {letter}
+                        </span>
+                    ))}
                 </div>
                 <div className={styles.gameWrapper}>
                     <div className={styles.gameGrid}>  
-                        <div className={`${styles.div0} ${styles.divHex}`} onClick={() => hexClick(0)}>
-                            {getLetter(0)}
-                        </div>
-                        <div className={`${styles.div1} ${styles.divHex}`} onClick={() => hexClick(1)}>
-                            {getLetter(1)}
-                        </div>
-                        <div className={`${styles.div2} ${styles.divHex}`} onClick={() => hexClick(2)}>
-                            {getLetter(2)}
-                        </div>
+                        {[0, 1, 2, 3, 4, 5].map(i => (
+                            <div key={i} className={`${styles[`div${i}`]} ${styles.divHex}`} onClick={() => hexClick(i)}>
+                                {getLetter(i)}
+                            </div>
+                        ))}
                         <div className={`${styles.centerDiv} ${styles.divHex}`} onClick={() => hexClick(-1)}>
                             {getMiddleLetter()}
-                        </div>
-                        <div className={`${styles.div3} ${styles.divHex}`} onClick={() => hexClick(3)}>
-                            {getLetter(3)}
-                        </div>
-                        <div className={`${styles.div4} ${styles.divHex}`} onClick={() => hexClick(4)}>
-                            {getLetter(4)}
-                        </div>
-                        <div className={`${styles.div5} ${styles.divHex}`} onClick={() => hexClick(5)}>
-                            {getLetter(5)}
                         </div>
                     </div>
                 </div>
                 <div className={styles.buttonWrapper}>
-                    <button className={styles.button} onClick={() => popLetter()}>
-                        Διαγραφή
+                    <button className={styles.button} onClick={() => popLetter()}>Διαγραφή</button>
+                    <button className={`${styles.button} ${styles.shuffleButton}`} onClick={() => shuffleLetters()}>
+                        <Image src="/assets/spellbee/images/shuffle.png" alt="Shuffle" width={22} height={22}/>
                     </button>
-                    <button className={`${styles.button} ${styles.buttonShuffle}`} onClick={() => shuffleLetters()}>
-                        S
-                    </button>
-                    <button className={styles.button} onClick={() => submitWord()}>
-                        Καταχώρηση
-                    </button>
+                    <button className={styles.button} onClick={() => submitWord()}>Καταχώρηση</button>
                 </div>
             </div>
         </div>
