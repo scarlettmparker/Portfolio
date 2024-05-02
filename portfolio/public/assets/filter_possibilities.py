@@ -38,8 +38,8 @@ def generateLetters(letters):
         if all(letter.upper() in word.upper() for letter in letters) and middle_letter.upper() in word.upper():
             pangrams += 1
 
-    # ensures at least 1 pangram and between 12 and 50 words, so we don't get unplayable letter combinations
-    if pangrams >= 1 and 14 <= len(filtered_words) <= 50:
+    # ensures at least 1 pangram and between 24 and 90 words, so we don't get unplayable letter combinations
+    if pangrams >= 1 and 24 <= len(filtered_words) <= 90:
         letters_str = middle_letter + ''.join(letters)
         # print so i can feel good about the program moving along lol
         print("Success! " + letters_str + " has " + str(pangrams) + " pangram(s) and " + str(len(filtered_words)) + " words")

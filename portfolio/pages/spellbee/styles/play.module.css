@@ -60,7 +60,7 @@
 
 .correctWordsWrapper {
     height: 40px;
-    width: 400px;
+    width: 500px;
     position: absolute;
     top: 17%;
     left: 50%;
@@ -68,6 +68,7 @@
     z-index: 1;
     background-color: rgb(240, 240, 240);
     border-radius: 8px;
+    cursor: pointer;
 }
 
 .fadedText {
@@ -75,7 +76,7 @@
 }
 
 .correctWord {
-    width: 370px;
+    width: 470px;
     height: 40px;
     position: relative;
     font-family: "Inter", sans-serif;
@@ -95,7 +96,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 370px;
+    width: 470px;
     background-color: rgb(240, 240, 240);
     border-radius: 8px;
     z-index: 2;
