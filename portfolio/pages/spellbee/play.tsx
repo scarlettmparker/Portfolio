@@ -16,10 +16,18 @@ export default function Play() {
     const [showOverlay, setShowOverlay] = useState(false);
     // used to close the win wrapper
     const [isWinWrapperVisible, setIsWinWrapperVisible] = useState(true);
-
     const greekAlphabet = ['Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ',
             'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
     const wordIssueRef = useRef(null);
+
+    const difficulty = 0; // currently for debugging, will include options later
+
+    // used if english keyboard is activated
+    const englishToGreekKeyMap = {
+        'w': 'ς', 'e': 'ε', 'r': 'ρ', 't': 'τ', 'y': 'υ', 'u': 'θ', 'i': 'ι', 'o': 'ο', 'p': 'π',
+        'a': 'α', 's': 'σ', 'd': 'δ', 'f': 'φ', 'g': 'γ', 'h': 'η', 'j': 'ξ', 'k': 'κ',
+        'l': 'λ', 'z': 'ζ', 'x': 'χ', 'c': 'ψ', 'v': 'ω', 'b': 'β', 'n': 'ν', 'm': 'μ',
+    };
 
     // allow win wrapper to close    
     const closeWinWrapper = () => {
@@ -30,6 +38,32 @@ export default function Play() {
     useEffect(() => {
         generateLetters();
     }, []);
+
+    useEffect(() => {
+        function handleKeyDown(event: KeyboardEvent) {
+            let key = event.key.toLowerCase();
+            // if keyboard is in english mode
+            if (key in englishToGreekKeyMap) {
+                key = englishToGreekKeyMap[key as keyof typeof englishToGreekKeyMap];
+            }
+            key = key.toUpperCase();
+            if (key === 'BACKSPACE') {
+                // remove letter
+                setCurrentWord(currentWord.slice(0, -1));
+            } else if (key === "ENTER") {
+                submitWord();
+            } else if (greekAlphabet.includes(key)){
+                // allow user to type the word
+                addLetter(key.toUpperCase());
+            }
+        }
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [lettersWithoutMiddle, middleLetter, currentWord]);
 
     // get points for each word
     function calculatePoints(word: string, lettersWithMiddle: string[]) {
@@ -46,7 +80,7 @@ export default function Play() {
 
     // get filtered words from the dictionary
     async function fetchFilteredWords(lettersWithMiddle: string[], invalidLetters: string[], middleLetter: string) {
-        const response = await fetch('/assets/spellbee/scripts/greek_dictionary_filtered.txt');
+        const response = await fetch(`/assets/spellbee/scripts/greek_dictionary_filtered_${difficulty}.txt`);
         const text = await response.text();
         // each word on new line
         const lines = text.split('\n');
@@ -60,6 +94,8 @@ export default function Play() {
             !invalidLetters.some(letter => wordWithoutAccent.includes(letter)) && 
             wordWithoutAccent.includes(middleLetter)
         );
+
+        // get total possible points
         const totalPoints = words.reduce((sum, { points }) => sum + (typeof points === 'boolean' ? 0 : points), 0);
         setTotalPoints(totalPoints);
         setFilteredWords(words);
@@ -68,7 +104,7 @@ export default function Play() {
 
     async function generateLetters() {
         // gets random line from the acceptable letter combinations
-        const fileContent = await fetch('/assets/spellbee/scripts/acceptable_letters.txt').then(response => response.text());
+        const fileContent = await fetch(`/assets/spellbee/scripts/acceptable_letters_${difficulty}.txt`).then(response => response.text());
         const lines = fileContent.split('\n');
         const randomLine = lines[Math.floor(Math.random() * lines.length)];
         // convert to array
@@ -93,6 +129,14 @@ export default function Play() {
         const newLetter = index === -1 ? middleLetter : lettersWithoutMiddle[index];
         setCurrentWord(prevWord => {
             const newWord = prevWord + newLetter;
+            return newWord;
+        });
+    }
+
+    // when you click a letter, add it to the list
+    function addLetter(letter: string) {
+        setCurrentWord(prevWord => {
+            const newWord = prevWord + letter;
             return newWord;
         });
     }
@@ -142,7 +186,7 @@ export default function Play() {
 
             if (foundWord.pangram) {
                 // pangram!
-                feedbackMessage = "Πάνγκραμ!";
+                feedbackMessage = "Παντόγραμμα!";
             }
 
             createFeedbackDiv(`${feedbackMessage} +${foundWord.points}`, styles.successDiv);
@@ -175,23 +219,24 @@ export default function Play() {
     function checkWord(word: string) {
         let issueWithWord = "";
         const foundWord = filteredWords.find(({ wordWithoutAccent }) => wordWithoutAccent === word);
-        if (word.length < 4) {
+        if (Array.from(word).some(char => ![...lettersWithoutMiddle, middleLetter].includes(char))) {
+            // word contains a character not in lettersWithoutMiddle or middleLetter
+            issueWithWord = "Μη αποδεκτή λέξη!";
+        }
+        else if (word.length < 4) {
             // word must have 4 or more letters
             issueWithWord = "Χρειάζονται 4+ γράμματα!";
-            return [false, issueWithWord, 0];
         }
-        if (!word.includes(middleLetter)) {
+        else if (!word.includes(middleLetter)) {
             // doesn't have middle letter
             issueWithWord = "Λείπει το κεντρικό γράμμα!";
-            return [false, issueWithWord, 0];
-        }
-        if (!foundWord) {
+        } else if (!foundWord) {
             // word is not in the dictionary
             issueWithWord = "Μη αποδεκτή λέξη!";
-            return [false, issueWithWord, 0];
+        } else {
+            return [true, "", foundWord];
         }
-
-        return [true, "", foundWord];
+        return [false, issueWithWord, 0];
     }
     
     // getters
@@ -217,7 +262,7 @@ export default function Play() {
                         βρήκες όλες τις λέξεις!<br />
                         🏆 <br /><br />
                         <b>Στατιστικά:</b><br />
-                        Λέξεις: {correctWords.length}/{Object.keys(filteredWords).length}<br />
+                        Λέξεις: {correctWords.length}/{correctWords.length}<br />
                         Πόντοι: {gamePoints}/{totalPoints}<br />
                     </div>
                 </div>
@@ -252,13 +297,23 @@ export default function Play() {
                 <div className={styles.wordIssueRef} ref={wordIssueRef}>
 
                 </div>
-                <div className={styles.currentWord}>
-                    {currentWord.split('').map((letter, index) => (
-                        <span key={index} style={{ color: letter === middleLetter ? '#2d83cc' : 'inherit' }}>
-                            {letter}
-                        </span>
-                    ))}
-                </div>
+                    <div className={styles.currentWord}>
+                        {currentWord.split('').map((letter, index) => {
+                            let color;
+                            if (letter === middleLetter) {
+                                color = '#2d83cc';
+                            } else if (lettersWithoutMiddle.includes(letter)) {
+                                color = 'inherit';
+                            } else {
+                                color = 'rgb(170, 170, 170)';
+                            }
+                            return (
+                                <span key={index} style={{ color: color }}>
+                                    {letter}
+                                </span>
+                            );
+                        })}
+                    </div>
                 <div className={styles.gameWrapper}>
                     <div className={styles.gameGrid}>  
                         {[0, 1, 2, 3, 4, 5].map(i => (
