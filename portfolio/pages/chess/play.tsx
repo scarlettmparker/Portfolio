@@ -6,14 +6,13 @@ import { ChessPiece } from './scripts/piece';
 
 export default function Play() {
     const [gamePieces, setGamePieces] = useState<ChessPiece[]>([]);
-    const [whitePlayer, setWhitePlayer] = useState(new ChessPlayer());
-    const [blackPlayer, setBlackPlayer] = useState(new ChessPlayer());
+    const [whitePlayer] = useState(new ChessPlayer());
+    const [blackPlayer] = useState(new ChessPlayer());
+    const [currentPlayer, setCurrentPlayer] = useState(0);
     
     const CELL_SIZE = 75;
     const PIECE_TYPES = ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'];
     const BOARD_SIZE = 8;
-
-    var currentPlayer = whitePlayer;
     var selectedPiece: ChessPiece;
 
     function createBoard() {
@@ -70,15 +69,15 @@ export default function Play() {
         const xCalc = Math.round((data.x + initialX) / CELL_SIZE);
         const yCalc = 7 - Math.round((data.y + initialY) / CELL_SIZE);
 
-        if (selectedPiece.canMove(selectedPiece.position.x, selectedPiece.position.y, xCalc, yCalc) && isPiece(xCalc, yCalc, selectedPiece.colour)) {
+        if (selectedPiece.canMove(currentPlayer, selectedPiece.position.x, selectedPiece.position.y, xCalc, yCalc) && isPiece(xCalc, yCalc, selectedPiece.colour)) {
             const removeIndex = gamePieces.findIndex(piece => piece.position.x === xCalc && piece.position.y === yCalc)
             if (removeIndex !== -1) {
-                console.log(gamePieces[removeIndex]);
                 gamePieces.splice(removeIndex, 1);
                 setGamePieces([...gamePieces]);
             }
             selectedPiece.position = { x: xCalc, y: yCalc };
             setPositions([...positions]);
+            setCurrentPlayer(currentPlayer === 0 ? 1 : 0);
         } else {
             console.log("Can't move to this position!")
         }

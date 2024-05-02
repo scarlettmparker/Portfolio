@@ -1,0 +1,236 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
+.pageWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.gameWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    height: 350px;
+    width: 350px;
+    transform: translateX(0.1%);
+}
+
+.wordIssueRef {
+    position: relative;
+    width: 225px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.issueDiv, .successDiv {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -88%);
+    color: white;
+    font-family: "Inter", sans-serif;
+    padding: 6px 6px 6px 6px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.issueDiv {
+    min-width: 225px;
+    background-color: black;
+    z-index: 1;
+}
+
+.successDiv {
+    padding-left: 15px;
+    padding-right: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    background-color: #0faf0f;
+}
+
+.gameGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    justify-content: center;
+    align-items: center;
+}
+
+.correctWordsWrapper {
+    height: 40px;
+    width: 400px;
+    position: absolute;
+    top: 17%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    background-color: rgb(240, 240, 240);
+    border-radius: 8px;
+}
+
+.fadedText {
+    color: rgb(150, 150, 150);
+}
+
+.correctWord {
+    width: 370px;
+    height: 40px;
+    position: relative;
+    font-family: "Inter", sans-serif;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    overflow: auto;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+    color: rgb(100, 100, 100);
+}
+
+.overlayWords {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 370px;
+    background-color: rgb(240, 240, 240);
+    border-radius: 8px;
+    z-index: 2;
+    white-space: normal;
+    font-family: "Inter", sans-serif;
+    font-size: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 10px;
+    color: rgb(100, 100, 100);
+}
+
+.overlayWordsList {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 10px;
+    line-height: 1.4; 
+    padding-bottom: 10px;
+    color: rgb(100, 100, 100);
+}
+
+.currentWord {
+    font-family: "Inter", sans-serif;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    height: 60px;
+    width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 15px;
+    letter-spacing: 1px;
+}
+
+.buttonWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+    width: 350px;
+}
+
+.button {
+    display: flex;
+    font-family: "Inter", sans-serif;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: white;
+    height: 50px;
+    width: 160px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: auto;
+    margin-bottom: auto;
+    cursor: pointer;
+    border-radius: 20px;
+    border-color: #6db7f7;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.06);
+    transition: border-color 0.3s ease-in-out;
+}
+
+.button:hover {
+    border-color: #204e75;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.buttonShuffle {
+    width: 50px;
+}
+
+.divHex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    background-color: rgb(230, 230, 230);
+    height: 108px;
+    width: 108px;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 4px;
+    margin-right: 4px;
+    cursor: pointer;
+    border-radius: 25px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.06);
+}
+
+.divHex:hover {
+    background-color: rgb(218, 218, 218);
+}
+
+.div0 {
+    grid-area: 1 / 2 / 2 / 3;
+    transform: translateX(-54%);
+}
+.div1 {
+    grid-area: 1 / 3 / 2 / 4;
+    transform: translateX(-54%);
+}
+.div2 {
+    grid-area: 2 / 1 / 3 / 2;
+}
+
+.centerDiv {
+    grid-area: 2 / 2 / 3 / 3;
+    background-color: #6db7f7;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.centerDiv:hover {
+    background-color: #5fa9e8
+}
+
+.div3 {
+    grid-area: 2 / 3 / 3 / 4;
+    background-color: rgb(230, 230, 230);
+}
+.div4 {
+    grid-area: 3 / 2 / 4 / 3;
+    background-color: rgb(230, 230, 230);
+    transform: translateX(-54%);
+}
+.div5 {
+    grid-area: 3 / 3 / 4 / 4;
+    background-color: rgb(230, 230, 230);
+    transform: translateX(-54%);
+}

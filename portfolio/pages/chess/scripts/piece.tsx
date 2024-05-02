@@ -1,3 +1,5 @@
+import { ChessPlayer } from "./player";
+
 export class ChessPiece {
     type: string;
     position: { x: number, y: number };
@@ -9,7 +11,12 @@ export class ChessPiece {
         this.colour = colour;
     }
 
-    canMove(currentX: number, currentY: number, moveX: number, moveY: number) {
+    canMove(player: number, currentX: number, currentY: number, moveX: number, moveY: number) {
+        if (player !== this.colour) {
+            console.log("Not your turn!");
+            return false;
+        }
+
         if (this.type == 'P') {
             console.log("Pawn");
         }
