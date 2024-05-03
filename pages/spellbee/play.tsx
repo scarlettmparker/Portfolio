@@ -237,7 +237,6 @@ export default function Play() {
                 result[elementKey] = elementKey === 'element1' ? 5 : 4;
                 return result;
             }, {} as { [key: string]: number });
-            console.log("hell yeah");
             setActiveZIndex(newZIndex);
         }
     }
@@ -339,7 +338,6 @@ export default function Play() {
         const totalPoints = words.reduce((sum, { points }) => sum + (typeof points === 'boolean' ? 0 : points), 0);
         setTotalPoints(totalPoints);
         setFilteredWords(words);
-        console.log(words);
     }
 
     async function generateLetters(difficulty: Number) {
