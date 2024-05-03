@@ -1,7 +1,13 @@
-import { useEffect, useState } from 'react';
-import React, { useRef } from 'react';
-import styles from './styles/play.module.css'
-import Image from 'next/image'
+/*
+Though I am aware that draggable elements exist, I implemented my own.
+Despite the fact that I've used draggable elements before, I still made my own.
+Why? I forgot they existed. I don't know why I did this. I'm sorry.
+*/
+
+import { useEffect, useState, useRef } from 'react';
+import styles from './styles/play.module.css';
+import Image from 'next/image';
+import './styles/global.css';
 
 export default function Play() {
     // keep track of game points
@@ -10,17 +16,209 @@ export default function Play() {
     const [lettersWithoutMiddle, setLettersWithoutMiddle] = useState<string[]>([]);
     const [middleLetter, setMiddleLetter] = useState<string>("");
     const [currentWord, setCurrentWord] = useState<string>("");
+
     // filtered words are the words that are valid and can be formed with the given letters
     const [filteredWords, setFilteredWords] = useState<{ wordWithoutAccent: string, wordWithAccent: string }[]>([]);
     const [correctWords, setCorrectWords] = useState<{ wordWithoutAccent: string, wordWithAccent: string }[]>([]);
     const [showOverlay, setShowOverlay] = useState(false);
-    // used to close the win wrapper
+    
+    // used to close the wrappers
     const [isWinWrapperVisible, setIsWinWrapperVisible] = useState(true);
+    const [isSettingsWrapperVisible, setIsSettingsWrapperVisible] = useState(false);
     const greekAlphabet = ['Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ', 'Ι', 'Κ', 'Λ', 'Μ',
             'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
     const wordIssueRef = useRef(null);
 
-    const difficulty = 0; // currently for debugging, will include options menu later
+    // different difficulties for display reasons
+    const [difficulty, setDifficulty] = useState<number>(-1);
+    const [tempDifficulty, setTempDifficulty] = useState<number>(-1);
+        
+    // used for dragging the settings wrapper
+    const [dragging, setDragging] = useState(false);
+    const [draggingElement, setDraggingElement] = useState<string | null>(null);
+
+    // difference state to hold x and y difference coordinates
+    const [diff, setDiff] = useState<{ [key: string]: { x: number, y: number } }>({
+        element1: { x: 0, y: 0 },
+        element2: { x: 0, y: 0 }
+    });
+
+    // initialize position state to hold the left and top positions for elements
+    const [pos, setPos] = useState<{ [key: string]: { left: number, top: number } }>({
+        element1: { left: 0, top: 200 },
+        element2: { left: 0, top: 200 }
+    });
+
+    // ensure the current dragged element takes priority
+    const [activeZIndex, setActiveZIndex] = useState<{ [key: string]: number }>({
+        element1: 4,
+        element2: 6
+    });
+
+    useEffect(() => {
+        // get size of window
+        let initialWindow = {
+            width: window.innerWidth,
+        };
+
+        const updatePositions = () => {
+            // get the ratio of the new window size to the initial window size
+            const widthRatio = window.innerWidth / initialWindow.width;
+
+            setPos(prevPos => ({
+                // move the elements to their new positions based on the ratio
+                element1: { 
+                    left: prevPos.element1.left * widthRatio, 
+                    top: prevPos.element1.top
+                },
+                element2: { 
+                    left: prevPos.element2.left * widthRatio, 
+                    top: prevPos.element2.top
+                },
+            }));
+
+            // get the new window size
+            initialWindow = {
+                width: window.innerWidth,
+            };
+        }
+
+        // set the initial position of the elements
+        setPos({
+            element1: { left: window.innerWidth / 2, top: 200 },
+            element2: { left: window.innerWidth / 2, top: 200 },
+        });
+
+        window.addEventListener('resize', updatePositions);
+        return () => {
+            window.removeEventListener('resize', updatePositions);
+        }
+    }, []);
+    
+    // handle mouse dwn events
+    const handleMouseDown = (key: string, e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        setDragging(true);
+        setDraggingElement(key);
+        setDiff({ ...diff, [key]: { x: e.clientX - pos[key].left, y: e.clientY - pos[key].top } });
+
+        // dragged element takes priority
+        const newZIndex = Object.keys(activeZIndex).reduce((result, elementKey) => {
+            result[elementKey] = elementKey === key ? 5 : 4;
+            return result;
+        }, {} as { [key: string]: number });
+        setActiveZIndex(newZIndex);
+        document.body.classList.add('dragging');
+    }
+    
+    // handle mouse move events
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        if (dragging && draggingElement) {
+            const left = e.clientX - diff[draggingElement].x;
+            const top = e.clientY - diff[draggingElement].y;
+            setPos({ ...pos, [draggingElement]: { left, top } });
+        }
+    }
+    
+    // stop dragging
+    const handleMouseUp = () => {
+        setDragging(false);
+        setDraggingElement(null);
+        document.body.classList.remove('dragging');
+    }
+    
+    useEffect(() => {
+        // handle mouse move events
+        const handleMouseMove = (e: MouseEvent) => {
+            if (dragging && draggingElement) {
+                const left = e.clientX - diff[draggingElement].x;
+                const top = e.clientY - diff[draggingElement].y;
+                setPos({ ...pos, [draggingElement]: { left, top } });
+            }
+        }
+    
+        // stop dragging
+        const handleMouseUp = () => {
+            setDragging(false);
+            setDraggingElement(null);
+            document.body.classList.remove('dragging');
+        }
+    
+        // Add mouse move and mouse up events to window
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mouseup', handleMouseUp);
+    
+        return () => {
+            // Remove the events when the component unmounts
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('mouseup', handleMouseUp);
+        }
+    }, [dragging, draggingElement, diff, pos]);
+
+    function resetGame() {
+        // remove game from local storage
+        localStorage.removeItem('currentGame');
+        // if in a browser environment, save difficulty to local storage
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('difficulty', tempDifficulty.toString());
+        }
+        window.location.reload();
+    }
+
+    useEffect(() => {
+        let storedDifficulty = localStorage.getItem('difficulty');
+        let storedGame = localStorage.getItem('currentGame');
+
+        // if difficulty doesn't exist, default to medium
+        if (storedDifficulty === null || storedDifficulty === undefined || storedDifficulty === '') {
+            storedDifficulty = '1';
+            localStorage.setItem('difficulty', storedDifficulty);
+        } if (storedGame === null || storedGame === undefined || storedGame === '') {
+            // set up new game
+            setDifficulty(Number(storedDifficulty));
+            setTempDifficulty(Number(storedDifficulty));
+            generateLetters(Number(storedDifficulty));
+        } else {
+            // get the game from local storage
+            const parsedGame = JSON.parse(storedGame);
+            // set up all this nonsense
+            setDifficulty(Number(storedDifficulty));
+            setTempDifficulty(Number(storedDifficulty));
+            setLettersWithoutMiddle(parsedGame.lettersWithoutMiddle);
+            setMiddleLetter(parsedGame.middleLetter);
+            setFilteredWords(parsedGame.filteredWords);
+            setCorrectWords(parsedGame.correctWords);
+            setPoints(parsedGame.points);
+            setTotalPoints(parsedGame.totalPoints);
+        }
+    }, []);
+
+    // used for html garbage
+    const difficultyMapping: { [key: number]: string } = {
+        0: 'Εύκολη',
+        1: 'Μέτρια',
+        2: 'Δύσκολη',
+        3: 'Πολύ Δύσκολη'
+    };
+
+    // depending on difficulty change colour :O
+    const difficultyColorMapping = {
+        0: '#1a67ed',
+        1: '#11d63f',
+        2: '#eb960e',
+        3: '#d60f23',
+    };
+
+    // more html stuff + html INSIDE THE STRINGS WHATTT
+    const descriptionMapping: { [key: number]: string } = {
+        0: `8-20 λέξεις ανά παιχνίδι <i><font color='${difficultyColorMapping[0]}'>πολύ κοινές λέξεις</font></i>`,
+        1: `20-40 λέξεις ανά παιχνίδι <i><font color='${difficultyColorMapping[1]}'>κοινές λέξεις</font></i>`,
+        2: `40-60 λέξεις ανά παιχνίδι <i><font color='${difficultyColorMapping[2]}'>πολλές λέξεις</font></i>`,
+        3: `60-120 λέξεις ανά παιχνίδι <i><font color='${difficultyColorMapping[3]}'>κάθε λέξη στο λεξικό</font></i>`
+    }
+        
+    function handleDifficultyChange(e: React.ChangeEvent<HTMLSelectElement>) {
+        setTempDifficulty(Number(e.target.value));
+    }
 
     // used if english keyboard is activated
     const englishToGreekKeyMap = {
@@ -29,15 +227,29 @@ export default function Play() {
         'l': 'λ', 'z': 'ζ', 'x': 'χ', 'c': 'ψ', 'v': 'ω', 'b': 'β', 'n': 'ν', 'm': 'μ',
     };
 
-    // allow win wrapper to close    
+    // show settings wrapper when clicked
+    const showSettingsWrapper = () => {
+        setIsSettingsWrapperVisible(prevState => !prevState)
+        // z-index stuff because of course
+        if (gamePoints === totalPoints && isWinWrapperVisible && totalPoints !== 0) {
+            // bring settings wrapper to front
+            const newZIndex = Object.keys(activeZIndex).reduce((result, elementKey) => {
+                result[elementKey] = elementKey === 'element1' ? 5 : 4;
+                return result;
+            }, {} as { [key: string]: number });
+            console.log("hell yeah");
+            setActiveZIndex(newZIndex);
+        }
+    }
+    // allow win wrapper to close
     const closeWinWrapper = () => {
         setIsWinWrapperVisible(false);
     };
 
-    // ensure that the game is reset when the component is mounted
-    useEffect(() => {
-        generateLetters();
-    }, []);
+    const closeSettingsWrapper = () => {
+        setDifficulty(Number(localStorage.getItem('difficulty')));
+        setIsSettingsWrapperVisible(false);
+    }
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
@@ -68,6 +280,22 @@ export default function Play() {
                 // allow user to type the word
                 addLetter(key.toUpperCase());
             }
+            if (key === 'ESCAPE') {
+                // close highest z-index element
+                const settingsZIndex = activeZIndex['element1'];
+                const winZIndex = activeZIndex['element2'];
+
+                const isSettingsVisible = isSettingsWrapperVisible;
+                const isWinVisible = isWinWrapperVisible;
+
+                if (isSettingsVisible && settingsZIndex > winZIndex) {
+                    closeSettingsWrapper();
+                } else if (isWinVisible) {
+                    closeWinWrapper(); 
+                } else if (isSettingsVisible) {
+                    closeSettingsWrapper();
+                }
+            }
         }
 
         window.addEventListener('keydown', handleKeyDown);
@@ -75,7 +303,7 @@ export default function Play() {
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [lettersWithoutMiddle, middleLetter, currentWord]);
+    }, [lettersWithoutMiddle, middleLetter, currentWord, activeZIndex, isSettingsWrapperVisible, isWinWrapperVisible]);
 
     // get points for each word
     function calculatePoints(word: string, lettersWithMiddle: string[]) {
@@ -91,7 +319,7 @@ export default function Play() {
     }
 
     // get filtered words from the dictionary
-    async function fetchFilteredWords(lettersWithMiddle: string[], invalidLetters: string[], middleLetter: string) {
+    async function fetchFilteredWords(lettersWithMiddle: string[], invalidLetters: string[], middleLetter: string, difficulty: Number) {
         const response = await fetch(`/assets/spellbee/scripts/greek_dictionary_filtered_${difficulty}.txt`);
         const text = await response.text();
         // each word on new line
@@ -114,7 +342,7 @@ export default function Play() {
         console.log(words);
     }
 
-    async function generateLetters() {
+    async function generateLetters(difficulty: Number) {
         // gets random line from the acceptable letter combinations
         const fileContent = await fetch(`/assets/spellbee/scripts/acceptable_letters_${difficulty}.txt`).then(response => response.text());
         const lines = fileContent.split('\n');
@@ -133,7 +361,7 @@ export default function Play() {
         const lettersWithMiddle = [...lettersWithoutMiddle, middle];
         // invalid letters is alphabet minus letters
         const invalidLetters = greekAlphabet.filter(letter => !lettersWithMiddle.includes(letter));
-        fetchFilteredWords(lettersWithMiddle, invalidLetters, middle);
+        fetchFilteredWords(lettersWithMiddle, invalidLetters, middle, difficulty);
     }
     
     // when you click a letter, add it to the list
@@ -181,6 +409,15 @@ export default function Play() {
             // remove word so it can't be submitted again
             setFilteredWords(prevWords => prevWords.filter(({ wordWithoutAccent }) => wordWithoutAccent.toUpperCase() !== currentWord));
             setCorrectWords(prevWords => [foundWord, ...prevWords]);
+            // save game state
+            localStorage.setItem('currentGame', JSON.stringify({
+                lettersWithoutMiddle,
+                middleLetter,
+                filteredWords,
+                correctWords: [foundWord, ...correctWords],
+                points: gamePoints + foundWord.points,
+                totalPoints
+            }));
 
             // default message for 4 letter words
             let feedbackMessage = "Σωστά!";
@@ -263,8 +500,59 @@ export default function Play() {
     return (
         <div className={styles.pageWrapper}>
             <div className={styles.experienceWrapper}>
-                <div className={styles.winWrapper} style={{ visibility: (gamePoints === totalPoints && gamePoints !== 0 && isWinWrapperVisible) ? 'visible' : 'hidden' }}>
-                    <div className={styles.winTopSection}>
+                <div 
+                    className={styles.settingsWrapper} 
+                    style={{ 
+                        visibility: isSettingsWrapperVisible ? 'visible' : 'hidden',
+                        top: pos['element1'].top,
+                        left: pos['element1'].left,
+                        zIndex: activeZIndex['element1']
+                    }}
+                >
+                    <div 
+                        className={styles.settingsTopSection}
+                        onMouseDown={(e) => handleMouseDown('element1', e)}
+                        onMouseMove={(e) => handleMouseMove(e)}
+                        onMouseUp={handleMouseUp}
+                    >
+                        Ρυθμίσεις
+                        <div className={styles.closeButton} onClick={closeSettingsWrapper}>
+                            X
+                        </div>
+                    </div>
+                    <div className={styles.settingsContent}>
+                        <div className={styles.settingsDifficulty}>
+                            Δυσκολία: 
+                            <select value={tempDifficulty} className={styles.difficultyDropDown} onChange={handleDifficultyChange}>
+                                <option value={0}>{difficultyMapping[0]}</option>
+                                <option value={1}>{difficultyMapping[1]}</option>
+                                <option value={2}>{difficultyMapping[2]}</option>
+                                <option value={3}>{difficultyMapping[3]}</option>
+                            </select> 
+                        </div>
+                        <div className={styles.settingsDescription}>
+                            <div dangerouslySetInnerHTML={{ __html: descriptionMapping[tempDifficulty]}}></div>
+                        </div>
+                        <button className={`${styles.button} ${styles.applyButton}`} onClick={() => resetGame()}>
+                            Νέο Παιχνίδι
+                        </button>
+                    </div>
+                </div>
+                <div 
+                    className={styles.winWrapper} 
+                    style={{ 
+                        visibility: (gamePoints === totalPoints && isWinWrapperVisible && totalPoints !== 0) ? 'visible' : 'hidden',
+                        top: pos['element2'].top,
+                        left: pos['element2'].left,
+                        zIndex: activeZIndex['element2']
+                    }}
+                >
+                    <div 
+                        className={styles.winTopSection}
+                        onMouseDown={(e) => handleMouseDown('element2', e)}
+                        onMouseMove={(e) => handleMouseMove(e)}
+                        onMouseUp={handleMouseUp}
+                    >
                         Είσαι ιδυιοφυΐα!
                         <div className={styles.closeButton} onClick={closeWinWrapper}>
                             X
@@ -275,8 +563,13 @@ export default function Play() {
                         🏆 <br /><br />
                         <b>Στατιστικά:</b><br />
                         Λέξεις: {correctWords.length}/{correctWords.length}<br />
-                        Πόντοι: {gamePoints}/{totalPoints}<br />
+                        Δυσκολία: <span style={{ color: difficultyColorMapping[difficulty as keyof typeof difficultyColorMapping] }}>
+                            <i>{difficultyMapping[difficulty]}</i><br />
+                        </span>
                     </div>
+                    <button className={`${styles.button} ${styles.applyButtonWin}`} onClick={() => resetGame()}>
+                            Νέο Παιχνίδι
+                    </button>
                 </div>
                 <div className={styles.pointsWrapper}>
                     <div className={styles.points}>
@@ -345,6 +638,11 @@ export default function Play() {
                     </button>
                     <button className={styles.button} onClick={() => submitWord()}>Καταχώρηση</button>
                 </div>
+                    <button 
+                        className={`${styles.button} ${styles.settingsButton}`} 
+                        onClick={() => showSettingsWrapper()}>
+                            <Image src="/assets/spellbee/images/settings.png" alt="Settings" width={22} height={22}/>
+                    </button>
             </div>
         </div>
     );

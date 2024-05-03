@@ -1,6 +1,6 @@
 """
 Helper file to generate list of playable letter combinations
-Playable combinations have at least 1 pangram and 16 possible words
+Playable combinations have at least 1 pangram
 This won't generate every single combination, but it will generate a lot
 If you wish to run this file, you will need the greek_dictionary_filtered.txt file in the same directory
 You will also need to run it on a Linux machine, preferably with multiple cores
@@ -60,14 +60,19 @@ def generateLetters(letters):
             pangrams += 1
 
     # ensures at least 1 pangram and between 24 and 90 words, so we don't get unplayable letter combinations
-    if pangrams >= 1 and 24 <= len(filtered_words) <= 90:
-        letters_str = middle_letter + ''.join(letters)
-        # print so i can feel good about the program moving along lol
-        print("Success! " + letters_str + " has " + str(pangrams) + " pangram(s) and " + str(len(filtered_words)) + " words")
-        with open(f'acceptable_letters_{difficulty}.txt', 'a', encoding='utf-8') as file:
-            file.write(letters_str + '\n')
+    if pangrams >= 1:
+        difficulty_limits = {'0': (8, 20), '1': (20, 40), '2': (40, 60), '3': (60, 120)}
+        min_limit, max_limit = difficulty_limits[difficulty]
+        # if word falls in between word limits
+        if min_limit <= len(filtered_words) <= max_limit:
+            letters_str = middle_letter + ''.join(letters)
+            # print so i feel good about it working
+            print(f"Success! {letters_str} has {pangrams} pangram(s) and {len(filtered_words)} words")
+            with open(f'acceptable_letters_{difficulty}.txt', 'a', encoding='utf-8') as file:
+                file.write(letters_str + '\n')
+        else:
+            filtered_words.clear()
     else:
-        # clear list from memory
         filtered_words.clear()
         
 def process_combination(combination):
