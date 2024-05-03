@@ -391,6 +391,15 @@ export default function Play() {
     function shuffleLetters() {
         const shuffledLetters = [...lettersWithoutMiddle].sort(() => Math.random() - 0.5);
         setLettersWithoutMiddle(shuffledLetters);
+        // shuffled letters also get added to local storage
+        localStorage.setItem('currentGame', JSON.stringify({
+            lettersWithoutMiddle: shuffledLetters,
+            middleLetter,
+            filteredWords,
+            correctWords,
+            points: gamePoints,
+            totalPoints
+        }));
     }
 
     function submitWord() {
