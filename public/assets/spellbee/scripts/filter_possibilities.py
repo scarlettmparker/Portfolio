@@ -17,9 +17,9 @@ greek_vowels = ["Α", "Ε", "Η", "Ι", "Ο", "Υ", "Ω"]
 try:
     # difficulty filter based on dictionary
     difficulty = sys.argv[1]
-    if (difficulty != '0' and difficulty != '1' and difficulty != '2'
-            and difficulty != '3' and difficulty != '4'):
-        print('Invalid difficulty level. Please enter a difficulty level between 0 and 4.')
+    if (difficulty != '0' and difficulty != '1'
+            and difficulty != '2' and difficulty != '3'):
+        print('Invalid difficulty level. Please enter a difficulty level between 0 and 3.')
         sys.exit(0)
 except:
     # if user enters nothing
