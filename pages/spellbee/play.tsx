@@ -20,7 +20,7 @@ export default function Play() {
             'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω'];
     const wordIssueRef = useRef(null);
 
-    const difficulty = 0; // currently for debugging, will include options later
+    const difficulty = 0; // currently for debugging, will include options menu later
 
     // used if english keyboard is activated
     const englishToGreekKeyMap = {
@@ -38,6 +38,18 @@ export default function Play() {
     useEffect(() => {
         generateLetters();
     }, []);
+
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            // reload page if game is stuck
+            if (lettersWithoutMiddle.length === 0) {
+                window.location.reload();
+            }
+        }, 2500); // 2500 milliseconds = 2.5 seconds
+    
+        // cleanup function to clear the timeout if the component unmounts before 5 seconds
+        return () => clearTimeout(timeoutId);
+    }, [lettersWithoutMiddle]);
 
     useEffect(() => {
         function handleKeyDown(event: KeyboardEvent) {
