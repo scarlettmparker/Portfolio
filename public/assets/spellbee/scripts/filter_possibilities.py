@@ -23,7 +23,7 @@ try:
         sys.exit(0)
 except:
     # if user enters nothing
-    print('Please enter a difficulty level between 0 and 4.')
+    print('Please enter a difficulty level between 0 and 3.')
     sys.exit(0)
 
 with open(f'acceptable_letters_{difficulty}.txt', 'w', encoding='utf-8') as letters_file:
@@ -33,13 +33,13 @@ with open(f'acceptable_letters_{difficulty}.txt', 'w', encoding='utf-8') as lett
 letters_by_word = {}
 try:
     # find difficulty specific dictionary
-    with open(f'greek_dictionary_filtered_{difficulty}.txt', 'r', encoding='utf-8') as file:
+    with open(f'greek_dictionary_filtered.txt', 'r', encoding='utf-8') as file:
         for line in file:
             word = line.split(':')[0].strip()
             letters_by_word[word] = set(word.upper())
 except:
     # if dictionary doesn't exist
-    print("Dictionary for specified difficulty doesn't exist! Please run fix_dictionary.py first.")
+    print("Dictionary file doesn't exist! Please run fix_dictionary.py first.")
 
 def generateLetters(letters):
     pangrams = 0
@@ -61,7 +61,7 @@ def generateLetters(letters):
 
     # ensures at least 1 pangram and between 24 and 90 words, so we don't get unplayable letter combinations
     if pangrams >= 1:
-        difficulty_limits = {'0': (8, 20), '1': (20, 40), '2': (40, 60), '3': (60, 120)}
+        difficulty_limits = {'0': (8, 20), '1': (20, 40), '2': (40, 60), '3': (80, 140)}
         min_limit, max_limit = difficulty_limits[difficulty]
         # if word falls in between word limits
         if min_limit <= len(filtered_words) <= max_limit:
