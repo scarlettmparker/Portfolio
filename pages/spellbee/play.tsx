@@ -653,7 +653,7 @@ export default function Play() {
                     </button>
             </div>
             <div className={styles.errorWrapper}>
-                <center>Η οθόνη σου είναι πολύ μικρή για το παιχνίδι. Παρακαλώ αλλάξε το μέγεθος της οθόνης σου.</center>
+                <center>Η οθόνη σου είναι πολύ μικρή για το παιχνίδι. Παρακαλώ άλλαξε το μέγεθος της οθόνης σου.</center>
             </div>
         </div>
     );
