@@ -210,10 +210,10 @@ export default function Play() {
 
     // more html stuff + html INSIDE THE STRINGS WHATTT
     const descriptionMapping: { [key: number]: string } = {
-        0: `8-20 λέξεις ανά παιχνίδι <i><font color='${difficultyColorMapping[0]}'>πολύ κοινές λέξεις</font></i>`,
-        1: `20-40 λέξεις ανά παιχνίδι <i><font color='${difficultyColorMapping[1]}'>κοινές λέξεις</font></i>`,
-        2: `40-60 λέξεις ανά παιχνίδι <i><font color='${difficultyColorMapping[2]}'>πολλές λέξεις</font></i>`,
-        3: `60-120 λέξεις ανά παιχνίδι <i><font color='${difficultyColorMapping[3]}'>κάθε λέξη στο λεξικό</font></i>`
+        0: `<i><font color='${difficultyColorMapping[0]}'>8-20 λέξεις</font> ανά παιχνίδι </i>`,
+        1: `<i><font color='${difficultyColorMapping[1]}'>20-40 λέξεις</font> ανά παιχνίδι </i>`,
+        2: `<i><font color='${difficultyColorMapping[2]}'>40-60 λέξεις</font> ανά παιχνίδι </i>`,
+        3: `<i><font color='${difficultyColorMapping[3]}'>80-140 λέξεις</font> ανά παιχνίδι</i>`
     }
         
     function handleDifficultyChange(e: React.ChangeEvent<HTMLSelectElement>) {
@@ -319,7 +319,7 @@ export default function Play() {
 
     // get filtered words from the dictionary
     async function fetchFilteredWords(lettersWithMiddle: string[], invalidLetters: string[], middleLetter: string, difficulty: Number) {
-        const response = await fetch(`/assets/spellbee/scripts/greek_dictionary_filtered_${difficulty}.txt`);
+        const response = await fetch(`/assets/spellbee/scripts/greek_dictionary_filtered.txt`);
         const text = await response.text();
         // each word on new line
         const lines = text.split('\n');
@@ -337,6 +337,7 @@ export default function Play() {
         // get total possible points
         const totalPoints = words.reduce((sum, { points }) => sum + (typeof points === 'boolean' ? 0 : points), 0);
         setTotalPoints(totalPoints);
+		console.log(words);
         setFilteredWords(words);
     }
 
@@ -650,6 +651,9 @@ export default function Play() {
                         onClick={() => showSettingsWrapper()}>
                             <Image src="/assets/spellbee/images/settings.png" alt="Settings" width={22} height={22}/>
                     </button>
+            </div>
+            <div className={styles.errorWrapper}>
+                <center>Η οθόνη σου είναι πολύ μικρή για το παιχνίδι. Παρακαλώ αλλάξε το μέγεθος της οθόνης σου.</center>
             </div>
         </div>
     );

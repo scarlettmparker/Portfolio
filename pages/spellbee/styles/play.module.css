@@ -37,7 +37,7 @@
 
 .settingsWrapper {
     width: 350px;
-    height: 230px;
+    height: 210px;
     z-index: 4;
 }
 
@@ -97,6 +97,10 @@
 
 .winMessage, .settingsDifficulty {
     margin-left: 20px;
+}
+
+.settingsDifficulty {
+    margin-top: 10px;
 }
 
 .difficultyDropDown {
@@ -382,6 +386,22 @@
     transform: translateX(-54%);
 }
 
+.errorWrapper{
+    visibility: hidden;
+    display: flex;
+    position: absolute;
+    left: 55%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: "Inter", sans-serif;
+    font-size: 25px;
+    width: 100vw;
+}
+
 @keyframes spin {
     from {
         transform: rotate(0deg);
@@ -397,5 +417,58 @@
     }
     to {
         transform: rotate(360deg);
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .pointsWrapper {
+        width: 300px;
+    }
+     
+    .correctWordsWrapper {
+        width: 330px;
+    }
+     
+    .correctWord {
+        width: 300px;
+    }
+     
+    .overlayWords {
+        width: 300px;
+    }
+}
+
+
+@media only screen and (max-width: 390px) {
+    .html {
+        width: 100vw;
+    }
+    .experienceWrapper {
+        width: 100vw;
+    }
+    .pageWrapper {
+        width: 100vw;
+        margin-left: 25px;
+    }
+    #__next {
+        width: 100vw;
+    }
+    .settingsButton {
+        position: absolute;
+        top: 10px;
+        right: -20px;
+        width: 50px;
+    }
+}
+
+@media only screen and (max-width: 360px) {
+    .experienceWrapper {
+        width: 95vw;
+    }
+    .pageWrapper {
+        visibility: hidden;
+    }
+    .errorWrapper{
+        visibility: visible;
     }
 }
