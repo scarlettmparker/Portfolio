@@ -337,7 +337,6 @@ export default function Play() {
         // get total possible points
         const totalPoints = words.reduce((sum, { points }) => sum + (typeof points === 'boolean' ? 0 : points), 0);
         setTotalPoints(totalPoints);
-		console.log(words);
         setFilteredWords(words);
     }
 
