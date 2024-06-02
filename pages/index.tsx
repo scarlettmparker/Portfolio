@@ -3,8 +3,8 @@ import { useEffect } from 'react';
 import { renderScene as renderSpiderScene } from './index/SpiderScene';
 import { renderScene as renderMusicScene } from './index/MusicScene';
 import { createCamera, createRenderer } from './index/SceneUtils';
+import { ArrowButton } from './index/ArrowButton';
 import { cleanUpScene } from './index/SceneCleanup';
-import Image from 'next/image';
 import styles from './index/styles/index.module.css';
 import './styles/global.css';
 
@@ -15,6 +15,7 @@ let scenes: { [key: number]: string } = {
     1: "#090f0f",
     2: "#ffffff"
 };
+
 const eventListeners: { type: string; listener: EventListenerOrEventListenerObject; }[] = [];
 
 export default function Home() {
@@ -31,36 +32,15 @@ export default function Home() {
     return (
         <>
             <div className={styles.htmlWrapper}>
-                <div className={`${styles.buttonWrapperDown} ${styles.buttonWrapper}`}
-                            onClick={() => movePage('down')}>
-                    <button className={styles.downButton}>
-                        <Image src="/assets/index/images/arrow.png" alt="Down Arrow" width={30} height={24} />
-                    </button>
-                </div>
-                <div className={`${styles.buttonWrapperUp} ${styles.buttonWrapper}`}
-                            onClick={() => movePage('up')}>
-                    <button className={styles.upButton}>
-                        <Image src="/assets/index/images/arrow.png" alt="Up Arrow"
-                            width={30} height={24} style={{transform: 'rotate(180deg)'}}  />
-                    </button>
-                </div>
-                <div className={`${styles.buttonWrapperRight} ${styles.buttonWrapper}`}
-                            onClick={() => changeScene(currentScene + 1)}>
-                    <button className={styles.rightButton}>
-                        <Image src="/assets/index/images/arrow.png" alt="Right Arrow"
-                            width={30} height={24} style={{transform: 'rotate(270deg)'}}  />
-                    </button>
-                </div>
-                <div className={`${styles.buttonWrapperLeft} ${styles.buttonWrapper}`}
-                            onClick={() => changeScene(currentScene - 1)}>
-                    <button className={styles.leftButton}>
-                        <Image src="/assets/index/images/arrow.png" alt="Left Arrow"
-                            width={30} height={24} style={{transform: 'rotate(90deg)'}}  />
-                    </button>
-                </div>
-                <div className={styles.contentWrapper}>
-                    
-                </div>
+                <ArrowButton wrapperStyle={styles.buttonWrapperDown} buttonStyle={styles.downButton}
+                        onClick={() => movePage('down')} altText="Down Arrow" rotation={0} />
+                <ArrowButton wrapperStyle={styles.buttonWrapperUp} buttonStyle={styles.upButton}
+                        onClick={() => movePage('up')} altText="Up Arrow" rotation={180} />
+                <ArrowButton wrapperStyle={styles.buttonWrapperRight} buttonStyle={styles.rightButton}
+                        onClick={() => changeScene(currentScene + 1)} altText="Right Arrow" rotation={270} />
+                <ArrowButton wrapperStyle={styles.buttonWrapperLeft} buttonStyle={styles.leftButton}
+                        onClick={() => changeScene(currentScene - 1)} altText="Left Arrow" rotation={90} />
+                <div className={styles.contentWrapper}></div>
             </div>
             <div className={styles.threeJsWrapper}>
                 <div id="sceneWrapper" className={styles.sceneWrapper}></div>
@@ -85,7 +65,7 @@ function createScene(sceneID: number) {
     // RENDERER
     renderer = createRenderer(sizes, scenes[sceneID]);
     const camera = createCamera(sizes);
-    
+
     switch (sceneID) {
         case 1:
             renderSpiderScene(loader, scene, sizes, camera, renderer);

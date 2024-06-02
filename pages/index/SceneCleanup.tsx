@@ -39,7 +39,6 @@ export function cleanUpScene(scene: THREE.Scene, renderer: THREE.WebGLRenderer, 
                 object.material.dispose();
             }
         } else if (object instanceof THREE.Audio) {
-            console.log("Hiii!");
             object.stop();
             object.disconnect();
         }
