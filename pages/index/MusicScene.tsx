@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { updateSizes } from './SceneUtils';
 import { titleMaterial, portfolioMaterial, vinylMaterial } from './shaders/TextMeshes';
+import { eventListeners } from '../index';
 
 let vinylPlaying = true;
 let vinylMesh: THREE.Object3D<THREE.Object3DEventMap>;
@@ -9,15 +10,14 @@ let audioBackground: THREE.Audio;
 let camera: THREE.PerspectiveCamera;
 let pausedRotation = 0;
 let lastElapsedTime = 0;
-let eventListeners;
 
 let volumeMusic: number;
 let volumeBackground: number;
 
 const helper: React.FC = () => {
     return null;
-  };
-  
+};
+
 export default helper;
 
 export const setVolumeMusic = (value: number) => {
@@ -28,7 +28,7 @@ export const setVolumeMusic = (value: number) => {
         audioMusic.setVolume(volumeMusic / 100);
     }
 };
-  
+
 export const setVolumeBackground = (value: number) => {
     volumeBackground = value;
 
@@ -44,23 +44,14 @@ export function renderScene(loader: THREE.TextureLoader, scene: THREE.Scene, siz
     scene.add(titleMesh, portfolioMesh, vinylMesh);
 
     // BACKGROUND
-    loader.load('/assets/index/images/musicscene/background.png' , function(texture)
-            {
-                scene.background = texture;  
-            });
+    loader.load('/assets/index/images/musicscene/background.png', function (texture) {
+        scene.background = texture;
+    });
 
     // LIGHT
     const pointLight = new THREE.PointLight(0xffffff, 0.1);
     pointLight.position.set(2, 3, 4);
     scene.add(pointLight);
-
-    // reset eventlisteners on rerender
-    eventListeners = [];
-
-    // currently does not do much
-    window.addEventListener('resize', () => {
-        updateSizes(camera, renderer, sizes);
-    });
 
     // CAMERA
     camera = perspectiveCamera;
@@ -81,7 +72,13 @@ export function renderScene(loader: THREE.TextureLoader, scene: THREE.Scene, siz
     audioMusic.setVolume(volumeMusic / 100);
     audioBackground.setVolume(volumeBackground / 50);
 
-    window.addEventListener('click', (event) => onVinylClick(event, sizes)); // start and stop the vinyl
+    const handleVinylClick = (event: Event) => {
+        const { clientX, clientY } = event as MouseEvent;
+        onVinylClick({ clientX, clientY }, sizes);
+    };
+
+    window.addEventListener('click', handleVinylClick); // start and stop the vinyl
+    eventListeners.push({ type: 'click', listener: handleVinylClick });
 
     const tick = () => {
         const elapsedTime = clock.getElapsedTime();
@@ -101,38 +98,83 @@ export function renderScene(loader: THREE.TextureLoader, scene: THREE.Scene, siz
     tick();
 }
 
+// TEXTURE PATHS
+const TEXTURE_PATHS = {
+    title: '/assets/index/images/musicscene/title.png',
+    portfolio: '/assets/index/images/musicscene/personalportfolio.png',
+    vinyl: '/assets/index/images/musicscene/vinyl.png',
+};
+
+// MESH SIZES
+const MESH_SIZES = {
+    title: [618, 100],
+    portfolio: [669, 26],
+    vinyl: [337, 337],
+};
+
+// SCALE FACTOR
+const SCALE_FACTOR = 600;
+
+// CREATE PLANE GEOMETRY
+function createPlaneGeometry(size: number[], scale: number) {
+    return new THREE.PlaneGeometry(size[0] / scale, size[1] / scale);
+}
+
 // TEXT MESHES
 function createTextMeshes(loader: THREE.TextureLoader) {
-    const titleSize = [618, 100];
-    const portfolioSize = [669, 26];
-    const vinylSize = [337, 337];
-
-    const scale = 600;
-
-    const titleGeometry = new THREE.PlaneGeometry(titleSize[0] / scale, titleSize[1] / scale);
-    const portfolioGeometry = new THREE.PlaneGeometry(portfolioSize[0] / scale, portfolioSize[1] / scale);
-    const vinylGeometry = new THREE.PlaneGeometry(vinylSize[0] / scale, vinylSize[1] / scale);
+    // create geometries
+    const titleGeometry = createPlaneGeometry(MESH_SIZES.title, SCALE_FACTOR);
+    const portfolioGeometry = createPlaneGeometry(MESH_SIZES.portfolio, SCALE_FACTOR);
+    const vinylGeometry = createPlaneGeometry(MESH_SIZES.vinyl, SCALE_FACTOR);
 
     // load texture files for the text meshes
-    titleMaterial.map = loader.load('/assets/index/images/musicscene/title.png');
-    portfolioMaterial.map = loader.load('/assets/index/images/musicscene/personalportfolio.png');
-    vinylMaterial.map = loader.load('/assets/index/images/musicscene/vinyl.png');
+    titleMaterial.map = loader.load(TEXTURE_PATHS.title);
+    portfolioMaterial.map = loader.load(TEXTURE_PATHS.portfolio);
+    vinylMaterial.map = loader.load(TEXTURE_PATHS.vinyl);
 
     const titleMesh = new THREE.Mesh(titleGeometry, titleMaterial);
     const portfolioMesh = new THREE.Mesh(portfolioGeometry, portfolioMaterial);
     const vinylMesh = new THREE.Mesh(vinylGeometry, vinylMaterial);
 
-    function updateMeshPositions() {
+    // update position and scale
+    function updateMeshPositionsAndScales() {
         const aspectRatio = window.innerWidth / window.innerHeight;
-        const shiftFactor = (1 - aspectRatio) * 0.5;
-        titleMesh.position.set(-0.35 + shiftFactor, 1.325, 0);
-        portfolioMesh.position.set(-0.35 + shiftFactor, 1.175, 0);
-        vinylMesh.position.set(0.55 - shiftFactor, 0.4, 0);
+        const shiftFactor = (1 - aspectRatio) * 7 / 9;
+
+        // position update based on aspect ratio
+        if (aspectRatio > 1) {
+            titleMesh.position.set(shiftFactor, 1.325, 0);
+            portfolioMesh.position.set(shiftFactor, 1.175, 0);
+            vinylMesh.position.set(-shiftFactor, 0.4, 0);
+        } else {
+            titleMesh.position.set(0, 1.325, 0);
+            portfolioMesh.position.set(0, 1.175, 0);
+            vinylMesh.position.set(0, 0.4, 0);
+        }
+
+        // scale update based on aspect ratio
+        if (aspectRatio > 0.727) {
+            titleMesh.scale.set(1, 1, 1);
+            portfolioMesh.scale.set(1, 1, 1);
+        } else if (aspectRatio > 0.587) {
+            titleMesh.scale.set(0.8, 0.8, 0.8);
+            portfolioMesh.scale.set(0.8, 0.8, 0.8);
+            portfolioMesh.position.set(0, 1.215, 0);
+            vinylMesh.position.set(0, 0.7, 0);
+        } else {
+            titleMesh.scale.set(0.6, 0.6, 0.6);
+            titleMesh.position.set(0, 1.125, 0);
+            portfolioMesh.scale.set(0, 0, 0);
+            vinylMesh.position.set(0, 0.7, 0);
+        }
     }
 
-    updateMeshPositions();
-    window.addEventListener('resize', updateMeshPositions);
+    // initial update and event listener setup
+    updateMeshPositionsAndScales();
+    window.addEventListener('resize', updateMeshPositionsAndScales);
+    eventListeners.push({ type: 'resize', listener: updateMeshPositionsAndScales });
 
+    // set render order
     titleMesh.renderOrder = 1;
     portfolioMesh.renderOrder = 1;
     vinylMesh.renderOrder = 1;
@@ -148,8 +190,8 @@ function playMusic(scene: THREE.Scene, audioFile: string) {
     let audioLoader = new THREE.AudioLoader();
     let listener = new THREE.AudioListener();
     let audio = new THREE.Audio(listener);
-    
-    audioLoader.load(stream, function(buffer) {
+
+    audioLoader.load(stream, function (buffer) {
         audio.setBuffer(buffer);
         audio.setLoop(true);
         audio.play();
@@ -184,7 +226,7 @@ function toggleVinyl() {
     const audioLoader = new THREE.AudioLoader();
     const scratchSound = new THREE.Audio(new THREE.AudioListener());
 
-    audioLoader.load('/assets/index/audio/recordscratch.mp3', function(buffer) {
+    audioLoader.load('/assets/index/audio/recordscratch.mp3', function (buffer) {
         scratchSound.setBuffer(buffer);
         scratchSound.setVolume(0.075);
         if (!vinylPlaying) {

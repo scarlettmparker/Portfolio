@@ -19,7 +19,7 @@ let scenes: { [key: number]: string } = {
     2: "#ffffff"
 };
 
-const eventListeners: { type: string; listener: EventListenerOrEventListenerObject; }[] = [];
+export let eventListeners: { type: string; listener: EventListenerOrEventListenerObject; }[] = [];
 
 export default function Home() {
     let defaultScene = 1;
@@ -54,6 +54,14 @@ export default function Home() {
             setIsHovered(false);
         }
     };
+
+    const handleMouseClick = () => {
+        if (isHovered) {
+            setIsHovered(false);
+        } else {
+            setIsHovered(true);
+        }
+    }
 
     // boring html stuff
     return (
@@ -140,6 +148,7 @@ async function changeScene(sceneID: number, setSceneID: React.Dispatch<React.Set
 
     // cleanup current scene before changing to the new scene
     cleanUpScene(scene, renderer, eventListeners);
+    
     // load new scene
     createScene(sceneID, setSceneID);
     manageButtons(sceneID);

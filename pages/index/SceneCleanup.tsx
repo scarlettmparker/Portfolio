@@ -23,8 +23,6 @@ export function cleanUpScene(scene: THREE.Scene, renderer: THREE.WebGLRenderer, 
         renderer.dispose();
     }
 
-    console.log("working");
-
     // dispose of all the objects in the scene
     scene.traverse((object) => {
         if (object instanceof THREE.Mesh) {
