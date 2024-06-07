@@ -189,7 +189,7 @@ function createMouseParticles(mousePosition: THREE.Vector2Like, particleCount = 
 // MOVING BACKGROUND PARTICLES
 function createParticles(loader: THREE.TextureLoader, particleCount: number, zIndex: number, renderOrder: number) {
     // get hexagon texture and create an array of random positions for the particles
-    const hexagon = loader.load('/assets/index/images/hexagon.png');
+    const hexagon = loader.load('/assets/index/images/spiderscene/hexagon.png');
     const particlesGeometry = new THREE.BufferGeometry();
     const posArray = new Float32Array(particleCount * 3);
 
@@ -241,8 +241,8 @@ function createTextMeshes(loader: THREE.TextureLoader) {
     const portfolioGeometry = new THREE.PlaneGeometry(portfolioSize[0] / 620, portfolioSize[1] / 620);
 
     // load the images for the graphics
-    titleMaterial.map = loader.load('/assets/index/images/title.png');
-    portfolioMaterial.map = loader.load('/assets/index/images/personalportfolio.png');
+    titleMaterial.map = loader.load('/assets/index/images/spiderscene/title.png');
+    portfolioMaterial.map = loader.load('/assets/index/images/spiderscene/personalportfolio.png');
 
     const titleMesh = new THREE.Mesh(titleGeometry, titleMaterial);
     const portfolioMesh = new THREE.Mesh(portfolioGeometry, portfolioMaterial);

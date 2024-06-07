@@ -1,11 +1,14 @@
 import * as THREE from 'three';
-import { useEffect } from 'react';
+import Image  from 'next/image';
+import { useEffect, useState } from 'react';
 import { renderScene as renderSpiderScene } from './index/SpiderScene';
 import { renderScene as renderMusicScene } from './index/MusicScene';
 import { createCamera, createRenderer } from './index/SceneUtils';
+import { setVolumeMusic, setVolumeBackground } from './index/MusicScene';
 import { ArrowButton } from './index/ArrowButton';
 import { cleanUpScene } from './index/SceneCleanup';
 import styles from './index/styles/index.module.css';
+import musicStyles from './index/styles/music.module.css';
 import './styles/global.css';
 
 let renderer: THREE.WebGLRenderer;
@@ -19,14 +22,38 @@ let scenes: { [key: number]: string } = {
 const eventListeners: { type: string; listener: EventListenerOrEventListenerObject; }[] = [];
 
 export default function Home() {
+    let defaultScene = 1;
+
+    const [sceneID, setSceneID] = useState<number>(defaultScene);
+    const [isHovered, setIsHovered] = useState(false);
+
+    const [topSliderValue, setTopSliderValue] = useState("50");
+    const [sideSliderValue, setSideSliderValue] = useState("50");
+    
     const init = async () => {
-        createScene(1);
+        createScene(defaultScene, setSceneID);
     };
 
     useEffect(() => {
         init();
         loadPage();
     }, []);
+
+    // change volume when sliders are moved
+    useEffect(() => {
+        setVolumeMusic(parseInt(topSliderValue));
+        setVolumeBackground(parseInt(sideSliderValue));
+    }, [topSliderValue, sideSliderValue]);
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+    };
+
+    const handleMouseLeave = (event: React.MouseEvent) => {
+        if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget)) {
+            setIsHovered(false);
+        }
+    };
 
     // boring html stuff
     return (
@@ -37,10 +64,30 @@ export default function Home() {
                 <ArrowButton wrapperStyle={styles.buttonWrapperUp} buttonStyle={styles.upButton}
                         onClick={() => movePage('up')} altText="Up Arrow" rotation={180} />
                 <ArrowButton wrapperStyle={styles.buttonWrapperRight} buttonStyle={styles.rightButton}
-                        onClick={() => changeScene(currentScene + 1)} altText="Right Arrow" rotation={270} />
+                        onClick={() => changeScene(currentScene + 1, setSceneID)} altText="Right Arrow" rotation={270} />
                 <ArrowButton wrapperStyle={styles.buttonWrapperLeft} buttonStyle={styles.leftButton}
-                        onClick={() => changeScene(currentScene - 1)} altText="Left Arrow" rotation={90} />
-                <div className={styles.contentWrapper}></div>
+                        onClick={() => changeScene(currentScene - 1, setSceneID)} altText="Left Arrow" rotation={90} />
+                <div className={styles.contentWrapper}>
+                    {sceneID === 2 && (
+                        <div className={musicStyles.volumeWrapper}
+                                onMouseEnter={handleMouseEnter} 
+                                onMouseLeave={handleMouseLeave}>
+                            <button className={musicStyles.volumeButton}>
+                                <Image src="/assets/index/images/musicscene/volume.png" width={30} height={30} alt="Volume"></Image>
+                            </button>
+                            <div className={isHovered ? musicStyles.volumeSliderTopWrapperActive : musicStyles.volumeSliderTopWrapper}>
+                            <input type="range" min="0" max="100" value={topSliderValue} 
+                                    onChange={(e) => setTopSliderValue(e.target.value)} 
+                                    className={isHovered ? musicStyles.volumeSliderTopActive : musicStyles.volumeSliderTop} />
+                            </div>
+                            <div className={isHovered ? musicStyles.volumeSliderSideWrapperActive : musicStyles.volumeSliderSideWrapper}>
+                            <input type="range" min="0" max="100" value={sideSliderValue} 
+                                    onChange={(e) => setSideSliderValue(e.target.value)} 
+                                    className={isHovered ? musicStyles.volumeSliderSideActive : musicStyles.volumeSliderSide} />
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
             <div className={styles.threeJsWrapper}>
                 <div id="sceneWrapper" className={styles.sceneWrapper}></div>
@@ -49,7 +96,8 @@ export default function Home() {
     );
 }
 
-function createScene(sceneID: number) {
+function createScene(sceneID: number, setSceneID: React.Dispatch<React.SetStateAction<number>>) {
+    setSceneID(sceneID);
     currentScene = sceneID;
 
     // create new scene
@@ -75,6 +123,7 @@ function createScene(sceneID: number) {
             break;
         default:
             console.log("Invalid sceneID");
+            console.log(sceneID);
     }
 
     // Append renderer to the DOM
@@ -85,11 +134,14 @@ function createScene(sceneID: number) {
     wrapper?.appendChild(renderer.domElement);
 }
 
-async function changeScene(sceneID: number) {
+async function changeScene(sceneID: number, setSceneID: React.Dispatch<React.SetStateAction<number>>) {
+    setSceneID(sceneID);
+    currentScene = sceneID;
+
     // cleanup current scene before changing to the new scene
     cleanUpScene(scene, renderer, eventListeners);
     // load new scene
-    createScene(sceneID);
+    createScene(sceneID, setSceneID);
     manageButtons(sceneID);
 }
 

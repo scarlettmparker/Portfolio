@@ -11,3 +11,8 @@ export const portfolioMaterial = new THREE.MeshBasicMaterial({
     depthWrite: false,
     blending: THREE.NormalBlending,
 });
+
+export const vinylMaterial = new THREE.MeshBasicMaterial({
+    transparent: true,
+    depthWrite: false,
+});
