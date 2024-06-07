@@ -1,6 +1,12 @@
 import Image from 'next/image';
 import styles from './styles/index.module.css';
 
+const helper: React.FC = () => {
+    return null;
+  };
+  
+export default helper;
+
 // ARROW BUTTON PROPS
 type ArrowButtonProps = {
     wrapperStyle: string;

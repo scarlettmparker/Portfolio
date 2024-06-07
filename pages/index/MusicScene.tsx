@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { updateSizes } from './SceneUtils';
-import { titleMaterial, portfolioMaterial, vinylMaterial } from './shaders/TextMeshes.js';
+import { titleMaterial, portfolioMaterial, vinylMaterial } from './shaders/TextMeshes';
 
 let vinylPlaying = true;
 let vinylMesh: THREE.Object3D<THREE.Object3DEventMap>;
@@ -13,6 +13,12 @@ let eventListeners;
 
 let volumeMusic: number;
 let volumeBackground: number;
+
+const helper: React.FC = () => {
+    return null;
+  };
+  
+export default helper;
 
 export const setVolumeMusic = (value: number) => {
     volumeMusic = value;

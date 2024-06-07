@@ -1,5 +1,11 @@
 import * as THREE from 'three';
 
+const helper: React.FC = () => {
+    return null;
+  };
+  
+export default helper;
+
 export const mouseMaterial = new THREE.ShaderMaterial({
     uniforms: {
         color: { value: new THREE.Color(0xffffff) },

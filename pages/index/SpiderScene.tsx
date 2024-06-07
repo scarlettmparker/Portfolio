@@ -1,14 +1,20 @@
 import * as THREE from 'three';
 import { updateSizes } from './SceneUtils';
 import { startAnimationLoop } from './SceneCleanup';
-import { mouseMaterial } from './shaders/MouseParticles.js';
-import { titleMaterial, portfolioMaterial } from './shaders/TextMeshes.js';
+import { mouseMaterial } from './shaders/MouseParticles';
+import { titleMaterial, portfolioMaterial } from './shaders/TextMeshes';
 
 let isMouseDown = false;
 let lastResetTimes: number[] = [];
 let mouseParticles: THREE.Points<THREE.BufferGeometry<THREE.NormalBufferAttributes>,
 THREE.ShaderMaterial, THREE.Object3DEventMap>;
 let eventListeners;
+
+const helper: React.FC = () => {
+    return null;
+  };
+  
+export default helper;
 
 // SCENE RENDERER
 export function renderScene(loader: THREE.TextureLoader, scene: THREE.Scene, sizes: { width: any; height: any; }, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer) {

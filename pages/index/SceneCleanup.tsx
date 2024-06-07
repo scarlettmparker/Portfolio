@@ -2,6 +2,12 @@ import * as THREE from 'three';
 
 let animationId: number;
 
+const helper: React.FC = () => {
+    return null;
+  };
+  
+export default helper;
+
 export function stopAnimationLoop() {
     cancelAnimationFrame(animationId);
 }

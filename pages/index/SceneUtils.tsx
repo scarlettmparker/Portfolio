@@ -1,5 +1,11 @@
 import * as THREE from 'three';
 
+const helper: React.FC = () => {
+    return null;
+  };
+  
+export default helper;
+
 // UPDATE SIZES
 export function updateSizes(camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, sizes: { width: any; height: any; }) {
     sizes.width = window.innerWidth;
