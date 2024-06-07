@@ -45,6 +45,12 @@
     right: 1%;
 }
 
+.leftButton, .rightButton, .upButton, .downButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .leftButton {
     display: none;
 }
@@ -54,11 +60,10 @@
     height: 50px;
     background-color: rgb(25, 25, 25);
     color: white;
-    opacity: 0.2;
+    opacity: 0.4;
     font-size: 16px;
     border-color: white;
     border-radius: 50px;
-    margin-bottom: 0px;
     transition: width 0.2s ease-in-out, height 0.2s ease-in-out, opacity 0.2s ease-in-out, 
             margin-bottom 0.2s ease-in-out, margin-top 0.2s ease-in-out;
 }

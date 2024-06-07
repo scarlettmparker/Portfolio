@@ -300,6 +300,7 @@ function createTextMeshes(loader: THREE.TextureLoader) {
         } else {
             titleMesh.scale.set(0.45, 0.45, 0.45);
             portfolioMesh.scale.set(0.45, 0.45, 0.45);
+            titleMesh.position.set(0, 1.25, 0);
             portfolioMesh.position.set(0, 1.115, 0);
         }
     }
