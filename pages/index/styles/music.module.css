@@ -67,12 +67,26 @@
     transition: all 0.5s ease;
 }
 
-.volumeSliderTopActive {
-    width: 200px;
-    margin-left: -98.5px;
-    margin-bottom: 100px;
+@media screen and (min-width: 900px) {
+    .volumeSliderTopActive {
+        width: 200px;
+        margin-left: -98.5px;
+        margin-bottom: 100px;
+    }
+
+    .volumeSliderSideActive {
+        width: 200px;
+    }
 }
 
-.volumeSliderSideActive {
-    width: 200px;
+@media screen and (min-width: 0px) {
+    .volumeSliderTopActive {
+        width: 125px;
+        margin-left: -60.5px;
+        margin-bottom: 65px;
+    }
+
+    .volumeSliderSideActive {
+        width: 125px;
+    }
 }

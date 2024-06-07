@@ -20,8 +20,10 @@ type ArrowButtonProps = {
 export const ArrowButton: React.FC<ArrowButtonProps> = ({ wrapperStyle, buttonStyle, onClick, altText, rotation }) => (
     <div className={`${wrapperStyle} ${styles.buttonWrapper}`} onClick={onClick}>
         <button className={buttonStyle}>
-            <Image src="/assets/index/images/arrow.png" alt={altText}
-                width={30} height={24} style={{ transform: `rotate(${rotation}deg)` }} />
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Image src="/assets/index/images/arrow.png" alt={altText}
+                    width={30} height={24} style={{ transform: `rotate(${rotation}deg)` }} />
+            </div>
         </button>
     </div>
 );

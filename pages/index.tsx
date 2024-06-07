@@ -79,9 +79,8 @@ export default function Home() {
                     {sceneID === 2 && (
                         <div className={musicStyles.volumeWrapper}
                                 onMouseEnter={handleMouseEnter} 
-                                onMouseLeave={handleMouseLeave}
-                                onClick={handleMouseClick}>
-                            <button className={musicStyles.volumeButton}>
+                                onMouseLeave={handleMouseLeave}>
+                            <button className={musicStyles.volumeButton} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                 <Image src="/assets/index/images/musicscene/volume.png" width={30} height={30} alt="Volume"></Image>
                             </button>
                             <div className={isHovered ? musicStyles.volumeSliderTopWrapperActive : musicStyles.volumeSliderTopWrapper}>
