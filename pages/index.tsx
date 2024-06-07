@@ -72,7 +72,7 @@ export default function Home() {
                         <div className={musicStyles.volumeWrapper}
                                 onMouseEnter={handleMouseEnter} 
                                 onMouseLeave={handleMouseLeave}>
-                            <button className={musicStyles.volumeButton}>
+                            <button className={musicStyles.volumeButton} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                 <Image src="/assets/index/images/musicscene/volume.png" width={30} height={30} alt="Volume"></Image>
                             </button>
                             <div className={isHovered ? musicStyles.volumeSliderTopWrapperActive : musicStyles.volumeSliderTopWrapper}>
