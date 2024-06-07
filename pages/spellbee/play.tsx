@@ -143,12 +143,12 @@ export default function Play() {
             document.body.classList.remove('dragging');
         }
     
-        // Add mouse move and mouse up events to window
+        // add mouse move and mouse up events to window
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('mouseup', handleMouseUp);
     
         return () => {
-            // Remove the events when the component unmounts
+            // remove the events when the component unmounts
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('mouseup', handleMouseUp);
         }
@@ -240,6 +240,7 @@ export default function Play() {
             setActiveZIndex(newZIndex);
         }
     }
+    
     // allow win wrapper to close
     const closeWinWrapper = () => {
         setIsWinWrapperVisible(false);

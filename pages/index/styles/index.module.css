@@ -1,0 +1,103 @@
+.htmlWrapper {
+    position: absolute;
+    z-index: 1;
+}
+
+.sceneWrapper {
+    position: relative;
+    width: 100%;
+    height: 200%;
+    overflow: hidden;
+}
+
+.threeJsWrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.buttonWrapper {
+    position: fixed;
+    width: fit-content;
+}
+
+.buttonWrapperDown, .buttonWrapperUp {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.buttonWrapperUp {
+    top: 2%;
+}
+
+.buttonWrapperDown {
+    bottom: 2%;
+}
+
+.buttonWrapperLeft {
+    top: 50%;
+    left: 1%;
+}
+
+.buttonWrapperRight {
+    top: 50%;
+    right: 1%;
+}
+
+.leftButton {
+    display: none;
+}
+
+.downButton, .upButton, .rightButton, .leftButton {
+    width: 50px;
+    height: 50px;
+    background-color: rgb(25, 25, 25);
+    color: white;
+    opacity: 0.2;
+    font-size: 16px;
+    border-color: white;
+    border-radius: 50px;
+    margin-bottom: 0px;
+    transition: width 0.2s ease-in-out, height 0.2s ease-in-out, opacity 0.2s ease-in-out, 
+            margin-bottom 0.2s ease-in-out, margin-top 0.2s ease-in-out;
+}
+
+.downButton:hover, .upButton:hover, .rightButton:hover, .leftButton:hover {
+    opacity: 0.7;
+}
+
+.rightButton:hover, .leftButton:hover {
+    height: 70px;
+    margin-top: -10px;
+}
+
+.downButton:hover, .upButton:hover {
+    width: 70px;
+    height: 45px;
+}
+
+.downButton:hover {
+    margin-bottom: 2.5px;
+}
+
+.upButton:hover {
+    margin-top: 2.5px;
+}
+
+.contentWrapper {
+    position: absolute;
+    pointer-events: none;
+    height: 200vh;
+    width: 100vw;
+    margin-left:auto;
+    margin-right:auto;
+    top: 0%;
+    z-index: 3;
+}
+
+.introText {
+    font-size: 16px;
+    color: white;
+}
