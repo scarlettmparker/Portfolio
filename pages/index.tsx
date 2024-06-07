@@ -19,7 +19,7 @@ let scenes: { [key: number]: string } = {
     2: "#ffffff"
 };
 
-const eventListeners: { type: string; listener: EventListenerOrEventListenerObject; }[] = [];
+export let eventListeners: { type: string; listener: EventListenerOrEventListenerObject; }[] = [];
 
 export default function Home() {
     let defaultScene = 1;
@@ -55,6 +55,14 @@ export default function Home() {
         }
     };
 
+    const handleMouseClick = () => {
+        if (isHovered) {
+            setIsHovered(false);
+        } else {
+            setIsHovered(true);
+        }
+    }
+
     // boring html stuff
     return (
         <>
@@ -71,7 +79,8 @@ export default function Home() {
                     {sceneID === 2 && (
                         <div className={musicStyles.volumeWrapper}
                                 onMouseEnter={handleMouseEnter} 
-                                onMouseLeave={handleMouseLeave}>
+                                onMouseLeave={handleMouseLeave}
+                                onClick={handleMouseClick}>
                             <button className={musicStyles.volumeButton}>
                                 <Image src="/assets/index/images/musicscene/volume.png" width={30} height={30} alt="Volume"></Image>
                             </button>
@@ -140,6 +149,7 @@ async function changeScene(sceneID: number, setSceneID: React.Dispatch<React.Set
 
     // cleanup current scene before changing to the new scene
     cleanUpScene(scene, renderer, eventListeners);
+    
     // load new scene
     createScene(sceneID, setSceneID);
     manageButtons(sceneID);

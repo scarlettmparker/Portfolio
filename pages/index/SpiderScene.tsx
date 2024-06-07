@@ -3,12 +3,12 @@ import { updateSizes } from './SceneUtils';
 import { startAnimationLoop } from './SceneCleanup';
 import { mouseMaterial } from './shaders/MouseParticles';
 import { titleMaterial, portfolioMaterial } from './shaders/TextMeshes';
+import { eventListeners } from '../index';
 
 let isMouseDown = false;
 let lastResetTimes: number[] = [];
 let mouseParticles: THREE.Points<THREE.BufferGeometry<THREE.NormalBufferAttributes>,
 THREE.ShaderMaterial, THREE.Object3DEventMap>;
-let eventListeners;
 
 const helper: React.FC = () => {
     return null;
@@ -23,9 +23,6 @@ export function renderScene(loader: THREE.TextureLoader, scene: THREE.Scene, siz
     const [titleMesh, portfolioMesh] = createTextMeshes(loader); // title and other images
 
     scene.add(titleMesh, portfolioMesh, particlesMesh, particlesMeshTop);
-
-    // reset eventlisteners on rerender
-    eventListeners = [];
 
     // LIGHT
     const pointLight = new THREE.PointLight(0xffffff, 0.1);
@@ -43,7 +40,7 @@ export function renderScene(loader: THREE.TextureLoader, scene: THREE.Scene, siz
     const mousePosition = new THREE.Vector3();
 
     // handle mouse movement
-    const handleMouseMove = (event: { clientX: number; clientY: number; }) => {
+    const handleMouseMove = (event) => {
         const rect = renderer.domElement.getBoundingClientRect();
         const mouse = new THREE.Vector2();
         mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
@@ -55,8 +52,34 @@ export function renderScene(loader: THREE.TextureLoader, scene: THREE.Scene, siz
     window.addEventListener('mousemove', handleMouseMove);
     eventListeners.push({ type: 'mousemove', listener: handleMouseMove });
 
+    const handleTouchMove = (event) => {
+        event.preventDefault(); // Prevent default behavior to ensure smooth handling
+        const touch = event.touches[0]; // Get the first touch point
+        isMouseDown = true;
+        if (touch) {
+            const rect = renderer.domElement.getBoundingClientRect();
+            const mouse = new THREE.Vector2();
+            mouse.x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
+            mousePosition.set(mouse.x, mouse.y, 0.8);
+            mousePosition.unproject(camera);
+        }
+    };
+    
+    // Add the event listener with options to ensure it's not passive
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    eventListeners.push({ type: 'touchmove', listener: handleTouchMove });
+
+    const handleTouchEnd = () => {
+        isMouseDown = false;
+    };
+    
+    // Add the event listener for touch end
+    window.addEventListener('touchend', handleTouchEnd);
+    eventListeners.push({ type: 'touchend', listener: handleTouchEnd });
+
     // handle mouse click
-    const handleMouseDown = (event: { button: number; }) => {
+    const handleMouseDown = (event) => {
         // if holding left click down
         if (event.button === 0) {
             isMouseDown = true;
@@ -72,7 +95,7 @@ export function renderScene(loader: THREE.TextureLoader, scene: THREE.Scene, siz
     eventListeners.push({ type: 'mousedown', listener: handleMouseDown });
 
     // handle left click mouse release
-    const handleMouseUp = (event: { button: number; }) => {
+    const handleMouseUp = (event) => {
         if (event.button === 0) {
             isMouseDown = false;
         }
@@ -253,8 +276,32 @@ function createTextMeshes(loader: THREE.TextureLoader) {
     const titleMesh = new THREE.Mesh(titleGeometry, titleMaterial);
     const portfolioMesh = new THREE.Mesh(portfolioGeometry, portfolioMaterial);
 
-    titleMesh.position.set(0, 0.95, 0);
-    portfolioMesh.position.set(0, 0.625, 0); // not centered because i'm EVIL hahaha
+    function updateMeshScales() {
+        const aspectRatio = window.innerWidth / window.innerHeight;
+        if (aspectRatio > 1.02) {
+            titleMesh.scale.set(1, 1, 1);
+            portfolioMesh.scale.set(1, 1, 1);
+            titleMesh.position.set(0, 0.95, 0);
+            portfolioMesh.position.set(0, 0.625, 0); // not centered because i'm EVIL hahaha
+        } else if (aspectRatio > 0.79) {
+            titleMesh.scale.set(0.8, 0.8, 0.8);
+            portfolioMesh.scale.set(0.8, 0.8, 0.8);
+            titleMesh.position.set(0, 0.9, 0);
+            portfolioMesh.position.set(0, 0.675, 0);
+        } else if (aspectRatio > 0.6) {
+            titleMesh.scale.set(0.6, 0.6, 0.6);
+            portfolioMesh.scale.set(0.6, 0.6, 0.6);
+            titleMesh.position.set(0, 1.25, 0);
+            portfolioMesh.position.set(0, 1.075, 0);
+        } else {
+            titleMesh.scale.set(0.45, 0.45, 0.45);
+            portfolioMesh.scale.set(0.45, 0.45, 0.45);
+            portfolioMesh.position.set(0, 1.115, 0);
+        }
+    }
+
+    updateMeshScales();
+    window.addEventListener('resize', updateMeshScales);
 
     titleMesh.renderOrder = 0;
     portfolioMesh.renderOrder = 0;
