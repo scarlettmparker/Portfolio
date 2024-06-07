@@ -5,4 +5,5 @@ module.exports = {
 
     return config;
   },
+  pageExtensions: ['index/ArrowButton.tsx', 'index/MusicScene.tsx', 'index/SceneCleanup.tsx', 'index/SceneUtils.tsx', 'index/SpiderScene.tsx']
 };
