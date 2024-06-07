@@ -40,21 +40,23 @@ export function renderScene(loader: THREE.TextureLoader, scene: THREE.Scene, siz
     const mousePosition = new THREE.Vector3();
 
     // handle mouse movement
-    const handleMouseMove = (event) => {
+    const handleMouseMove: EventListener = (event: Event) => {
+        const mouseEvent = event as MouseEvent;
         const rect = renderer.domElement.getBoundingClientRect();
         const mouse = new THREE.Vector2();
-        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        mouse.x = ((mouseEvent.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((mouseEvent.clientY - rect.top) / rect.height) * 2 + 1;
         mousePosition.set(mouse.x, mouse.y, 0.8);
         mousePosition.unproject(camera);
     };
-
+    
     window.addEventListener('mousemove', handleMouseMove);
     eventListeners.push({ type: 'mousemove', listener: handleMouseMove });
 
-    const handleTouchMove = (event) => {
-        event.preventDefault(); // Prevent default behavior to ensure smooth handling
-        const touch = event.touches[0]; // Get the first touch point
+    // handle touch movement
+    const handleTouchMove: EventListener = (event: Event) => {
+        const touchEvent = event as TouchEvent;
+        const touch = touchEvent.touches[0];
         isMouseDown = true;
         if (touch) {
             const rect = renderer.domElement.getBoundingClientRect();
@@ -65,23 +67,24 @@ export function renderScene(loader: THREE.TextureLoader, scene: THREE.Scene, siz
             mousePosition.unproject(camera);
         }
     };
-    
-    // Add the event listener with options to ensure it's not passive
-    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+
+    // add the event listener with options to ensure it's not passive
+    window.addEventListener('touchmove', handleTouchMove);
     eventListeners.push({ type: 'touchmove', listener: handleTouchMove });
 
     const handleTouchEnd = () => {
         isMouseDown = false;
     };
     
-    // Add the event listener for touch end
+    // add the event listener for touch end
     window.addEventListener('touchend', handleTouchEnd);
     eventListeners.push({ type: 'touchend', listener: handleTouchEnd });
 
     // handle mouse click
-    const handleMouseDown = (event) => {
+    const handleMouseDown: EventListener = (event: Event) => {
+        const mouseEvent = event as MouseEvent;
         // if holding left click down
-        if (event.button === 0) {
+        if (mouseEvent.button === 0) {
             isMouseDown = true;
             if (!scene.getObjectByName('mouseParticles')) {
                 mouseParticles = createMouseParticles(mousePosition);
@@ -95,8 +98,9 @@ export function renderScene(loader: THREE.TextureLoader, scene: THREE.Scene, siz
     eventListeners.push({ type: 'mousedown', listener: handleMouseDown });
 
     // handle left click mouse release
-    const handleMouseUp = (event) => {
-        if (event.button === 0) {
+    const handleMouseUp: EventListener = (event: Event) => {
+        const mouseEvent = event as MouseEvent;
+        if (mouseEvent.button === 0) {
             isMouseDown = false;
         }
     };
