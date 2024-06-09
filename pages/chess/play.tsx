@@ -4,6 +4,7 @@ import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { SetStateAction, useEffect, useState } from 'react';
 import { ChessPlayer } from './scripts/player';
 import { ChessPiece } from './scripts/piece';
+import { canMove, processPieceMap, getLegalSquares } from './scripts/legalmoves';
 
 // CONSTANTS
 const CELL_SIZE = 75;
@@ -26,12 +27,22 @@ const iconMappings: { [key: string]: string } = {
     'K1': DIRECTORY + 'bk.png'
 };
 
+const MOVE_DIRECTORY = '/assets/chess/movesets/';
+const moveMappings: { [key: string]: string } = {
+    'P': MOVE_DIRECTORY + 'pawn.txt',
+    'R': MOVE_DIRECTORY + 'rook.txt',
+    'N': MOVE_DIRECTORY + 'knight.txt',
+    'B': MOVE_DIRECTORY + 'bishop.txt',
+    'Q': MOVE_DIRECTORY + 'queen.txt',
+    'K': MOVE_DIRECTORY + 'king.txt'
+};
+
 // UTILITY FUNCTIONS
 function getPieceName(piece: ChessPiece) {
     return piece.type + piece.colour;
 }
 
-function posToNotation(x: number, y: number) {
+export function posToNotation(x: number, y: number) {
     const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
     const numbers = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
@@ -43,24 +54,47 @@ function isPiece(gamePieces: ChessPiece[], x: number, y: number, colour: number)
     return piece ? piece.colour !== colour : true;
 }
 
-function findPiece(gamePieces: ChessPiece[], x: number, y: number): ChessPiece | null {
+export function findPiece(gamePieces: ChessPiece[], x: number, y: number): ChessPiece | null {
     return gamePieces.find(piece => piece.position.x === x && piece.position.y === y) || null;
 }
 
 // BOARD SETUP
-function setupBoard(setGamePieces: any, whitePlayer: { pieces: ChessPiece[]; }, blackPlayer: { pieces: ChessPiece[]; }) {
+async function setupBoard(setGamePieces: any, whitePlayer: { pieces: ChessPiece[]; }, blackPlayer: { pieces: ChessPiece[]; }) {
     whitePlayer.pieces = [];
     blackPlayer.pieces = [];
 
     for (let i = 0; i < BOARD_SIZE; i++) {
-        blackPlayer.pieces.push(new ChessPiece(PIECE_TYPES[i], { x: i, y: 7 }, 1));
-        blackPlayer.pieces.push(new ChessPiece('P', { x: i, y: 6 }, 1));
-        whitePlayer.pieces.push(new ChessPiece(PIECE_TYPES[i], { x: i, y: 0 }, 0));
-        whitePlayer.pieces.push(new ChessPiece('P', { x: i, y: 1 }, 0));
-    }
+        // create black pieces
+        const blackPiece = new ChessPiece(PIECE_TYPES[i], { x: i, y: 7 }, 1, "");
+        blackPiece.moves = await readPieceFile(getPieceFile(blackPiece));
+        blackPlayer.pieces.push(blackPiece);
 
+        const blackPawn = new ChessPiece('P', { x: i, y: 6 }, 1, "");
+        blackPawn.moves = await readPieceFile(getPieceFile(blackPawn));
+        blackPlayer.pieces.push(blackPawn);
+
+        // create white pieces
+        const whitePiece = new ChessPiece(PIECE_TYPES[i], { x: i, y: 0 }, 0, "");
+        whitePiece.moves = await readPieceFile(getPieceFile(whitePiece));
+        whitePlayer.pieces.push(whitePiece);
+
+        const whitePawn = new ChessPiece('P', { x: i, y: 1 }, 0, "");
+        whitePawn.moves = await readPieceFile(getPieceFile(whitePawn));
+        whitePlayer.pieces.push(whitePawn);
+    }
+    
     const newGamePieces = [...blackPlayer.pieces, ...whitePlayer.pieces];
     setGamePieces(newGamePieces);
+}
+
+async function readPieceFile(file: string): Promise<string> {
+    const response = await fetch(file);
+    const data = await response.text();
+    return data;
+}
+
+function getPieceFile(piece: ChessPiece) {
+    return moveMappings[piece.type];
 }
 
 // GET PIECE COORDINATES
@@ -89,13 +123,14 @@ function movePiece(i: number, j: number, e: DraggableEvent, data: DraggableData,
     const xCalc = Math.round((data.x + initialX) / CELL_SIZE);
     const yCalc = 7 - Math.round((data.y + initialY) / CELL_SIZE);
 
-    if (selectedPiece.canMove(currentPlayer, selectedPiece.position.x, selectedPiece.position.y, xCalc, yCalc) && isPiece(gamePieces, xCalc, yCalc, selectedPiece.colour)) {
+    if (canMove(gamePieces, currentPlayer, selectedPiece, selectedPiece.position.x, selectedPiece.position.y, xCalc, yCalc) && isPiece(gamePieces, xCalc, yCalc, selectedPiece.colour)) {
         const removeIndex = gamePieces.findIndex(piece => piece.position.x === xCalc && piece.position.y === yCalc);
         if (removeIndex !== -1) {
             gamePieces.splice(removeIndex, 1);
             setGamePieces([...gamePieces]);
         }
         selectedPiece.position = { x: xCalc, y: yCalc };
+        selectedPiece.currentMove += 1;
         setPositions([...positions]);
         setCurrentPlayer(currentPlayer === 0 ? 1 : 0);
     } else {
@@ -110,7 +145,8 @@ export default function Play() {
     const [blackPlayer] = useState(new ChessPlayer());
     const [currentPlayer, setCurrentPlayer] = useState(0);
     const [positions, setPositions] = useState(Array(64).fill({ x: 0, y: 0 }));
-    let selectedPiece: ChessPiece | null = null;
+    const [legalSquares, setLegalSquares] = useState<number[][]>([]);
+    const [selectedPiece, setSelectedPiece] = useState<ChessPiece | null>(null);
 
     useEffect(() => {
         setupBoard(setGamePieces, whitePlayer, blackPlayer);
@@ -123,15 +159,31 @@ export default function Play() {
                     const isBlack = (i + j) % 2 === 0;
                     const squareColor = isBlack ? 'white' : 'black';
                     const piece = gamePieces.find(p => p.position.x === j && p.position.y === 7 - i);
-
+                    const isLegalSquare = legalSquares.some(([x, y]) => x === j && y === 7 - i);
+                
+                    // change div class for legal mvoes
+                    const squareClasses = `${styles[squareColor]} ${styles.square} ${
+                        isLegalSquare ? styles[`legalSquare${squareColor}`] : ''
+                    }`;
                     return (
-                        <div className={`${styles[squareColor]} ${styles.square}`} style={{ position: 'relative' }}>
+                        <div className={squareClasses} style={{ position: 'relative' }}>
                             <div className={styles.not}>{posToNotation(j, 7 - i)}</div>
                             {piece && (
                                 <Draggable position={positions[i * 8 + j]}
-                                    onMouseDown={() => { selectedPiece = getPieceCoordinates(i, j, positions, gamePieces); }}
+                                    onMouseDown={() => {
+                                        const piece = getPieceCoordinates(i, j, positions, gamePieces);
+                                        setSelectedPiece(piece);
+                                        if (piece) {
+                                            const legalMoves = getLegalSquares(processPieceMap(gamePieces, piece, piece.position.x, piece.position.y), piece, piece.colour === 0 ? ["m", "w", "r", "j"] : ["m", "b", "t", "j"], piece.position.x, piece.position.y);
+                                            if (piece.colour === currentPlayer) {
+                                                setLegalSquares(legalMoves);
+                                            }
+                                        }
+                                    }}
                                     onStop={(e, data) => {
+                                        setLegalSquares([]);
                                         movePiece(i, j, e, data, positions, setPositions, gamePieces, setGamePieces, currentPlayer, setCurrentPlayer, selectedPiece);
+                                        setSelectedPiece(null);
                                     }}>
                                     <div key={piece ? piece.type + piece.position.x + piece.position.y : `empty${i}${j}`}
                                         className={piece ? (piece.colour === 0 ? styles.whitePiece : styles.blackPiece) : styles.piece}

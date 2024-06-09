@@ -30,6 +30,12 @@
     position: relative;
 }
 
+.legalSquareblack {
+    background-color: #2D96AE;
+}
+.legalSquarewhite {
+    background-color: #59bed4;
+}
 .not {
     color: white;
     position: relative;

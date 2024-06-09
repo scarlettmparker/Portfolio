@@ -2,7 +2,6 @@
 #b = black move
 #r = white take
 #t = black take
-
 1
 ...............
 ...............
