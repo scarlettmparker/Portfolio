@@ -4,7 +4,7 @@ import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { SetStateAction, useEffect, useState } from 'react';
 import { ChessPlayer } from './scripts/player';
 import { ChessPiece } from './scripts/piece';
-import { canMove, processPieceMap, getLegalSquares } from './scripts/legalmoves';
+import { canMove, processPieceMap, generateLegalMoves } from './scripts/legalmoves';
 
 // CONSTANTS
 const CELL_SIZE = 75;
@@ -58,6 +58,14 @@ export function findPiece(gamePieces: ChessPiece[], x: number, y: number): Chess
     return gamePieces.find(piece => piece.position.x === x && piece.position.y === y) || null;
 }
 
+export function getKing(gamePieces: ChessPiece[], colour: number): ChessPiece | null {
+    return gamePieces.find(piece => piece.type === 'K' && piece.colour === colour) || null;
+}
+
+export function getPieces(gamePieces: ChessPiece[], colour: number): ChessPiece[] {
+    return gamePieces.filter(piece => piece.colour === colour);
+}
+
 // BOARD SETUP
 async function setupBoard(setGamePieces: any, whitePlayer: { pieces: ChessPiece[]; }, blackPlayer: { pieces: ChessPiece[]; }) {
     whitePlayer.pieces = [];
@@ -82,7 +90,7 @@ async function setupBoard(setGamePieces: any, whitePlayer: { pieces: ChessPiece[
         whitePawn.moves = await readPieceFile(getPieceFile(whitePawn));
         whitePlayer.pieces.push(whitePawn);
     }
-    
+
     const newGamePieces = [...blackPlayer.pieces, ...whitePlayer.pieces];
     setGamePieces(newGamePieces);
 }
@@ -109,48 +117,59 @@ function getPieceCoordinates(i: number, j: number, positions: any[], gamePieces:
     return findPiece(gamePieces, x, y);
 }
 
-
 // MOVE PIECE
-function movePiece(i: number, j: number, e: DraggableEvent, data: DraggableData, positions: any[], setPositions: React.Dispatch<SetStateAction<any[]>>, gamePieces: ChessPiece[], setGamePieces: React.Dispatch<SetStateAction<ChessPiece[]>>, currentPlayer: number, setCurrentPlayer: React.Dispatch<SetStateAction<number>>, selectedPiece: ChessPiece | null): void {
-    // in case an empty space is selected
-    if (selectedPiece === null) {
+function movePiece(i: number, j: number, e: DraggableEvent, data: DraggableData, positions: any[], setPositions: React.Dispatch<SetStateAction<any[]>>,
+    gamePieces: ChessPiece[], setGamePieces: React.Dispatch<SetStateAction<ChessPiece[]>>, currentPlayer: ChessPlayer,
+    setCurrentPlayer: React.Dispatch<SetStateAction<ChessPlayer>>, selectedPiece: ChessPiece | null,
+    whitePlayer: ChessPlayer, blackPlayer: ChessPlayer): void {
+    
+    if (!selectedPiece || selectedPiece.colour !== currentPlayer.colour) {
         return;
     }
 
     const initialX = j * CELL_SIZE;
     const initialY = i * CELL_SIZE;
-
     const xCalc = Math.round((data.x + initialX) / CELL_SIZE);
     const yCalc = 7 - Math.round((data.y + initialY) / CELL_SIZE);
 
-    if (canMove(gamePieces, currentPlayer, selectedPiece, selectedPiece.position.x, selectedPiece.position.y, xCalc, yCalc) && isPiece(gamePieces, xCalc, yCalc, selectedPiece.colour)) {
-        const removeIndex = gamePieces.findIndex(piece => piece.position.x === xCalc && piece.position.y === yCalc);
-        if (removeIndex !== -1) {
-            gamePieces.splice(removeIndex, 1);
-            setGamePieces([...gamePieces]);
-        }
-        selectedPiece.position = { x: xCalc, y: yCalc };
-        selectedPiece.currentMove += 1;
-        setPositions([...positions]);
-        setCurrentPlayer(currentPlayer === 0 ? 1 : 0);
-    } else {
-        console.log("Can't move to this position!");
+    if (!canMove(gamePieces, currentPlayer, selectedPiece, xCalc, yCalc)) {
+        return;
     }
+
+    const targetPiece = findPiece(gamePieces, xCalc, yCalc);
+    if (targetPiece && targetPiece.colour !== selectedPiece.colour) {
+        setGamePieces(gamePieces.filter(piece => piece !== targetPiece));
+    }
+
+    selectedPiece.position = { x: xCalc, y: yCalc };
+
+    selectedPiece.currentMove += 1;
+    setPositions([...positions]);
+
+    const king = getKing(gamePieces, currentPlayer.colour);
+    if (king) {
+        king.attackers = [];
+    }
+
+    setCurrentPlayer(currentPlayer.colour === whitePlayer.colour ? blackPlayer : whitePlayer);
 }
 
 // PLAY COMPONENT
 export default function Play() {
     const [gamePieces, setGamePieces] = useState<ChessPiece[]>([]);
-    const [whitePlayer] = useState(new ChessPlayer());
-    const [blackPlayer] = useState(new ChessPlayer());
-    const [currentPlayer, setCurrentPlayer] = useState(0);
     const [positions, setPositions] = useState(Array(64).fill({ x: 0, y: 0 }));
     const [legalSquares, setLegalSquares] = useState<number[][]>([]);
     const [selectedPiece, setSelectedPiece] = useState<ChessPiece | null>(null);
+    const [whitePlayer] = useState(new ChessPlayer());
+    const [blackPlayer] = useState(new ChessPlayer());
+    const [currentPlayer, setCurrentPlayer] = useState<ChessPlayer>(whitePlayer);
 
     useEffect(() => {
+        whitePlayer.colour = 0;
+        blackPlayer.colour = 1;
         setupBoard(setGamePieces, whitePlayer, blackPlayer);
     }, [whitePlayer, blackPlayer]);
+    
 
     const createBoard = () => (
         Array(8).fill(0).map((_, j) => (
@@ -173,16 +192,24 @@ export default function Play() {
                                     onMouseDown={() => {
                                         const piece = getPieceCoordinates(i, j, positions, gamePieces);
                                         setSelectedPiece(piece);
+                                        const king = getKing(gamePieces, currentPlayer.colour);
+                                        if (king) {
+                                            king.seenPieces.forEach(piece => {
+                                                processPieceMap(gamePieces, currentPlayer, piece);
+                                            })
+                                        }
                                         if (piece) {
-                                            const legalMoves = getLegalSquares(processPieceMap(gamePieces, piece, piece.position.x, piece.position.y), piece, piece.colour === 0 ? ["m", "w", "r", "j"] : ["m", "b", "t", "j"], piece.position.x, piece.position.y);
-                                            if (piece.colour === currentPlayer) {
-                                                setLegalSquares(legalMoves);
-                                            }
+                                            processPieceMap(gamePieces, currentPlayer, piece);
+                                            const legalMoves = piece.legalMoves;
+                                            setLegalSquares(legalMoves);
                                         }
                                     }}
                                     onStop={(e, data) => {
                                         setLegalSquares([]);
-                                        movePiece(i, j, e, data, positions, setPositions, gamePieces, setGamePieces, currentPlayer, setCurrentPlayer, selectedPiece);
+                                        movePiece(i, j, e, data, positions, setPositions, gamePieces, setGamePieces, currentPlayer, setCurrentPlayer, selectedPiece, whitePlayer, blackPlayer);
+                                        if (selectedPiece) {
+                                            processPieceMap(gamePieces, currentPlayer, selectedPiece);
+                                        }
                                         setSelectedPiece(null);
                                     }}>
                                     <div key={piece ? piece.type + piece.position.x + piece.position.y : `empty${i}${j}`}
@@ -206,7 +233,10 @@ export default function Play() {
                     {createBoard()}
                 </div>
                 <div className={styles.buttonWrapper}>
-                    <button className={styles.button} onClick={() => setupBoard(setGamePieces, whitePlayer, blackPlayer)}>RESET</button>
+                    <button className={styles.button} onClick={() => {
+                        setCurrentPlayer(whitePlayer);
+                        setupBoard(setGamePieces, whitePlayer, blackPlayer)    
+                    }}>RESET</button>
                 </div>
             </div>
         </div>
