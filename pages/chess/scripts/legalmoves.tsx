@@ -179,6 +179,13 @@ export function generateLegalMoves(gamePieces: ChessPiece[], currentPlayer: Ches
 
     piece.updatePieces = updatePieces;
     piece.legalMoves = boardMoves;
+
+    getPieces(gamePieces, piece.colour).forEach(gamePiece => {
+        if (piece.legalMoves.find(([x, y]) => x === gamePiece.position.x && y === gamePiece.position.y)) {
+            removeSquare(piece.legalMoves, gamePiece.position.x, gamePiece.position.y);
+        }
+    });
+
     piece.potentialAttacks = potentialAttacks;
 
     let opponentColour = piece.colour === 0 ? 1 : 0;
