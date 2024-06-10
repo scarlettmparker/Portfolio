@@ -1,7 +1,6 @@
 import { ChessPiece } from "./piece";
 import { ChessPlayer } from "./player";
-import { findPiece, posToNotation, getKing, getPieces } from "../play";
-import { remove } from "three/examples/jsm/libs/tween.module.js";
+import { findPiece, getKing, getPieces } from "../play";
 /**
 
 */
@@ -91,7 +90,8 @@ export function generateLegalMoves(gamePieces: ChessPiece[], currentPlayer: Ches
                 pieceFound = true;
             }
 
-            if (piece.type == "K" && foundPiece && foundPiece.colour != piece.colour) {
+            if (piece.type == "K" && foundPiece && foundPiece.colour != piece.colour && !seenPieces.includes(foundPiece) && piece !== foundPiece && !isAttacker) {
+                console.log("found a piece!");
                 seenPieces.push(foundPiece);
             }
 
@@ -263,8 +263,7 @@ export function processPieceMap(gamePieces: ChessPiece[], player: ChessPlayer, p
 }
 
 // LEGAL MOVE CHECK
-export function canMove(gamePieces: ChessPiece[], player: ChessPlayer, piece: ChessPiece, moveX: number, moveY: number) {
-    processPieceMap(gamePieces, player, piece);
+export function canMove(piece: ChessPiece, moveX: number, moveY: number) {
     for (const [x, y] of piece.legalMoves) {
         if (x === moveX && y === moveY) {
             return true;

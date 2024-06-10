@@ -4,7 +4,7 @@ import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { SetStateAction, useEffect, useState } from 'react';
 import { ChessPlayer } from './scripts/player';
 import { ChessPiece } from './scripts/piece';
-import { canMove, processPieceMap, generateLegalMoves } from './scripts/legalmoves';
+import { canMove, processPieceMap } from './scripts/legalmoves';
 
 // CONSTANTS
 const CELL_SIZE = 75;
@@ -132,7 +132,7 @@ function movePiece(i: number, j: number, e: DraggableEvent, data: DraggableData,
     const xCalc = Math.round((data.x + initialX) / CELL_SIZE);
     const yCalc = 7 - Math.round((data.y + initialY) / CELL_SIZE);
 
-    if (!canMove(gamePieces, currentPlayer, selectedPiece, xCalc, yCalc)) {
+    if (!canMove(selectedPiece, xCalc, yCalc)) {
         return;
     }
 
@@ -169,7 +169,6 @@ export default function Play() {
         blackPlayer.colour = 1;
         setupBoard(setGamePieces, whitePlayer, blackPlayer);
     }, [whitePlayer, blackPlayer]);
-    
 
     const createBoard = () => (
         Array(8).fill(0).map((_, j) => (
@@ -194,8 +193,10 @@ export default function Play() {
                                         setSelectedPiece(piece);
                                         const king = getKing(gamePieces, currentPlayer.colour);
                                         if (king) {
-                                            king.seenPieces.forEach(piece => {
-                                                processPieceMap(gamePieces, currentPlayer, piece);
+                                            king.seenPieces.forEach(seenPiece => {
+                                                if (seenPiece !== piece) {
+                                                    processPieceMap(gamePieces, currentPlayer, seenPiece);
+                                                }
                                             })
                                         }
                                         if (piece) {
