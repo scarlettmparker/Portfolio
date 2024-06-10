@@ -193,10 +193,8 @@ export default function Play() {
                                         setSelectedPiece(piece);
                                         const king = getKing(gamePieces, currentPlayer.colour);
                                         if (king) {
-                                            king.seenPieces.forEach(seenPiece => {
-                                                if (seenPiece !== piece) {
-                                                    processPieceMap(gamePieces, currentPlayer, seenPiece);
-                                                }
+                                            king.seenPieces.forEach(piece => {
+                                                processPieceMap(gamePieces, currentPlayer, piece);
                                             })
                                         }
                                         if (piece) {
