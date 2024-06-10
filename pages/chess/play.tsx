@@ -49,11 +49,6 @@ export function posToNotation(x: number, y: number) {
     return letters[x] + numbers[y];
 }
 
-function isPiece(gamePieces: ChessPiece[], x: number, y: number, colour: number) {
-    const piece = gamePieces.find(piece => piece.position.x === x && piece.position.y === y);
-    return piece ? piece.colour !== colour : true;
-}
-
 export function findPiece(gamePieces: ChessPiece[], x: number, y: number): ChessPiece | null {
     return gamePieces.find(piece => piece.position.x === x && piece.position.y === y) || null;
 }

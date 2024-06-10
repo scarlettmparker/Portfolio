@@ -77,7 +77,7 @@ export function generateLegalMoves(gamePieces: ChessPiece[], currentPlayer: Ches
     // used for the king to detect nearby pieces that may attack
     let seenPieces: ChessPiece[] = [];
     let updatePieces: ChessPiece[] = [];
-    
+
     directions.forEach(({ dx, dy }) => {
         let x = currentX;
         let y = currentY;
@@ -143,7 +143,7 @@ export function generateLegalMoves(gamePieces: ChessPiece[], currentPlayer: Ches
                 potentialAttacks.push([x, y]);
             }
             
-            if (foundPiece && !ownPieceFound && visionMoves.find(([vx, vy]) => vx === x && vy === y) && piece.type != "P") {
+            if (foundPiece && !ownPieceFound && visionMoves.find(([vx, vy]) => vx === x && vy === y)) {
                 if (enemiesFound <= 1) {
                     boardMoves.push([x, y]);
                 }
