@@ -264,8 +264,12 @@ function removeSquare(boardMoves: number[][], x: number, y: number) {
 
 // PROCESS PIECE MAP
 export function processPieceMap(gamePieces: ChessPiece[], player: ChessPlayer, piece: ChessPiece) {
-    let pieceMap = processMoves(piece.moves);
-    generateLegalMoves(gamePieces, player, pieceMap, piece, false);
+    if (piece.pieceMap.length === 0) {
+        let pieceMap = processMoves(piece.moves);
+        generateLegalMoves(gamePieces, player, pieceMap, piece, false);
+    } else {
+        generateLegalMoves(gamePieces, player, piece.pieceMap, piece, false);
+    }
 }
 
 // LEGAL MOVE CHECK
