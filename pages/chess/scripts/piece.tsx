@@ -23,6 +23,7 @@ export class ChessPiece {
     potentialAttackingPieces: ChessPiece[] = [];
     attackers: ChessPiece[] = [];
     seenPieces: ChessPiece[] = [];
+    updatePieces: ChessPiece[] = [];
 
     constructor(type: string, position: { x: number, y: number }, colour: number, moves: string) {
         this.type = type;

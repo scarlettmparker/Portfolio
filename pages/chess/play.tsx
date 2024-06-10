@@ -207,6 +207,11 @@ export default function Play() {
                                         setLegalSquares([]);
                                         movePiece(i, j, e, data, positions, setPositions, gamePieces, setGamePieces, currentPlayer, setCurrentPlayer, selectedPiece, whitePlayer, blackPlayer);
                                         if (selectedPiece) {
+                                            selectedPiece.updatePieces.forEach(piece => {
+                                                processPieceMap(gamePieces, currentPlayer, piece);
+                                            });
+                                        }
+                                        if (selectedPiece) {
                                             processPieceMap(gamePieces, currentPlayer, selectedPiece);
                                         }
                                         setSelectedPiece(null);
