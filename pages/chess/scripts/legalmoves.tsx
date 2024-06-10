@@ -62,10 +62,13 @@ export function generateLegalMoves(gamePieces: ChessPiece[], currentPlayer: Ches
                 mapX = x - currentX + 7;
                 mapY = y - currentY + 7;
             }
+            let foundPiece = findPiece(gamePieces, x, y);
             if (exists(pieceMap, currentMove, mapY, mapX)) {
                 if (legalNotations.includes(pieceMap[currentMove][mapY][mapX])) {
                     if (!isAttacker) {
-                        boardMoves.push([x, y]);
+                        if (!foundPiece) {
+                            boardMoves.push([x, y]);
+                        }
                         potentialAttacks.push([x, y]);
                     }
                     visionMoves.push([x, y]);
