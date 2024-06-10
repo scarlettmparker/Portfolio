@@ -62,13 +62,10 @@ export function generateLegalMoves(gamePieces: ChessPiece[], currentPlayer: Ches
                 mapX = x - currentX + 7;
                 mapY = y - currentY + 7;
             }
-            let foundPiece = findPiece(gamePieces, x, y);
             if (exists(pieceMap, currentMove, mapY, mapX)) {
                 if (legalNotations.includes(pieceMap[currentMove][mapY][mapX])) {
                     if (!isAttacker) {
-                        if (!foundPiece) {
-                            boardMoves.push([x, y]);
-                        }
+                        boardMoves.push([x, y]);
                         potentialAttacks.push([x, y]);
                     }
                     visionMoves.push([x, y]);
@@ -169,6 +166,10 @@ export function generateLegalMoves(gamePieces: ChessPiece[], currentPlayer: Ches
             if (foundPiece && visionMoves.find(([vx, vy]) => vx === x && vy === y) && piece.type != "P" && enemiesFound < 1) {
                 potentialAttacks.push([x, y]);
             };
+
+            if (foundPiece && piece.type == "P") {
+                removeSquare(boardMoves, x, y);
+            }
 
             // increment in every direction
             x += dx;
@@ -288,6 +289,7 @@ export function generateLegalMoves(gamePieces: ChessPiece[], currentPlayer: Ches
         let ownPieceFound = false;
 
         piece.potentialAttackers.forEach(attacker => {
+            if (attacker.type == "P") return;
             let newLegalSquares: number[][] = [];
             let offsetX = 0;
             let offsetY = 0;
@@ -324,10 +326,10 @@ export function generateLegalMoves(gamePieces: ChessPiece[], currentPlayer: Ches
             // if the king is behind the piece, remove all moves that aren't matched with the attacking direction
             if (kingFound) {
                 let newLegalMoves: number[][] = [];
-                if (piece.potentialAttackers.length == 1) {
-                    newLegalMoves.push([attacker.position.x, attacker.position.y]);
-                }
                 piece.legalMoves.forEach(([x, y]) => {
+                    if (piece.legalMoves.find(([vx, vy]) => vx == attacker.position.x && vy == attacker.position.y)) {
+                        newLegalMoves.push([attacker.position.x, attacker.position.y]);
+                    }
                     if (newLegalSquares.find(([vx, vy]) => vx == x && vy == y)) {
                         newLegalMoves.push([x, y]);
                     }
