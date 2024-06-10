@@ -184,7 +184,7 @@ export default function Play() {
                         isLegalSquare ? styles[`legalSquare${squareColor}`] : ''
                     }`;
                     return (
-                        <div className={squareClasses} style={{ position: 'relative' }}>
+                        <div key={`square-${j}-${i}`} className={squareClasses} style={{ position: 'relative' }}>
                             <div className={styles.not}>{posToNotation(j, 7 - i)}</div>
                             {piece && (
                                 <Draggable position={positions[i * 8 + j]}
