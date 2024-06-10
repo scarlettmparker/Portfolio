@@ -1,3 +1,9 @@
+const helper: React.FC = () => {
+    return null;
+  };
+  
+export default helper;
+
 export class ChessPiece {
     type: string;
     position: { x: number, y: number };

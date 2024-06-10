@@ -1,5 +1,11 @@
 import { ChessPiece } from './piece';
 
+const helper: React.FC = () => {
+    return null;
+  };
+  
+export default helper;
+
 export class ChessPlayer {
     turn: boolean = false;
     checked: boolean = false;

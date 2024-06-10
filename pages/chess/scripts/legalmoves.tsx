@@ -5,6 +5,12 @@ import { findPiece, getKing, getPieces } from "../play";
 
 */
 
+const helper: React.FC = () => {
+    return null;
+  };
+  
+export default helper;
+
 // PREVENT PIECE JUMPING
 function exists(obj: any[], ...keys: number[]) {
     return keys.reduce((acc, key) => acc && acc[key], obj) !== undefined;
