@@ -117,7 +117,8 @@ export function generateLegalMoves(gamePieces: ChessPiece[], pieceMap: string[][
                     removeSquare(potentialAttacks, x, y);
                     if (foundPiece && foundPiece !== piece && boardMoves.find(([vx, vy]) => vx === x && vy === y)) {
                         removeSquare(boardMoves, x, y);
-
+                        removeSquare(boardMoves, x, y + 1);
+                        removeSquare(boardMoves, x, y - 1); 
                     }
                 }
             }
@@ -182,7 +183,9 @@ export function generateLegalMoves(gamePieces: ChessPiece[], pieceMap: string[][
 
     getPieces(gamePieces, piece.colour).forEach(gamePiece => {
         if (gamePiece.potentialAttacks.find(([x, y]) => x === piece.position.x && y === piece.position.y)) {
-            piece.updatePieces.push(gamePiece);
+            if (!piece.updatePieces.includes(gamePiece)) {
+                piece.updatePieces.push(gamePiece);
+            }
         }
         if (piece.legalMoves.find(([x, y]) => x === gamePiece.position.x && y === gamePiece.position.y && gamePiece.colour === piece.colour)) {
             removeSquare(piece.legalMoves, gamePiece.position.x, gamePiece.position.y);

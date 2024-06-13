@@ -167,7 +167,7 @@ function movePiece(i: number, j: number, data: DraggableData, positions: any[], 
     setCurrentPlayer(nextPlayer);
 
     if (gameRunning && currentPlayer.colour === whitePlayer.colour) {
-        //makeRandomMove(gamePieces, blackPlayer, setCurrentPlayer, positions, setPositions, setGamePieces, whitePlayer, blackPlayer);
+        makeRandomMove(gamePieces, blackPlayer, setCurrentPlayer, positions, setPositions, setGamePieces, whitePlayer, blackPlayer);
     }
 }
 
@@ -244,6 +244,7 @@ function checkForCheck(gamePieces: ChessPiece[], currentPlayer: ChessPlayer, pie
         piece.updatePieces.forEach(updatePiece => {
             processPieceMap(gamePieces, updatePiece);
         });
+        piece.updatePieces = [];
     }
 }
 
