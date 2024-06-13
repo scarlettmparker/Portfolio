@@ -11,16 +11,15 @@ export class ChessPiece {
     colour: number;
     moves: string;
 
-    pieceMap: string[][][] = [];
-
+    overlapSquares: number[][] = [];
     legalMoves: number[][] = [];
     visionMoves: number[][] = [];
     potentialAttacks: number[][] = [];
 
+    pieceMap: string[][][] = [];
     attackingDirection: [ChessPiece, [number, number]][] = [];
 
     potentialAttackers: ChessPiece[] = [];
-    potentialAttackingPieces: ChessPiece[] = [];
     attackers: ChessPiece[] = [];
     seenPieces: ChessPiece[] = [];
     updatePieces: ChessPiece[] = [];
@@ -33,6 +32,10 @@ export class ChessPiece {
         this.currentMove = 1;
         this.potentialAttackers = [];
         this.attackers = [];
+    }
+
+    addOverlapSquare(x: number, y: number) {
+        this.overlapSquares.push([x, y]);
     }
 
     addAttacker(attacker: ChessPiece) {
@@ -68,10 +71,19 @@ export class ChessPiece {
         }
     }
 
+    removeAllAttackingDirections(chessPiece: ChessPiece) {
+        this.attackingDirection = this.attackingDirection.filter(([piece, ]) => piece !== chessPiece);
+    }
+
     getAttackingDirection(chessPiece: ChessPiece): [number, number][] {
         const filteredDirections = this.attackingDirection.filter(([piece, ]) => piece === chessPiece);
         const attackingPositions: [number, number][] = filteredDirections.map(([, [x, y]]) => [x, y] as [number, number]);
     
+        return attackingPositions;
+    }
+
+    getAllAttackingDirections(): [number, number][] {
+        const attackingPositions: [number, number][] = this.attackingDirection.map(([, [x, y]]) => [x, y] as [number, number]);
         return attackingPositions;
     }
 }

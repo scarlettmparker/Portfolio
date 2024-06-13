@@ -37,6 +37,8 @@ const moveMappings: { [key: string]: string } = {
     'K': MOVE_DIRECTORY + 'king.txt'
 };
 
+let gameRunning = false;
+
 // UTILITY FUNCTIONS
 function getPieceName(piece: ChessPiece) {
     return piece.type + piece.colour;
@@ -88,6 +90,10 @@ async function setupBoard(setGamePieces: any, whitePlayer: { pieces: ChessPiece[
 
     const newGamePieces = [...blackPlayer.pieces, ...whitePlayer.pieces];
     setGamePieces(newGamePieces);
+
+    newGamePieces.forEach(piece => {
+        processPieceMap(newGamePieces, piece)
+    });
 }
 
 async function readPieceFile(file: string): Promise<string> {
@@ -113,11 +119,11 @@ function getPieceCoordinates(i: number, j: number, positions: any[], gamePieces:
 }
 
 // MOVE PIECE
-function movePiece(i: number, j: number, e: DraggableEvent, data: DraggableData, positions: any[], setPositions: React.Dispatch<SetStateAction<any[]>>,
+function movePiece(i: number, j: number, data: DraggableData, positions: any[], setPositions: React.Dispatch<SetStateAction<any[]>>,
     gamePieces: ChessPiece[], setGamePieces: React.Dispatch<SetStateAction<ChessPiece[]>>, currentPlayer: ChessPlayer,
     setCurrentPlayer: React.Dispatch<SetStateAction<ChessPlayer>>, selectedPiece: ChessPiece | null,
     whitePlayer: ChessPlayer, blackPlayer: ChessPlayer): void {
-    
+
     if (!selectedPiece || selectedPiece.colour !== currentPlayer.colour) {
         return;
     }
@@ -131,22 +137,111 @@ function movePiece(i: number, j: number, e: DraggableEvent, data: DraggableData,
         return;
     }
 
-    const targetPiece = findPiece(gamePieces, xCalc, yCalc);
-    if (targetPiece && targetPiece.colour !== selectedPiece.colour) {
-        setGamePieces(gamePieces.filter(piece => piece !== targetPiece));
-    }
-
+    // move the piece
     selectedPiece.position = { x: xCalc, y: yCalc };
-
     selectedPiece.currentMove += 1;
     setPositions([...positions]);
 
-    const king = getKing(gamePieces, currentPlayer.colour);
-    if (king) {
-        king.attackers = [];
+    // handle captures
+    const targetPiece = findPiece(gamePieces, xCalc, yCalc);
+    if (targetPiece && targetPiece.colour !== selectedPiece.colour) {
+        // remove the captured piece
+        const newGamePieces = gamePieces.filter(piece => piece !== targetPiece);
+        setGamePieces(newGamePieces);
+        gamePieces = newGamePieces;
     }
 
-    setCurrentPlayer(currentPlayer.colour === whitePlayer.colour ? blackPlayer : whitePlayer);
+    // update game state and reprocess legal moves
+    setGamePieces([...gamePieces])
+
+    if (selectedPiece) {
+        processPieceMap(gamePieces, selectedPiece);
+        selectedPiece.updatePieces.forEach(piece => {
+            processPieceMap(gamePieces, piece);
+        });
+        checkForCheck(gamePieces, currentPlayer, selectedPiece);
+        selectedPiece.potentialAttackers = [];
+        selectedPiece.attackers = [];
+    }
+
+    // switch the current player
+    const nextPlayer = switchPlayer(currentPlayer, whitePlayer, blackPlayer);
+    setCurrentPlayer(nextPlayer);
+}
+
+function makeRandomMove(gamePieces: ChessPiece[], currentPlayer: ChessPlayer, setCurrentPlayer: React.Dispatch<SetStateAction<ChessPlayer>>,
+    positions: any[], setPositions: React.Dispatch<SetStateAction<any[]>>, setGamePieces: React.Dispatch<SetStateAction<ChessPiece[]>>,
+    whitePlayer: ChessPlayer, blackPlayer: ChessPlayer): void {
+
+    const pieces = getPieces(gamePieces, currentPlayer.colour);
+
+    let randomPiece = pieces[Math.floor(Math.random() * pieces.length)];
+    let randomMove = randomPiece.legalMoves[Math.floor(Math.random() * randomPiece.legalMoves.length)];
+
+    while (!randomMove) {
+        randomPiece = pieces[Math.floor(Math.random() * pieces.length)];
+        randomMove = randomPiece.legalMoves[Math.floor(Math.random() * randomPiece.legalMoves.length)];
+    }
+
+    while (!canMove(randomPiece, randomMove[0], randomMove[1])) {
+        randomMove = randomPiece.legalMoves[Math.floor(Math.random() * randomPiece.legalMoves.length)];
+    }
+
+    if (randomMove) {
+        const [x, y] = randomMove;
+        randomPiece.position = { x, y };
+        randomPiece.currentMove += 1;
+        setPositions([...positions]);
+
+        const targetPiece = findPiece(gamePieces, x, y);
+        if (targetPiece && targetPiece.colour !== randomPiece.colour) {
+            const newGamePieces = gamePieces.filter(piece => piece !== targetPiece);
+            setGamePieces(newGamePieces);
+            gamePieces = newGamePieces;
+        }
+
+        setGamePieces([...gamePieces]);
+        processPieceMap(gamePieces, randomPiece);
+        randomPiece.updatePieces.forEach(piece => processPieceMap(gamePieces, piece));
+        checkForCheck(gamePieces, currentPlayer, randomPiece);
+        randomPiece.potentialAttackers = [];
+        randomPiece.attackers = [];
+
+        // Switch the current player
+        const nextPlayer = switchPlayer(currentPlayer, whitePlayer, blackPlayer);
+        setCurrentPlayer(nextPlayer);
+    }
+}
+
+function checkForCheck(gamePieces: ChessPiece[], currentPlayer: ChessPlayer, piece: ChessPiece) {
+    let opponentColour = currentPlayer.colour === 0 ? 1 : 0;
+    const opponentKing = getKing(gamePieces, opponentColour);
+    let testMoves = piece.type == "P" ? piece.potentialAttacks : piece.legalMoves;
+    let check = false;
+    
+    testMoves.forEach(([x, y]) => {
+        if (opponentKing && opponentKing.position.x === x && opponentKing.position.y === y) {
+            check = true;
+        }
+    });
+
+    if (check) {
+        console.log("Check!");
+        let legalMoves = 0;
+        getPieces(gamePieces, opponentColour).forEach(opponentPiece => {
+            processPieceMap(gamePieces, opponentPiece);
+            legalMoves += opponentPiece.legalMoves.length;
+        });
+        if (legalMoves == 0) {
+            // TODO: checkmate screen
+            console.log("Checkmate for " + (opponentColour === 0 ? "white" : "black") + " king");
+            gameRunning = false;
+        }
+    }
+}
+
+function switchPlayer(currentPlayer: ChessPlayer, whitePlayer: ChessPlayer, blackPlayer: ChessPlayer): ChessPlayer {
+    return currentPlayer.colour === whitePlayer.colour ? blackPlayer : whitePlayer;
 }
 
 // PLAY COMPONENT
@@ -163,7 +258,15 @@ export default function Play() {
         whitePlayer.colour = 0;
         blackPlayer.colour = 1;
         setupBoard(setGamePieces, whitePlayer, blackPlayer);
+        gameRunning = true;
     }, [whitePlayer, blackPlayer]);
+
+    
+    useEffect(() => {
+        if (gameRunning && currentPlayer.colour === blackPlayer.colour) {
+            makeRandomMove(gamePieces, currentPlayer, setCurrentPlayer, positions, setPositions, setGamePieces, whitePlayer, blackPlayer);
+        }
+    }, [currentPlayer]);
 
     const createBoard = () => (
         Array(8).fill(0).map((_, j) => (
@@ -173,11 +276,10 @@ export default function Play() {
                     const squareColor = isBlack ? 'white' : 'black';
                     const piece = gamePieces.find(p => p.position.x === j && p.position.y === 7 - i);
                     const isLegalSquare = legalSquares.some(([x, y]) => x === j && y === 7 - i);
-                
+
                     // change div class for legal mvoes
-                    const squareClasses = `${styles[squareColor]} ${styles.square} ${
-                        isLegalSquare ? styles[`legalSquare${squareColor}`] : ''
-                    }`;
+                    const squareClasses = `${styles[squareColor]} ${styles.square} ${isLegalSquare ? styles[`legalSquare${squareColor}`] : ''
+                        }`;
                     return (
                         <div key={`square-${j}-${i}`} className={squareClasses} style={{ position: 'relative' }}>
                             <div className={styles.not}>{posToNotation(j, 7 - i)}</div>
@@ -186,35 +288,23 @@ export default function Play() {
                                     onMouseDown={() => {
                                         const piece = getPieceCoordinates(i, j, positions, gamePieces);
                                         setSelectedPiece(piece);
-                                        const king = getKing(gamePieces, currentPlayer.colour);
-                                        if (king) {
-                                            king.seenPieces.forEach(piece => {
-                                                processPieceMap(gamePieces, currentPlayer, piece);
-                                            })
-                                        }
                                         if (piece) {
-                                            processPieceMap(gamePieces, currentPlayer, piece);
+                                            if (piece.colour == currentPlayer.colour) {
+                                                processPieceMap(gamePieces, piece);
+                                            }
                                             const legalMoves = piece.legalMoves;
                                             setLegalSquares(legalMoves);
                                         }
                                     }}
                                     onStop={(e, data) => {
                                         setLegalSquares([]);
-                                        movePiece(i, j, e, data, positions, setPositions, gamePieces, setGamePieces, currentPlayer, setCurrentPlayer, selectedPiece, whitePlayer, blackPlayer);
-                                        if (selectedPiece) {
-                                            selectedPiece.updatePieces.forEach(piece => {
-                                                processPieceMap(gamePieces, currentPlayer, piece);
-                                            });
-                                        }
-                                        if (selectedPiece) {
-                                            processPieceMap(gamePieces, currentPlayer, selectedPiece);
-                                        }
+                                        movePiece(i, j, data, positions, setPositions, gamePieces, setGamePieces, currentPlayer, setCurrentPlayer, selectedPiece, whitePlayer, blackPlayer);
                                         setSelectedPiece(null);
                                     }}>
                                     <div key={piece ? piece.type + piece.position.x + piece.position.y : `empty${i}${j}`}
                                         className={piece ? (piece.colour === 0 ? styles.whitePiece : styles.blackPiece) : styles.piece}
                                         style={{ position: 'absolute', top: 0 }}>
-                                        <Image src={iconMappings[getPieceName(piece)]} alt="Piece" width={64} height={64} draggable="false"/>
+                                        <Image src={iconMappings[getPieceName(piece)]} alt="Piece" width={64} height={64} draggable="false" />
                                     </div>
                                 </Draggable>
                             )}
@@ -234,7 +324,7 @@ export default function Play() {
                 <div className={styles.buttonWrapper}>
                     <button className={styles.button} onClick={() => {
                         setCurrentPlayer(whitePlayer);
-                        setupBoard(setGamePieces, whitePlayer, blackPlayer)    
+                        setupBoard(setGamePieces, whitePlayer, blackPlayer)
                     }}>RESET</button>
                 </div>
             </div>

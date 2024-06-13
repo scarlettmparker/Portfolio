@@ -2,13 +2,14 @@ import { ChessPiece } from "./piece";
 import { ChessPlayer } from "./player";
 import { findPiece, getKing, getPieces, posToNotation } from "../play";
 /**
-
+If it sees its own colour piece, remove the square (done) and add the piece to an array in the found pieces
+generate check moves function
 */
 
 const helper: React.FC = () => {
     return null;
-  };
-  
+};
+
 export default helper;
 
 // PREVENT PIECE JUMPING
@@ -16,12 +17,7 @@ function exists(obj: any[], ...keys: number[]) {
     return keys.reduce((acc, key) => acc && acc[key], obj) !== undefined;
 }
 
-
-/**
-TODO:
-Generate legal moves when a piece is unblocked
-*/
-export function generateLegalMoves(gamePieces: ChessPiece[], currentPlayer: ChessPlayer, pieceMap: string[][][], piece: ChessPiece, isAttacker: boolean) {
+export function generateLegalMoves(gamePieces: ChessPiece[], pieceMap: string[][][], piece: ChessPiece, isAttacker: boolean) {
     let boardSize = 8;
     let boardMoves: number[][] = [];
     let potentialAttacks: number[][] = [];
@@ -41,7 +37,7 @@ export function generateLegalMoves(gamePieces: ChessPiece[], currentPlayer: Ches
 
     let currentX = piece.position.x;
     let currentY = piece.position.y;
-    
+
     // iterate over each direction
     let legalNotations = piece.colour == 1 ? ["w", "m", "r", "c"] : ["b", "m", "t", "c"];
 
@@ -79,6 +75,8 @@ export function generateLegalMoves(gamePieces: ChessPiece[], currentPlayer: Ches
     // used for the king to detect nearby pieces that may attack
     let seenPieces: ChessPiece[] = [];
     let updatePieces: ChessPiece[] = [];
+
+    piece.overlapSquares = [];
 
     directions.forEach(({ dx, dy }) => {
         let x = currentX;
@@ -126,34 +124,32 @@ export function generateLegalMoves(gamePieces: ChessPiece[], currentPlayer: Ches
                     }
                 } else if (x == currentX) {
                     removeSquare(potentialAttacks, x, y);
-                    if (foundPiece) {
+                    if (foundPiece && foundPiece !== piece && boardMoves.find(([vx, vy]) => vx === x && vy === y)) {
                         removeSquare(boardMoves, x, y);
+                        removeSquare(boardMoves, x, y + 1);
+                        removeSquare(boardMoves, x, y - 1);
                     }
                 }
             }
 
             if (pieceFound && piece.type != "P") {
                 removeSquare(boardMoves, x, y)
-            }
-
-            if (pieceFound && piece.type != "P") {
                 removeSquare(potentialAttacks, x, y);
             }
 
             if (!foundPiece && enemiesFound == 1 && !ownPieceFound && visionMoves.find(([vx, vy]) => vx === x && vy === y)) {
                 potentialAttacks.push([x, y]);
             }
-            
+
             if (foundPiece && !ownPieceFound && visionMoves.find(([vx, vy]) => vx === x && vy === y)) {
+                if (enemiesFound == 1 && foundPiece.type == "K" && foundPiece.colour != piece.colour) {
+                    foundPiece.addAttacker(piece);
+                }
                 if (enemiesFound <= 1) {
                     boardMoves.push([x, y]);
                 }
                 // if a piece is under attack add the attacking direction to the piece
                 if (enemiesFound <= 2) {
-                    if (!(foundPiece.attackingDirection.find(([piece, [dx, dy]]) => dx === x - currentX && dy === y - currentY))) {
-                        foundPiece.addAttackingDirection(piece, dx, dy);
-                        foundPiece.addPotentialAttacker(piece);
-                    }
                     potentialAttacks.push([x, y]);
                 }
                 if (enemiesFound >= 3) {
@@ -162,8 +158,15 @@ export function generateLegalMoves(gamePieces: ChessPiece[], currentPlayer: Ches
             }
 
             if (foundPiece && visionMoves.find(([vx, vy]) => vx === x && vy === y) && enemiesFound < 1) {
+                foundPiece.addOverlapSquare(x, y);
                 potentialAttacks.push([x, y]);
             };
+
+            if (foundPiece && !ownPieceFound && potentialAttacks.find(([vx, vy]) => vx === x && vy === y)) {
+                foundPiece.removeAllAttackingDirections(piece);
+                foundPiece.addAttackingDirection(piece, dx, dy);
+                foundPiece.addPotentialAttacker(piece);
+            }
 
             // increment in every direction
             x += dx;
@@ -180,61 +183,58 @@ export function generateLegalMoves(gamePieces: ChessPiece[], currentPlayer: Ches
     piece.updatePieces = updatePieces;
     piece.legalMoves = boardMoves;
 
+    piece.legalMoves.forEach(([x, y]) => {
+        let foundPiece = findPiece(gamePieces, x, y);
+        if (foundPiece && foundPiece != piece && foundPiece.colour != piece.colour && foundPiece.type == "K") {
+            if (!foundPiece.attackers.includes(piece)) {
+                foundPiece.addAttacker(piece);
+            }
+        }
+    });
+
     getPieces(gamePieces, piece.colour).forEach(gamePiece => {
-        if (piece.legalMoves.find(([x, y]) => x === gamePiece.position.x && y === gamePiece.position.y)) {
+        if (piece.legalMoves.find(([x, y]) => x === gamePiece.position.x && y === gamePiece.position.y && gamePiece.colour === piece.colour)) {
             removeSquare(piece.legalMoves, gamePiece.position.x, gamePiece.position.y);
         }
     });
 
+    potentialAttacks.push([currentX, currentY]);
     piece.potentialAttacks = potentialAttacks;
 
-    let opponentColour = piece.colour === 0 ? 1 : 0;
-    let opponentKing = getKing(gamePieces, opponentColour);
+    let king = getKing(gamePieces, piece.colour);
 
-    piece.legalMoves.forEach(([x, y]) => {
-        if (opponentKing && opponentKing.position.x === x && opponentKing.position.y === y) {
-            opponentKing.addAttacker(piece);
-        }
-    });
-
-    // if opponent king has attackers its in check
-    if (opponentKing && opponentKing?.attackers && opponentKing.attackers.length > 0) {
-        let legalMoves = 0;
-        getPieces(gamePieces, opponentColour).forEach(opponentPiece => {
-            opponentPiece.legalMoves = [];
-            generateLegalMoves(gamePieces, currentPlayer, processMoves(opponentPiece.moves), opponentPiece, false);
-            legalMoves += opponentPiece.legalMoves.length;
-        });
-        // if no avaiable moves for the opponent, do checkmate stuff
-        if (legalMoves == 0) {
-            // TODO: checkmate screen
-            console.log("Checkmate for " + (opponentColour === 0 ? "white" : "black") + " king");
-        }
-    }
-
-    if (!isAttacker) {
-        let king = getKing(gamePieces, piece.colour);
-        // if in check
-        if (king && king.attackers && king.attackers.length > 0) {
-            king.attackers.forEach(attacker => {
+    // if in check
+    if (king && king.attackers && king.attackers.length > 0) {
+        king.attackers.forEach(attacker => {
+            // check in directions that the king is attacked
+            let attackingDirections = king.getAttackingDirection(attacker);
+            if (attackingDirections.length == 0) {
                 getPieces(gamePieces, piece.colour).forEach(piece => {
-                    let newLegalSquares: number[][] = [];
-                    let offsetX = 0;
-                    let offsetY = 0;
-
-                    // check in directions that the king is attacked
-                    let attackingDirections = king.getAttackingDirection(attacker);
-                    if (attacker.type == "P") {
+                    if (piece.type != "K") {
                         if (piece.legalMoves.find(([vx, vy]) => vx == attacker.position.x && vy == attacker.position.y)) {
-                            newLegalSquares.push([attacker.position.x, attacker.position.y]);
-                        }
-                        if (piece.type != "K") {
-                            piece.legalMoves = newLegalSquares;
+                            piece.legalMoves = [];
+                            piece.legalMoves.push([attacker.position.x, attacker.position.y]);
+                        } else {
+                            piece.legalMoves = [];
                         }
                     }
-                    if (!attackingDirections[0]) {
-                        return;
+                });
+            }
+            getPieces(gamePieces, piece.colour).forEach(piece => {
+                let newLegalSquares: number[][] = [];
+                let offsetX = 0;
+                let offsetY = 0;
+
+                if (attacker.type == "P") {
+                    if (piece.legalMoves.find(([vx, vy]) => vx == attacker.position.x && vy == attacker.position.y)) {
+                        newLegalSquares.push([attacker.position.x, attacker.position.y]);
                     }
+                    if (piece.type != "K") {
+                        piece.legalMoves = newLegalSquares;
+                    }
+                }
+
+                if (attackingDirections.length != 0) {
                     let dx = attackingDirections[0][0];
                     let dy = attackingDirections[0][1];
 
@@ -256,77 +256,75 @@ export function generateLegalMoves(gamePieces: ChessPiece[], currentPlayer: Ches
                     if (piece.type != "K") {
                         piece.legalMoves = newLegalSquares;
                     }
-                });
+                }
             });
-        }
+        });
+    }
 
-        if (piece.type == "K") {
-            let opponentPieces = getPieces(gamePieces, opponentColour);
-            opponentPieces.forEach(opponentPiece => {
-                // so king doesn't run into potential pawn attacks
-                opponentPiece.potentialAttacks.forEach(([x, y]) => {
-                    removeSquare(piece.legalMoves, x, y);
-                });
+    let opponentColour = piece.colour == 0 ? 1 : 0;
+    if (piece.type == "K") {
+        let opponentPieces = getPieces(gamePieces, opponentColour);
+        opponentPieces.forEach(opponentPiece => {
+            let testMoves = opponentPiece.type == "P" ? opponentPiece.potentialAttacks : opponentPiece.legalMoves;
+            testMoves.forEach(([x, y]) => {
+                removeSquare(piece.legalMoves, x, y);
             });
-        }
+        });
+    }
 
-        if (piece.potentialAttackers.length == 0) return;
-        if (king && king.attackers.length > 0) return;
-        if (piece.type == "K") return;
-
+    piece.potentialAttackers.forEach(attacker => {
+        let newLegalSquares: number[][] = [];
         let kingFound = false;
-        let ownPieceFound = false;
 
-        piece.potentialAttackers.forEach(attacker => {
-            let newLegalSquares: number[][] = [];
+        // get the direction in which the piece is attacking
+        let attackingDirections = piece.getAttackingDirection(attacker);
+        for (let i = 0; i < attackingDirections.length; i++) {
             let offsetX = 0;
             let offsetY = 0;
-            let pieceCount = 0;
-            // get the direction in which the piece is attacking
-            let attackingDirections = piece.getAttackingDirection(attacker);
-            if (!attackingDirections[0]) {
-                return;
-            }
-
-            let dx = attackingDirections[0][0];
-            let dy = attackingDirections[0][1];
+            let dx = attackingDirections[i][0];
+            let dy = attackingDirections[i][1];
+            let piecesFound = 0;
 
             // this is basically just a reverse of the king code
             while (offsetX < 8 && offsetY < 8 && offsetX > -8 && offsetY > -8) {
-                if (attacker.potentialAttacks.find(([vx, vy]) => vx == attacker.position.x + offsetX && vy == attacker.position.y + offsetY)){
+                if (attacker.potentialAttacks.find(([vx, vy]) => vx == attacker.position.x + offsetX && vy == attacker.position.y + offsetY)) {
                     newLegalSquares.push([attacker.position.x + offsetX, attacker.position.y + offsetY]);
                 }
                 let foundPiece = findPiece(gamePieces, attacker.position.x + offsetX, attacker.position.y + offsetY);
-                if (foundPiece && foundPiece.colour == piece.colour) {
-                    pieceCount++;
+                if (foundPiece) {
+                    piecesFound++;
                 }
-                if (foundPiece && foundPiece == piece) {
-                    ownPieceFound = true;
-                }
-                // i'm not sure if the piece count is necessary anymore but we're keeping it
-                if (foundPiece && foundPiece.colour == piece.colour && foundPiece.type == "K" && pieceCount < 3 && ownPieceFound) {
+                if (foundPiece && foundPiece.colour == piece.colour && foundPiece.type == "K") {
                     kingFound = true;
                 }
+                // i'm not sure if the piece count is necessary anymore but we're keeping it
                 offsetX += dx;
                 offsetY += dy;
             }
-                   
+
             // if the king is behind the piece, remove all moves that aren't matched with the attacking direction
-            if (kingFound) {
-                let newLegalMoves: number[][] = [];
-                piece.legalMoves.forEach(([x, y]) => {
-                    if (piece.legalMoves.find(([vx, vy]) => vx == attacker.position.x && vy == attacker.position.y)) {
-                        newLegalMoves.push([attacker.position.x, attacker.position.y]);
-                    }
-                    if (newLegalSquares.find(([vx, vy]) => vx == x && vy == y)) {
-                        newLegalMoves.push([x, y]);
-                    }
+            let newLegalMoves: number[][] = [];
+            let testMoves = piece.type == "P" ? piece.legalMoves : piece.potentialAttacks;
+            testMoves.forEach(([x, y]) => {
+                if (newLegalSquares.find(([vx, vy]) => vx == x && vy == y)) {
+                    newLegalMoves.push([x, y]);
+                }
+            });
+            // update legal moves
+            if (piece.type != "K") {
+                if (kingFound && piecesFound <= 3) {
+                    piece.legalMoves = newLegalMoves;
+                }
+            } else {
+                newLegalMoves.forEach(([x, y]) => {
+                    removeSquare(piece.legalMoves, x, y);
                 });
-                // update legal moves
-                piece.legalMoves = newLegalMoves;
+                if (attacker.overlapSquares.length == 0 && piece.potentialAttacks.find(([vx, vy]) => vx == attacker.position.x && vy == attacker.position.y)) {
+                    piece.legalMoves.push([attacker.position.x, attacker.position.y]);
+                }
             }
-        });
-    }
+        }
+    });
 }
 
 function removeSquare(boardMoves: number[][], x: number, y: number) {
@@ -337,12 +335,12 @@ function removeSquare(boardMoves: number[][], x: number, y: number) {
 }
 
 // PROCESS PIECE MAP
-export function processPieceMap(gamePieces: ChessPiece[], player: ChessPlayer, piece: ChessPiece) {
+export function processPieceMap(gamePieces: ChessPiece[], piece: ChessPiece) {
     if (piece.pieceMap.length === 0) {
         let pieceMap = processMoves(piece.moves);
-        generateLegalMoves(gamePieces, player, pieceMap, piece, false);
+        generateLegalMoves(gamePieces, pieceMap, piece, false);
     } else {
-        generateLegalMoves(gamePieces, player, piece.pieceMap, piece, false);
+        generateLegalMoves(gamePieces, piece.pieceMap, piece, false);
     }
 }
 
@@ -357,7 +355,7 @@ export function canMove(piece: ChessPiece, moveX: number, moveY: number) {
     return false;
 }
 
-function processMoves(moves: string) {
+export function processMoves(moves: string) {
     const lines = moves.split("\n").filter(line => !line.startsWith("#"));
     const pieceMap: string[][][] = [];
 
