@@ -126,8 +126,7 @@ export function generateLegalMoves(gamePieces: ChessPiece[], pieceMap: string[][
                     removeSquare(potentialAttacks, x, y);
                     if (foundPiece && foundPiece !== piece && boardMoves.find(([vx, vy]) => vx === x && vy === y)) {
                         removeSquare(boardMoves, x, y);
-                        removeSquare(boardMoves, x, y + 1);
-                        removeSquare(boardMoves, x, y - 1);
+
                     }
                 }
             }
@@ -201,9 +200,40 @@ export function generateLegalMoves(gamePieces: ChessPiece[], pieceMap: string[][
     potentialAttacks.push([currentX, currentY]);
     piece.potentialAttacks = potentialAttacks;
 
-    let king = getKing(gamePieces, piece.colour);
+    let opponentColour = piece.colour == 0 ? 1 : 0;
+    if (piece.type == "K") {
+        let opponentPieces = getPieces(gamePieces, opponentColour);
+        opponentPieces.forEach(opponentPiece => {
+            let testMoves = opponentPiece.type == "P" ? opponentPiece.potentialAttacks : opponentPiece.legalMoves;
+            testMoves.forEach(([x, y]) => {
+                removeSquare(piece.legalMoves, x, y);
+            });
+            //removeSquare(piece.legalMoves, opponentPiece.position.x, opponentPiece.position.y);
+        });
+
+        piece.attackers.forEach(attacker => {
+            let attackingDirections = piece.getAttackingDirection(attacker);
+            if (!attackingDirections) return;
+            for (let i = 0; i < attackingDirections.length; i++) {
+                let dx = attackingDirections[i][0];
+                let dy = attackingDirections[i][1];
+                let x = attacker.position.x;
+                let y = attacker.position.y;
+                let offsetX = 0;
+                let offsetY = 0;
+                while (offsetX < 8 && offsetY < 8 && offsetX > -8 && offsetY > -8) {
+                    if (piece.legalMoves.find(([vx, vy]) => vx === x + offsetX && vy === y + offsetY)) {
+                        removeSquare(piece.legalMoves, x + offsetX, y + offsetY);
+                    }
+                    offsetX += dx;
+                    offsetY += dy;
+                }
+            };
+        });
+    }
 
     // if in check
+    let king = getKing(gamePieces, piece.colour);
     if (king && king.attackers && king.attackers.length > 0) {
         king.attackers.forEach(attacker => {
             // check in directions that the king is attacked
@@ -220,6 +250,7 @@ export function generateLegalMoves(gamePieces: ChessPiece[], pieceMap: string[][
                     }
                 });
             }
+            
             getPieces(gamePieces, piece.colour).forEach(piece => {
                 let newLegalSquares: number[][] = [];
                 let offsetX = 0;
@@ -261,68 +292,9 @@ export function generateLegalMoves(gamePieces: ChessPiece[], pieceMap: string[][
         });
     }
 
-    let opponentColour = piece.colour == 0 ? 1 : 0;
-    if (piece.type == "K") {
-        let opponentPieces = getPieces(gamePieces, opponentColour);
-        opponentPieces.forEach(opponentPiece => {
-            let testMoves = opponentPiece.type == "P" ? opponentPiece.potentialAttacks : opponentPiece.legalMoves;
-            testMoves.forEach(([x, y]) => {
-                removeSquare(piece.legalMoves, x, y);
-            });
-        });
-    }
-
-    piece.potentialAttackers.forEach(attacker => {
-        let newLegalSquares: number[][] = [];
-        let kingFound = false;
-
-        // get the direction in which the piece is attacking
-        let attackingDirections = piece.getAttackingDirection(attacker);
-        for (let i = 0; i < attackingDirections.length; i++) {
-            let offsetX = 0;
-            let offsetY = 0;
-            let dx = attackingDirections[i][0];
-            let dy = attackingDirections[i][1];
-            let piecesFound = 0;
-
-            // this is basically just a reverse of the king code
-            while (offsetX < 8 && offsetY < 8 && offsetX > -8 && offsetY > -8) {
-                if (attacker.potentialAttacks.find(([vx, vy]) => vx == attacker.position.x + offsetX && vy == attacker.position.y + offsetY)) {
-                    newLegalSquares.push([attacker.position.x + offsetX, attacker.position.y + offsetY]);
-                }
-                let foundPiece = findPiece(gamePieces, attacker.position.x + offsetX, attacker.position.y + offsetY);
-                if (foundPiece) {
-                    piecesFound++;
-                }
-                if (foundPiece && foundPiece.colour == piece.colour && foundPiece.type == "K") {
-                    kingFound = true;
-                }
-                // i'm not sure if the piece count is necessary anymore but we're keeping it
-                offsetX += dx;
-                offsetY += dy;
-            }
-
-            // if the king is behind the piece, remove all moves that aren't matched with the attacking direction
-            let newLegalMoves: number[][] = [];
-            let testMoves = piece.type == "P" ? piece.legalMoves : piece.potentialAttacks;
-            testMoves.forEach(([x, y]) => {
-                if (newLegalSquares.find(([vx, vy]) => vx == x && vy == y)) {
-                    newLegalMoves.push([x, y]);
-                }
-            });
-            // update legal moves
-            if (piece.type != "K") {
-                if (kingFound && piecesFound <= 3) {
-                    piece.legalMoves = newLegalMoves;
-                }
-            } else {
-                newLegalMoves.forEach(([x, y]) => {
-                    removeSquare(piece.legalMoves, x, y);
-                });
-                if (attacker.overlapSquares.length == 0 && piece.potentialAttacks.find(([vx, vy]) => vx == attacker.position.x && vy == attacker.position.y)) {
-                    piece.legalMoves.push([attacker.position.x, attacker.position.y]);
-                }
-            }
+    piece.attackers.forEach(attacker => {
+        if (attacker.overlapSquares.length == 0 && piece.potentialAttacks.find(([vx, vy]) => vx == attacker.position.x && vy == attacker.position.y)) {
+                piece.legalMoves.push([attacker.position.x, attacker.position.y]);
         }
     });
 }

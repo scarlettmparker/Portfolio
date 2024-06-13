@@ -128,6 +128,14 @@ function movePiece(i: number, j: number, data: DraggableData, positions: any[], 
         return;
     }
 
+    let opponentKing = getKing(gamePieces, currentPlayer.colour === 0 ? 1 : 0);
+    let king = getKing(gamePieces, currentPlayer.colour);
+
+    if (opponentKing && king) {
+        opponentKing.attackers = [];
+        opponentKing.attackingDirection = [];
+    }
+
     const initialX = j * CELL_SIZE;
     const initialY = i * CELL_SIZE;
     const xCalc = Math.round((data.x + initialX) / CELL_SIZE);
@@ -144,24 +152,21 @@ function movePiece(i: number, j: number, data: DraggableData, positions: any[], 
 
     // handle captures
     const targetPiece = findPiece(gamePieces, xCalc, yCalc);
+    let updatedGamePieces = gamePieces;
     if (targetPiece && targetPiece.colour !== selectedPiece.colour) {
-        // remove the captured piece
-        const newGamePieces = gamePieces.filter(piece => piece !== targetPiece);
-        setGamePieces(newGamePieces);
-        gamePieces = newGamePieces;
+        updatedGamePieces = removeGamePiece(gamePieces, targetPiece);
     }
 
     // update game state and reprocess legal moves
-    setGamePieces([...gamePieces])
+    setGamePieces([...updatedGamePieces])
 
     if (selectedPiece) {
-        processPieceMap(gamePieces, selectedPiece);
+        processPieceMap(updatedGamePieces, selectedPiece);
         selectedPiece.updatePieces.forEach(piece => {
-            processPieceMap(gamePieces, piece);
+            processPieceMap(updatedGamePieces, piece);
         });
-        checkForCheck(gamePieces, currentPlayer, selectedPiece);
+        checkForCheck(updatedGamePieces, currentPlayer, selectedPiece);
         selectedPiece.potentialAttackers = [];
-        selectedPiece.attackers = [];
     }
 
     // switch the current player
@@ -174,6 +179,7 @@ function makeRandomMove(gamePieces: ChessPiece[], currentPlayer: ChessPlayer, se
     whitePlayer: ChessPlayer, blackPlayer: ChessPlayer): void {
 
     const pieces = getPieces(gamePieces, currentPlayer.colour);
+    pieces.forEach(piece => processPieceMap(gamePieces, piece));
 
     let randomPiece = pieces[Math.floor(Math.random() * pieces.length)];
     let randomMove = randomPiece.legalMoves[Math.floor(Math.random() * randomPiece.legalMoves.length)];
@@ -194,18 +200,19 @@ function makeRandomMove(gamePieces: ChessPiece[], currentPlayer: ChessPlayer, se
         setPositions([...positions]);
 
         const targetPiece = findPiece(gamePieces, x, y);
+        let updatedGamePieces = gamePieces;
         if (targetPiece && targetPiece.colour !== randomPiece.colour) {
-            const newGamePieces = gamePieces.filter(piece => piece !== targetPiece);
-            setGamePieces(newGamePieces);
-            gamePieces = newGamePieces;
+            updatedGamePieces = removeGamePiece(gamePieces, targetPiece);
+            if (updatedGamePieces.find(piece => piece === targetPiece)) {
+                console.log("Piece not removed");
+            }
         }
 
-        setGamePieces([...gamePieces]);
-        processPieceMap(gamePieces, randomPiece);
-        randomPiece.updatePieces.forEach(piece => processPieceMap(gamePieces, piece));
-        checkForCheck(gamePieces, currentPlayer, randomPiece);
+        setGamePieces([...updatedGamePieces]);
+        processPieceMap(updatedGamePieces, randomPiece);
+        randomPiece.updatePieces.forEach(piece => processPieceMap(updatedGamePieces, piece));
+        checkForCheck(updatedGamePieces, currentPlayer, randomPiece);
         randomPiece.potentialAttackers = [];
-        randomPiece.attackers = [];
 
         // Switch the current player
         const nextPlayer = switchPlayer(currentPlayer, whitePlayer, blackPlayer);
@@ -240,6 +247,10 @@ function checkForCheck(gamePieces: ChessPiece[], currentPlayer: ChessPlayer, pie
     }
 }
 
+function removeGamePiece(gamePieces: ChessPiece[], piece: ChessPiece): ChessPiece[] {
+    return gamePieces.filter(p => p !== piece);
+}
+
 function switchPlayer(currentPlayer: ChessPlayer, whitePlayer: ChessPlayer, blackPlayer: ChessPlayer): ChessPlayer {
     return currentPlayer.colour === whitePlayer.colour ? blackPlayer : whitePlayer;
 }
@@ -264,7 +275,7 @@ export default function Play() {
     
     useEffect(() => {
         if (gameRunning && currentPlayer.colour === blackPlayer.colour) {
-            makeRandomMove(gamePieces, currentPlayer, setCurrentPlayer, positions, setPositions, setGamePieces, whitePlayer, blackPlayer);
+            //makeRandomMove(gamePieces, currentPlayer, setCurrentPlayer, positions, setPositions, setGamePieces, whitePlayer, blackPlayer);
         }
     }, [currentPlayer]);
 
