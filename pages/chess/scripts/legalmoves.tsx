@@ -74,9 +74,6 @@ export function generateLegalMoves(gamePieces: ChessPiece[], pieceMap: string[][
 
     // used for the king to detect nearby pieces that may attack
     let seenPieces: ChessPiece[] = [];
-    let updatePieces: ChessPiece[] = [];
-
-    piece.overlapSquares = [];
 
     directions.forEach(({ dx, dy }) => {
         let x = currentX;
@@ -86,8 +83,6 @@ export function generateLegalMoves(gamePieces: ChessPiece[], pieceMap: string[][
 
         let pieceFound = false;
         let ownPieceFound = false;
-        let checkPieceFound = false;
-
         let enemiesFound = 0;
 
         while (true) {
@@ -99,10 +94,6 @@ export function generateLegalMoves(gamePieces: ChessPiece[], pieceMap: string[][
 
             if (x < 0 || x >= boardSize || y < 0 || y >= boardSize) {
                 break;
-            }
-
-            if (foundPiece && foundPiece !== piece && foundPiece.colour === piece.colour && !isAttacker && !checkPieceFound && !updatePieces.includes(foundPiece)) {
-                updatePieces.push(foundPiece);
             }
 
             // if a piece is found, start to fill the potential attacks
@@ -179,9 +170,7 @@ export function generateLegalMoves(gamePieces: ChessPiece[], pieceMap: string[][
         piece.seenPieces = seenPieces;
     }
 
-    piece.updatePieces = updatePieces;
     piece.legalMoves = boardMoves;
-
     piece.legalMoves.forEach(([x, y]) => {
         let foundPiece = findPiece(gamePieces, x, y);
         if (foundPiece && foundPiece != piece && foundPiece.colour != piece.colour && foundPiece.type == "K") {
@@ -192,12 +181,14 @@ export function generateLegalMoves(gamePieces: ChessPiece[], pieceMap: string[][
     });
 
     getPieces(gamePieces, piece.colour).forEach(gamePiece => {
+        if (gamePiece.potentialAttacks.find(([x, y]) => x === piece.position.x && y === piece.position.y)) {
+            piece.updatePieces.push(gamePiece);
+        }
         if (piece.legalMoves.find(([x, y]) => x === gamePiece.position.x && y === gamePiece.position.y && gamePiece.colour === piece.colour)) {
             removeSquare(piece.legalMoves, gamePiece.position.x, gamePiece.position.y);
         }
     });
 
-    potentialAttacks.push([currentX, currentY]);
     piece.potentialAttacks = potentialAttacks;
 
     let opponentColour = piece.colour == 0 ? 1 : 0;
@@ -208,7 +199,6 @@ export function generateLegalMoves(gamePieces: ChessPiece[], pieceMap: string[][
             testMoves.forEach(([x, y]) => {
                 removeSquare(piece.legalMoves, x, y);
             });
-            //removeSquare(piece.legalMoves, opponentPiece.position.x, opponentPiece.position.y);
         });
 
         piece.attackers.forEach(attacker => {
@@ -221,10 +211,15 @@ export function generateLegalMoves(gamePieces: ChessPiece[], pieceMap: string[][
                 let y = attacker.position.y;
                 let offsetX = 0;
                 let offsetY = 0;
+                let pieceFound = false;
                 while (offsetX < 8 && offsetY < 8 && offsetX > -8 && offsetY > -8) {
-                    if (piece.legalMoves.find(([vx, vy]) => vx === x + offsetX && vy === y + offsetY)) {
-                        removeSquare(piece.legalMoves, x + offsetX, y + offsetY);
+                    let foundPiece = findPiece(gamePieces, x + offsetX, y + offsetY);
+                    if (foundPiece && foundPiece !== piece && foundPiece.colour === piece.colour) {
+                        pieceFound = true;
                     }
+                    if (!pieceFound && piece.legalMoves.find(([vx, vy]) => vx === x + offsetX && vy === y + offsetY)) {
+                        removeSquare(piece.legalMoves, x + offsetX, y + offsetY);
+                    }   
                     offsetX += dx;
                     offsetY += dy;
                 }
@@ -292,10 +287,11 @@ export function generateLegalMoves(gamePieces: ChessPiece[], pieceMap: string[][
         });
     }
 
-    piece.attackers.forEach(attacker => {
+    piece.potentialAttackers.forEach(attacker => {
         if (attacker.overlapSquares.length == 0 && piece.potentialAttacks.find(([vx, vy]) => vx == attacker.position.x && vy == attacker.position.y)) {
-                piece.legalMoves.push([attacker.position.x, attacker.position.y]);
+            piece.legalMoves.push([attacker.position.x, attacker.position.y]);
         }
+        attacker.overlapSquares = [];
     });
 }
 
