@@ -19,6 +19,7 @@ export class ChessPiece {
 
     pseudoSquares: number[][] = [];
     legalSquares: number[][] = [];
+    raySquares: number[][] = [];
 
     constructor(type: string, position: { x: number, y: number }, player: ChessPlayer, moveFile: string) {
         this.type = type;

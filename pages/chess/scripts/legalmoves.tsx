@@ -109,9 +109,13 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
             if (enemiesFound > 0 && piece.type != "P") {
                 removeSquare(piece.legalSquares, x, y);
                 if (foundPiece && foundPiece.position.x == x && foundPiece.position.y == y
-                        && teamPiecesFound == 0 && enemiesFound <= 1 && !kingFound) {
+                        && teamPiecesFound == 0 && enemiesFound <= 1) {
                     if (pseudoSquares.find(([px, py]) => px === x && py === y)) {
-                        piece.legalSquares.push([x, y]);
+                        if (!kingFound) {
+                            piece.legalSquares.push([x, y]);
+                        } else {
+                            piece.raySquares.push([x, y]);
+                        }
                     }
                 }
             }
@@ -144,17 +148,127 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
 
 export function lookForChecks(player: ChessPlayer, opponent: ChessPlayer, king: ChessPiece) {
     if (opponent.pseudoSquares[king.position.x][king.position.y] == 1) {
-        console.log("Check!");
         player.checked = true;
+        restrictSquares(player, opponent, king);
     }
 
+    opponent.pieces.forEach(piece => {
+        piece.raySquares.forEach(([x, y]) => {
+            if (x === king.position.x && y === king.position.y) {
+                console.log("Preventing a discovered attack!");
+                preventDiscoveredAttack(player, king, piece);
+            }
+        });
+    });
+
     king.pseudoSquares.forEach(([x, y]) => {
-        console.log("Checking king " + player.colour + " square at " + posToNotation(x, y) + " for check");
         if (opponent.pseudoSquares[x][y] == 1) {
-            console.log("Removing squre at " + posToNotation(x, y) + " because of check");
             removeSquare(king.legalSquares, x, y);
         }
     });
+}
+
+function preventDiscoveredAttack(player: ChessPlayer, king: ChessPiece, piece: ChessPiece) {
+    const dx = Math.sign(king.position.x - piece.position.x);
+    const dy = Math.sign(king.position.y - piece.position.y);
+
+    console.log(dx, dy);
+
+    player.pieces.forEach(p => {
+        let x = king.position.x;
+        let y = king.position.y;
+
+        let pieceFound = false;
+        const validSquares: number[][] = [];
+
+        while (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE) {
+            if (p.legalSquares.find(([px, py]) => px === x && py === y)) {
+                validSquares.push([x, y]);
+            }
+            if (p !== king && p !== piece && p.position.x === x && p.position.y === y) {
+                pieceFound = true;
+            }
+            
+            x -= dx;
+            y -= dy;
+        }
+
+        if (pieceFound) {
+            p.legalSquares = validSquares;
+        }
+    });
+}
+
+function restrictSquares(player: ChessPlayer, opponent: ChessPlayer, king: ChessPiece) {
+    const checkingPiece = findCheckingPiece(opponent, king);
+    if (!checkingPiece) {
+        return;
+    }
+
+    const checkingSquares = generateLineSquares(checkingPiece, king);
+
+    if (checkingSquares == -1) {
+        player.pieces.forEach(piece => {
+            const validSquares: number[][] = [];
+            if (piece.legalSquares.some(([x, y]) => x === checkingPiece.position.x && y === checkingPiece.position.y)) {
+                validSquares.push([checkingPiece.position.x, checkingPiece.position.y]);
+            }
+            piece.legalSquares = validSquares;
+        });
+        return;
+    }
+
+    player.pieces.forEach(piece => {
+        if (piece.type != "K") {
+            const validSquares: number[][] = [];
+            checkingSquares.forEach(([cx, cy]) => {
+                if (piece.legalSquares.some(([x, y]) => x === cx && y === cy)) {
+                    validSquares.push([cx, cy]);
+                }
+            });
+            
+            // check if the piece can capture the checking piece
+            if (piece.legalSquares.some(([x, y]) => x === checkingPiece.position.x && y === checkingPiece.position.y)) {
+                validSquares.push([checkingPiece.position.x, checkingPiece.position.y]);
+            }
+
+            piece.legalSquares = validSquares;
+        }
+    });
+}
+
+function findCheckingPiece(opponent: ChessPlayer, king: ChessPiece) {
+    return opponent.pieces.find(piece => {
+        return piece.pseudoSquares.some(([x, y]) => x === king.position.x && y === king.position.y);
+    });
+}
+
+function generateLineSquares(attacker: ChessPiece, king: ChessPiece) {
+    const lineMoves = [];
+    const dx = Math.sign(king.position.x - attacker.position.x);
+    const dy = Math.sign(king.position.y - attacker.position.y);
+
+    const testX = king.position.x - attacker.position.x;
+    const testY = king.position.y - attacker.position.y;
+
+    const isDirectionalMove = (testX === 0 || testY === 0 || Math.abs(testX) === Math.abs(testY));
+
+    if (!isDirectionalMove) {
+        return -1;
+    }
+
+    let x = attacker.position.x + dx;
+    let y = attacker.position.y + dy;
+
+    while (x !== king.position.x || y !== king.position.y) {
+        lineMoves.push([x, y]);
+        x += dx;
+        y += dy;
+    }
+
+    lineMoves.push([king.position.x, king.position.y]);
+
+    return lineMoves;
 }
 
 function removeSquare(boardMoves: number[][], x: number, y: number) {

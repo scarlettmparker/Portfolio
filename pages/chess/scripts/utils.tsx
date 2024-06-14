@@ -49,6 +49,7 @@ export function fillPseudoMoves(gamePieces: ChessPiece[]) {
             piece.baseSquares = processMoves(piece.moveFile);
         }
         piece.legalSquares = [];
+        piece.raySquares = [];
         generatePseudoMoves(gamePieces, piece);
     });
 }
