@@ -2,20 +2,37 @@ import { ChessPiece } from './piece';
 
 const helper: React.FC = () => {
     return null;
-  };
+};
   
 export default helper;
 
 export class ChessPlayer {
     turn: boolean = false;
     checked: boolean = false;
-    colour: number = 0;
-    legalMoves: number = 1;
+
+    colour: number;
+    legalMoves: number;
 
     pieces: ChessPiece[] = [];
-    legalSquares: number[][] = [];
+    pseudoSquares: number[][] = [];
+    debugSquares: number[][] = [];
 
-    addLegalSquares(x: number, y: number) {
-        this.legalSquares.push([x, y]);
+    constructor(colour: number) {
+        this.colour = colour;
+        this.legalMoves = 0;
+    }
+
+    addPiece(piece: ChessPiece) {
+        this.pieces.push(piece);
+        this.clearPseudoSquares();
+    }
+
+    addPseudoSquare(x: number, y: number) {
+        this.pseudoSquares[x][y] = 1;
+    }
+
+    clearPseudoSquares() {
+        this.pseudoSquares = Array.from({ length: 8 }, () => Array(8).fill(0));
+        this.debugSquares = Array.from({ length: 8 }, () => Array(8).fill(0));
     }
 }
