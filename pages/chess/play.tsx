@@ -83,7 +83,7 @@ export default function Play() {
                                 <Draggable position={positions[i * 8 + j]}
                                     onMouseDown={() => {
                                         setSelectedPiece(piece);
-                                        if (piece) {
+                                        if (piece && piece.player == currentPlayer) {
                                             const legalSquares = piece.legalSquares;
                                             setLegalSquares(legalSquares);
                                         }
@@ -152,8 +152,9 @@ function movePiece(i: number, j: number, data: DraggableData, positions: any[], 
     selectedPiece.position = { x: xCalc, y: yCalc };
     setPositions([...positions]);
 
-    currentPlayer.clearPseudoSquares();
-    fillPseudoMoves(currentPlayer.pieces);
+    whitePlayer.clearPseudoSquares();
+    blackPlayer.clearPseudoSquares();
+    fillPseudoMoves(gamePieces);
 
     const nextPlayer = switchPlayer(currentPlayer, whitePlayer, blackPlayer);
     setCurrentPlayer(nextPlayer);

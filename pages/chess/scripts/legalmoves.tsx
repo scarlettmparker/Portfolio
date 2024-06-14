@@ -58,8 +58,8 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
     piece.pseudoSquares = [...pseudoSquares];
 
     DIRECTIONS.forEach(({ dx, dy }) => {
-        let x = currentX + dx;
-        let y = currentY + dy;
+        let x = currentX;
+        let y = currentY;
 
         let directionX = 7;
         let directionY = 7;
@@ -83,7 +83,20 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
             }
 
             if (piece.type === "P") {
-                removePawnSquares(piece, x, y, currentX, currentY, foundPiece, piece.player.pseudoSquares);
+                if (Math.abs(x - currentX) === 1 && y != currentY) {
+                    // remove attacks if there is no piece to attack
+                    piece.player.pseudoSquares[x][y] = 1;
+                    if (!foundPiece || foundPiece.player === piece.player) {
+                        removeSquare(piece.legalSquares, x, y);
+                    }
+                } else if (x == currentX) {
+                    removeSquare(piece.pseudoSquares, x, y);
+                    if (foundPiece && foundPiece !== piece && pseudoSquares.find(([vx, vy]) => vx === x && vy === y)) {
+                        removeSquare(piece.legalSquares, x, y);
+                        removeSquare(piece.legalSquares, x, y + 1);
+                        removeSquare(piece.legalSquares, x, y - 1);
+                    }
+                }
             }
 
             if (enemiesFound > 0 && piece.type != "P") {
@@ -105,8 +118,12 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
         }
     });
 
+    
     let checkSquares = piece.type == "P" ? piece.pseudoSquares : piece.legalSquares;
     checkSquares.forEach(([x, y]) => {
+        if (findPiece(gamePieces, x, y)) {
+            removeSquare(piece.legalSquares, x, y);
+        }
         if (piece.player.pseudoSquares[x][y] == 0) {
             piece.player.pseudoSquares[x][y] = 1;
             piece.player.debugSquares[BOARD_SIZE - 1 - y][x] = 1;
@@ -127,23 +144,6 @@ export function lookForChecks(player: ChessPlayer, opponent: ChessPlayer, king: 
             removeSquare(king.legalSquares, x, y);
         }
     });
-}
-
-function removePawnSquares(piece: ChessPiece, x: number, y: number, currentX: number, currentY: number, foundPiece: ChessPiece | null, pseudoSquares: number[][]) {
-    if (Math.abs(x - currentX) === 1 && y != currentY) {
-        // remove attacks if there is no piece to attack
-        piece.player.pseudoSquares[x][y] = 1;
-        if (!foundPiece || foundPiece.player === piece.player) {
-            removeSquare(piece.legalSquares, x, y);
-        }
-    } else if (x == currentX) {
-        removeSquare(piece.pseudoSquares, x, y);
-        if (foundPiece && foundPiece !== piece && pseudoSquares.find(([vx, vy]) => vx === x && vy === y)) {
-            removeSquare(piece.legalSquares, x, y);
-            removeSquare(piece.legalSquares, x, y + 1);
-            removeSquare(piece.legalSquares, x, y - 1);
-        }
-    }
 }
 
 function removeSquare(boardMoves: number[][], x: number, y: number) {
