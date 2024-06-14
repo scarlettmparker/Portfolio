@@ -67,11 +67,15 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
         let enemiesFound = 0;
         let teamPiecesFound = 0;
 
+        let kingFound = false;
+
         while (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE) {
             let foundPiece = findPiece(gamePieces, x, y);
 
             if (foundPiece && foundPiece.player != piece.player && foundPiece.type != "K") {
                 enemiesFound++;
+            } else if (foundPiece && foundPiece.player != piece.player && foundPiece.type == "K") {
+                kingFound = true;
             }
 
             if (foundPiece && foundPiece !== piece && foundPiece.player === piece.player) {
@@ -102,7 +106,7 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
             if (enemiesFound > 0 && piece.type != "P") {
                 removeSquare(piece.legalSquares, x, y);
                 if (foundPiece && foundPiece.position.x == x && foundPiece.position.y == y
-                        && teamPiecesFound == 0 && enemiesFound < 2) {
+                        && teamPiecesFound == 0 && enemiesFound <= 1 && !kingFound) {
                     if (pseudoSquares.find(([px, py]) => px === x && py === y)) {
                         piece.legalSquares.push([x, y]);
                     }
