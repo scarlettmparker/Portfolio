@@ -57,6 +57,13 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
     piece.legalSquares = [...pseudoSquares];
     piece.pseudoSquares = [...pseudoSquares];
 
+    piece.legalSquares.forEach(([x, y]) => {
+        let checkPiece = findPiece(gamePieces, x, y);
+        if (checkPiece && checkPiece.player == piece.player) {
+            removeSquare(piece.legalSquares, x, y);
+        }
+    });
+
     DIRECTIONS.forEach(({ dx, dy }) => {
         let x = currentX;
         let y = currentY;
@@ -121,14 +128,9 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
             directionY += dy;
         }
     });
-
     
     let checkSquares = piece.type == "P" ? piece.pseudoSquares : piece.legalSquares;
     checkSquares.forEach(([x, y]) => {
-        let checkPiece = findPiece(gamePieces, x, y);
-        if (checkPiece && checkPiece.player == piece.player) {
-            removeSquare(piece.legalSquares, x, y);
-        }
         if (piece.player.pseudoSquares[x][y] == 0) {
             piece.player.pseudoSquares[x][y] = 1;
             piece.player.debugSquares[BOARD_SIZE - 1 - y][x] = 1;
