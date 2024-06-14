@@ -57,13 +57,6 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
     piece.legalSquares = [...pseudoSquares];
     piece.pseudoSquares = [...pseudoSquares];
 
-    piece.legalSquares.forEach(([x, y]) => {
-        let checkPiece = findPiece(gamePieces, x, y);
-        if (checkPiece && checkPiece.player == piece.player) {
-            removeSquare(piece.legalSquares, x, y);
-        }
-    });
-
     DIRECTIONS.forEach(({ dx, dy }) => {
         let x = currentX;
         let y = currentY;
@@ -104,8 +97,11 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
                     removeSquare(piece.pseudoSquares, x, y);
                     if (foundPiece && foundPiece !== piece && pseudoSquares.find(([vx, vy]) => vx === x && vy === y)) {
                         removeSquare(piece.legalSquares, x, y);
-                        removeSquare(piece.legalSquares, x, y + 1);
-                        removeSquare(piece.legalSquares, x, y - 1);
+                        if (piece.player.colour == 0) {
+                            removeSquare(piece.legalSquares, x, y + 1);
+                        } else {
+                            removeSquare(piece.legalSquares, x, y - 1);
+                        }
                     }
                 }
             }
@@ -126,6 +122,13 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
 
             directionX += dx;
             directionY += dy;
+        }
+    });
+
+    piece.legalSquares.forEach(([x, y]) => {
+        let checkPiece = findPiece(gamePieces, x, y);
+        if (checkPiece && checkPiece.player == piece.player && piece.legalSquares.find(([px, py]) => px === x && py === y)) {
+            removeSquare(piece.legalSquares, x, y);
         }
     });
     
