@@ -125,9 +125,9 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
         }
     });
 
-    piece.legalSquares.forEach(([x, y]) => {
+    piece.pseudoSquares.forEach(([x, y]) => {
         let checkPiece = findPiece(gamePieces, x, y);
-        if (checkPiece && checkPiece.player == piece.player && piece.legalSquares.find(([px, py]) => px === x && py === y)) {
+        if (checkPiece && checkPiece.player == piece.player) {
             removeSquare(piece.legalSquares, x, y);
         }
     });
