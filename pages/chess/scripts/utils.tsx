@@ -43,6 +43,10 @@ export function findPiece(gamePieces: ChessPiece[], x: number, y: number): Chess
     return gamePieces.find(piece => piece.position.x === x && piece.position.y === y) || null;
 }
 
+export function getPieces(gamePieces: ChessPiece[], player: ChessPlayer): ChessPiece[] {
+    return gamePieces.filter(piece => piece.player === player);
+}
+
 export function fillPseudoMoves(gamePieces: ChessPiece[]) {
     gamePieces.forEach(piece => {
         if (piece.baseSquares = []) {
@@ -50,6 +54,7 @@ export function fillPseudoMoves(gamePieces: ChessPiece[]) {
         }
         piece.legalSquares = [];
         piece.raySquares = [];
+        
         generatePseudoMoves(gamePieces, piece);
     });
 }

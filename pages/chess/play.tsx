@@ -1,10 +1,10 @@
 import styles from './styles/play.module.css'
 import Image from 'next/image';
 import Draggable, { DraggableData }from 'react-draggable';
-import { SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { ChessPiece } from './scripts/piece';
 import { ChessPlayer } from './scripts/player';
-import { posToNotation, getPieceName, readPieceFile, getPieceFile, findPiece, findKing, fillPseudoMoves } from './scripts/utils';
+import { posToNotation, getPieceName, readPieceFile, getPieceFile, findPiece, findKing, fillPseudoMoves, getPieces } from './scripts/utils';
 import { lookForChecks } from './scripts/legalmoves';
 
 // CONSTANTS
@@ -123,7 +123,7 @@ export default function Play() {
     );
 }
 
-function movePiece(i: number, j: number, data: DraggableData, positions: any[], setPositions: React.Dispatch<SetStateAction<any[]>>, gamePieces: ChessPiece[],
+function movePiece(i: number, j: number, data: DraggableData | null, positions: any[], setPositions: React.Dispatch<SetStateAction<any[]>>, gamePieces: ChessPiece[],
     setGamePieces: React.Dispatch<SetStateAction<ChessPiece[]>>, currentPlayer: ChessPlayer, setCurrentPlayer: React.Dispatch<SetStateAction<ChessPlayer>>,
     selectedPiece: ChessPiece | null, whitePlayer: ChessPlayer, blackPlayer: ChessPlayer): void {
 
@@ -133,8 +133,16 @@ function movePiece(i: number, j: number, data: DraggableData, positions: any[], 
 
     const initialX = j * CELL_SIZE;
     const initialY = i * CELL_SIZE;
-    const xCalc = Math.round((data.x + initialX) / CELL_SIZE);
-    const yCalc = 7 - Math.round((data.y + initialY) / CELL_SIZE);
+    let xCalc;
+    let yCalc;
+
+    if (data) {
+        xCalc = Math.round((data.x + initialX) / CELL_SIZE);
+        yCalc = 7 - Math.round((data.y + initialY) / CELL_SIZE);
+    } else {
+        xCalc = i;
+        yCalc = j;
+    }
 
     if (!canMove(selectedPiece, xCalc, yCalc)) {
         return;
@@ -143,7 +151,6 @@ function movePiece(i: number, j: number, data: DraggableData, positions: any[], 
     const targetPiece = findPiece(gamePieces, xCalc, yCalc);
 
     if (targetPiece && targetPiece.player !== currentPlayer) {
-        console.log("Captured " + targetPiece.type + " at " + xCalc + ", " + yCalc);
         gamePieces = removeGamePiece(gamePieces, targetPiece);
         setGamePieces([...gamePieces]); // update gamePieces state after removal
     }
@@ -154,13 +161,14 @@ function movePiece(i: number, j: number, data: DraggableData, positions: any[], 
 
     whitePlayer.clearPseudoSquares();
     blackPlayer.clearPseudoSquares();
+
     fillPseudoMoves(gamePieces);
 
     const nextPlayer = switchPlayer(currentPlayer, whitePlayer, blackPlayer);
     setCurrentPlayer(nextPlayer);
 
     const king = findKing(gamePieces, nextPlayer);
-    nextPlayer.checked = false;
+    nextPlayer.check = false;
 
     if (king) {
         lookForChecks(nextPlayer, nextPlayer === whitePlayer ? blackPlayer : whitePlayer, king);

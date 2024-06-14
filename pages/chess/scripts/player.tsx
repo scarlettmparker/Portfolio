@@ -8,7 +8,9 @@ export default helper;
 
 export class ChessPlayer {
     turn: boolean = false;
-    checked: boolean = false;
+    check: boolean = false;
+    checkmate: boolean = false;
+    stalemate: boolean = false;
 
     colour: number;
     legalMoves: number;
@@ -24,6 +26,12 @@ export class ChessPlayer {
 
     addPiece(piece: ChessPiece) {
         this.pieces.push(piece);
+        this.clearPseudoSquares();
+    }
+
+    removePiece(piece: ChessPiece) {
+        const index = this.pieces.indexOf(piece);
+        this.pieces.splice(index, 1);
         this.clearPseudoSquares();
     }
 
