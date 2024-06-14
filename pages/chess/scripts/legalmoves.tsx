@@ -128,6 +128,7 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
     piece.pseudoSquares.forEach(([x, y]) => {
         let checkPiece = findPiece(gamePieces, x, y);
         if (checkPiece && checkPiece.player == piece.player) {
+            piece.player.pseudoSquares[x][y] = 1;
             removeSquare(piece.legalSquares, x, y);
         }
     });
