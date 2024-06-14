@@ -149,6 +149,7 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
 export function lookForChecks(player: ChessPlayer, opponent: ChessPlayer, king: ChessPiece) {
     if (opponent.pseudoSquares[king.position.x][king.position.y] == 1) {
         player.checked = true;
+        console.log("Check!");
         restrictSquares(player, opponent, king);
     }
 
@@ -200,11 +201,21 @@ function preventDiscoveredAttack(player: ChessPlayer, king: ChessPiece, piece: C
 }
 
 function restrictSquares(player: ChessPlayer, opponent: ChessPlayer, king: ChessPiece) {
-    const checkingPiece = findCheckingPiece(opponent, king);
-    if (!checkingPiece) {
+    const checkingPieces = findCheckingPiece(opponent, king);
+    if (checkingPieces.length === 0) {
         return;
     }
 
+    if (checkingPieces.length > 1) {
+        player.pieces.forEach(piece => {
+            if (piece.type != "K") {
+                piece.legalSquares = [];
+            }
+        });
+        return;
+    }
+
+    const checkingPiece = checkingPieces[0];
     const checkingSquares = generateLineSquares(checkingPiece, king);
 
     if (checkingSquares == -1) {
@@ -226,8 +237,7 @@ function restrictSquares(player: ChessPlayer, opponent: ChessPlayer, king: Chess
                     validSquares.push([cx, cy]);
                 }
             });
-            
-            // check if the piece can capture the checking piece
+
             if (piece.legalSquares.some(([x, y]) => x === checkingPiece.position.x && y === checkingPiece.position.y)) {
                 validSquares.push([checkingPiece.position.x, checkingPiece.position.y]);
             }
@@ -238,8 +248,8 @@ function restrictSquares(player: ChessPlayer, opponent: ChessPlayer, king: Chess
 }
 
 function findCheckingPiece(opponent: ChessPlayer, king: ChessPiece) {
-    return opponent.pieces.find(piece => {
-        return piece.pseudoSquares.some(([x, y]) => x === king.position.x && y === king.position.y);
+    return opponent.pieces.filter(piece => {
+        return piece.legalSquares.some(([x, y]) => x === king.position.x && y === king.position.y);
     });
 }
 
