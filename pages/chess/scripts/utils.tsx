@@ -67,6 +67,7 @@ export function exists(obj: any[], ...keys: number[]) {
     return keys.reduce((acc, key) => acc && acc[key], obj) !== undefined;
 }
 
+// FIND GAME REQUEST
 export async function findGame(gameId: string) {
     const response = await fetch('../api/chess/findgame', {
         method: 'POST',
