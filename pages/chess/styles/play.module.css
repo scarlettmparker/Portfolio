@@ -61,14 +61,6 @@
     z-index: 1;
 }
 
-.flippedBoard {
-    transform: rotate(180deg);
-}
-
-.flippedBoard .square {
-    transform: rotate(180deg);
-}
-
 .buttonWrapper {
     display: flex;
     justify-content: center;

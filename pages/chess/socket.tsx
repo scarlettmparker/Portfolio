@@ -1,15 +1,14 @@
-import { DefaultEventsMap } from '@socket.io/component-emitter';
-import { Socket, io } from 'socket.io-client';
+import { io } from 'socket.io-client';
 
-let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
+const socket = io();
+
 const socketInitializer = async () => {
-    await fetch('/api/chess/socket');
-    socket = io();
+    await fetch('/api/socket');
 
     await new Promise(resolve => {
         socket.on('connect', () => {
           console.log('Connected to server!');
-          resolve(true); // resolve the promise when connected
+          resolve(true); // Resolve the promise when connected
         });
     });
 };
