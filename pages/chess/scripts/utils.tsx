@@ -66,3 +66,12 @@ export function findKing(gamePieces: ChessPiece[], player: ChessPlayer) {
 export function exists(obj: any[], ...keys: number[]) {
     return keys.reduce((acc, key) => acc && acc[key], obj) !== undefined;
 }
+
+export async function findGame(gameId: string) {
+    const response = await fetch('../api/chess/findgame', {
+        method: 'POST',
+        body: JSON.stringify(gameId)
+    });
+    const jsonResponse = await response.json();
+    return jsonResponse.exists;
+}

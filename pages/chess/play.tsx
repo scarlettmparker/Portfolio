@@ -1,11 +1,15 @@
+import io, { Socket } from 'socket.io-client';
 import styles from './styles/play.module.css'
 import Image from 'next/image';
 import Draggable, { DraggableData }from 'react-draggable';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { ChessPiece } from './scripts/piece';
 import { ChessPlayer } from './scripts/player';
-import { posToNotation, getPieceName, readPieceFile, getPieceFile, findPiece, findKing, fillPseudoMoves, getPieces } from './scripts/utils';
+import { SetStateAction, useEffect, useState } from 'react';
+import { posToNotation, getPieceName, readPieceFile, getPieceFile, findPiece, findKing, findGame, fillPseudoMoves } from './scripts/utils';
 import { lookForChecks } from './scripts/legalmoves';
+import { DefaultEventsMap } from '@socket.io/component-emitter';
+import { socket } from './socket';
 
 // CONSTANTS
 const CELL_SIZE = 75;
@@ -51,6 +55,20 @@ async function setupBoard(setGamePieces: any, whitePlayer: ChessPlayer, blackPla
     fillPseudoMoves(newGamePieces);
 }
 
+// SEND MOVE OVER SOCKET
+const sendMove = (originX: number, originY: number, xCalc: number, yCalc: number,
+        socket: Socket<DefaultEventsMap, DefaultEventsMap>, game: string | string[]) => {
+    
+    // move data
+    const message = {
+        originX: originX,
+        originY: originY,
+        x: xCalc,
+        y: yCalc
+    }
+    socket.emit('sendMove', { game, message });
+};
+
 export default function Play() {
     const [gamePieces, setGamePieces] = useState<ChessPiece[]>([]);
     const [positions, setPositions] = useState(Array(64).fill({ x: 0, y: 0 }));
@@ -60,6 +78,31 @@ export default function Play() {
     const [whitePlayer] = useState(new ChessPlayer(0));
     const [blackPlayer] = useState(new ChessPlayer(1));
     const [currentPlayer, setCurrentPlayer] = useState<ChessPlayer>(whitePlayer);
+    
+    const router = useRouter();
+    const { game } = router.query;
+
+    useEffect(() => {
+        const joinGameAndListen = async () => {
+            if (game && typeof game === 'string') {
+                if (await findGame(game) == false) {
+                    router.push('/chess/play');
+                }
+            }
+
+            socket.emit('joinGame', { game });
+            socket.on('receiveMove', (message) => {
+                 // handle move reception
+                serverMove(message.originX, message.originY, message.x, message.y, positions, setPositions, 
+                    gamePieces, setGamePieces, currentPlayer, setCurrentPlayer, whitePlayer, blackPlayer);
+            });
+        };
+
+        joinGameAndListen();
+        return () => {
+            socket.off('receiveMove'); // clean up on unmount
+        };
+    }, [game, gamePieces, positions, currentPlayer, whitePlayer, blackPlayer]);
 
     useEffect(() => {
         setupBoard(setGamePieces, whitePlayer, blackPlayer);
@@ -90,7 +133,8 @@ export default function Play() {
                                     }}
                                     onStop={(e, data) => {
                                         setLegalSquares([]);
-                                        movePiece(i, j, data, positions, setPositions, gamePieces, setGamePieces, currentPlayer, setCurrentPlayer, selectedPiece, whitePlayer, blackPlayer);
+                                        movePiece(i, j, data, positions, setPositions, gamePieces, setGamePieces, currentPlayer,
+                                            setCurrentPlayer, selectedPiece, whitePlayer, blackPlayer, game);
                                         setSelectedPiece(null);
                                     }}>
                                     <div key={piece ? piece.type + piece.position.x + piece.position.y : `empty${i}${j}`}
@@ -123,57 +167,6 @@ export default function Play() {
     );
 }
 
-function movePiece(i: number, j: number, data: DraggableData | null, positions: any[], setPositions: React.Dispatch<SetStateAction<any[]>>, gamePieces: ChessPiece[],
-    setGamePieces: React.Dispatch<SetStateAction<ChessPiece[]>>, currentPlayer: ChessPlayer, setCurrentPlayer: React.Dispatch<SetStateAction<ChessPlayer>>,
-    selectedPiece: ChessPiece | null, whitePlayer: ChessPlayer, blackPlayer: ChessPlayer): void {
-
-    if (!selectedPiece || selectedPiece.player !== currentPlayer) {
-        return;
-    }
-
-    const initialX = j * CELL_SIZE;
-    const initialY = i * CELL_SIZE;
-    let xCalc;
-    let yCalc;
-
-    if (data) {
-        xCalc = Math.round((data.x + initialX) / CELL_SIZE);
-        yCalc = 7 - Math.round((data.y + initialY) / CELL_SIZE);
-    } else {
-        xCalc = i;
-        yCalc = j;
-    }
-
-    if (!canMove(selectedPiece, xCalc, yCalc)) {
-        return;
-    }
-
-    const targetPiece = findPiece(gamePieces, xCalc, yCalc);
-
-    if (targetPiece && targetPiece.player !== currentPlayer) {
-        gamePieces = removeGamePiece(gamePieces, targetPiece);
-        setGamePieces([...gamePieces]); // update gamePieces state after removal
-    }
-
-    selectedPiece.move++;
-    selectedPiece.position = { x: xCalc, y: yCalc };
-    setPositions([...positions]);
-
-    whitePlayer.clearPseudoSquares();
-    blackPlayer.clearPseudoSquares();
-
-    fillPseudoMoves(gamePieces);
-
-    const nextPlayer = switchPlayer(currentPlayer, whitePlayer, blackPlayer);
-    setCurrentPlayer(nextPlayer);
-
-    const king = findKing(gamePieces, nextPlayer);
-    nextPlayer.check = false;
-
-    if (king) {
-        lookForChecks(nextPlayer, nextPlayer === whitePlayer ? blackPlayer : whitePlayer, king);
-    }
-}
 
 function canMove(piece: ChessPiece, moveX: number, moveY: number) {
     for (const [x, y] of piece.legalSquares) {
@@ -182,6 +175,82 @@ function canMove(piece: ChessPiece, moveX: number, moveY: number) {
         }
     }
     return false;
+}
+
+function serverMove(originX: number, originY: number, xCalc: number, yCalc: number, positions: any[], setPositions: React.Dispatch<SetStateAction<any[]>>,
+    gamePieces: ChessPiece[], setGamePieces: React.Dispatch<SetStateAction<ChessPiece[]>>, currentPlayer: ChessPlayer,
+    setCurrentPlayer: React.Dispatch<SetStateAction<ChessPlayer>>, whitePlayer: ChessPlayer, blackPlayer: ChessPlayer) {
+
+    const pieceToMove = findPiece(gamePieces, originX, originY);
+    updateGameState(gamePieces, setGamePieces, currentPlayer, setCurrentPlayer, whitePlayer, blackPlayer, positions, setPositions, xCalc, yCalc, pieceToMove);
+}
+
+function movePiece(i: number, j: number, data: DraggableData | null, positions: any[], setPositions: React.Dispatch<SetStateAction<any[]>>, gamePieces: ChessPiece[],
+    setGamePieces: React.Dispatch<SetStateAction<ChessPiece[]>>, currentPlayer: ChessPlayer, setCurrentPlayer: React.Dispatch<SetStateAction<ChessPlayer>>,
+    pieceToMove: ChessPiece | null, whitePlayer: ChessPlayer, blackPlayer: ChessPlayer, game: string | string[] | undefined): void {
+
+    if (!pieceToMove || pieceToMove.player !== currentPlayer) {
+        return;
+    }
+
+    const initialX = j * CELL_SIZE;
+    const initialY = i * CELL_SIZE;
+    let xCalc;
+    let yCalc;
+
+    // if data is null, the move was made automatically (for bot stuff if i ever do that)
+    if (data) {
+        xCalc = Math.round((data.x + initialX) / CELL_SIZE);
+        yCalc = 7 - Math.round((data.y + initialY) / CELL_SIZE);
+    } else {
+        xCalc = i;
+        yCalc = j;
+    }
+
+    // if the move is invalid, return
+    if (!canMove(pieceToMove, xCalc, yCalc)) {
+        return;
+    }
+       
+    if (game) {
+        sendMove(pieceToMove.position.x, pieceToMove.position.y, xCalc, yCalc, socket, game);
+    }
+
+    updateGameState(gamePieces, setGamePieces, currentPlayer, setCurrentPlayer, whitePlayer, blackPlayer, positions, setPositions, xCalc, yCalc, pieceToMove);
+}
+
+function updateGameState(gamePieces: ChessPiece[], setGamePieces: React.Dispatch<SetStateAction<ChessPiece[]>>, currentPlayer: ChessPlayer,
+    setCurrentPlayer: React.Dispatch<SetStateAction<ChessPlayer>>, whitePlayer: ChessPlayer, blackPlayer: ChessPlayer, positions: any[],
+    setPositions: React.Dispatch<SetStateAction<any[]>>, xCalc: number, yCalc: number, pieceToMove: ChessPiece | null) {
+
+    // find piece to move
+    const targetPiece = findPiece(gamePieces, xCalc, yCalc);
+    if (targetPiece && targetPiece.player !== currentPlayer) {
+        gamePieces = removeGamePiece(gamePieces, targetPiece);
+        setGamePieces([...gamePieces]); // update gamePieces state after removal
+    }
+
+    // update piece position and move index
+    if (pieceToMove) {
+        pieceToMove.move++;
+        pieceToMove.position = { x: xCalc, y: yCalc };
+    }
+
+    // update board positions and re-calculate legal squares
+    setPositions([...positions]);
+    whitePlayer.clearPseudoSquares();
+    blackPlayer.clearPseudoSquares();
+    fillPseudoMoves(gamePieces);
+
+    // switch player and look for checks
+    const nextPlayer = switchPlayer(currentPlayer, whitePlayer, blackPlayer);
+    setCurrentPlayer(nextPlayer);
+    const king = findKing(gamePieces, nextPlayer);
+    nextPlayer.check = false;
+
+    if (king) {
+        lookForChecks(nextPlayer, nextPlayer === whitePlayer ? blackPlayer : whitePlayer, king);
+    }
 }
 
 function switchPlayer(currentPlayer: ChessPlayer, whitePlayer: ChessPlayer, blackPlayer: ChessPlayer): ChessPlayer {
