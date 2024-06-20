@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import { findOnlinePlayer, setPlayer } from './serverutils';
+import { findOnlinePlayer, setPlayer, setCurrentPlayer, setState } from './serverutils';
 
 const SocketHandler = (req, res) => {
   if (!res.socket.server.io) {
@@ -32,6 +32,15 @@ const attachEventHandlers = (io, socket) => {
     }
     socket.emit('startGame', role); // emit 'startGame' with the player's role
   })
+
+  socket.on('setState', ( {game, message} ) => {
+    // update game state on server
+    setState(game, message);
+  });
+
+  socket.on('setCurrentPlayer', ({game, nextPlayer}) => {
+    setCurrentPlayer(game, nextPlayer);
+  });
 
   socket.on('sendMove', ({ game, message }, callback) => {
     console.log(`Sending move to game ${game}: ${message}`);

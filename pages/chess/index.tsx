@@ -30,7 +30,9 @@ async function createInstance(multiplayer: boolean, router: NextRouter | string[
 
         const response = await fetch('../api/chess/addgame', {
             method: 'POST',
-            body: JSON.stringify({ id: randomString })
+            body: JSON.stringify({
+                id: randomString
+            })
         });
 
         if (!response.ok) {

@@ -9,12 +9,36 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Game {
   id String @id
   player0 Boolean @default(false)
   player1 Boolean @default(false)
+  player Int @default(0)
+  state Json[] @default([])
+}
+
+model Piece {
+  id String @id
+  skin Int[]
+  moveSets PieceMoveSet[]
+}
+
+model MoveSet {
+  id Int @id @default(autoincrement())
+  moves Int[]
+  pieces PieceMoveSet[]
+}
+
+model PieceMoveSet {
+  pieceId String
+  moveSetId Int
+
+  piece Piece @relation(fields: [pieceId], references: [id])
+  moveSet MoveSet @relation(fields: [moveSetId], references: [id])
+
+  @@id([pieceId, moveSetId])
 }

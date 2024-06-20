@@ -10,7 +10,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     if (game) {
-        res.json({ exists: true });
+        res.json({ state: game.state });
     } else {
         res.json({ exists: false });
     }
