@@ -17,3 +17,19 @@ export async function setPlayer(gameId: string, player: string, modifier: boolea
     });
     return response.ok;
 }
+
+export async function setCurrentPlayer(gameId: string, nextPlayer: number) {
+    const response = await fetch(`${baseUrl}/api/chess/setcurrentplayer`, {
+        method: 'POST',
+        body: JSON.stringify({ id: gameId, player: nextPlayer})
+    });
+    return response.ok;
+}
+
+export async function setState(gameId: string, state: JSON) {
+    const response = await fetch(`${baseUrl}/api/chess/setstate`, {
+        method: 'POST',
+        body: JSON.stringify({ id: gameId, state: state })
+    });
+    return response.ok;
+}

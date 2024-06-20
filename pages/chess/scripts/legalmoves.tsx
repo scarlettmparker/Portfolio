@@ -127,6 +127,9 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
                         }
                     }
                 }
+                if (enemiesFound >= 2 || enemiesFound >= 1 && teamPiecesFound >= 1) {
+                    removeSquare(piece.pseudoSquares, x, y);
+                }
             }
     
             // increment in every direction

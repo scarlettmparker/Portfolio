@@ -6,7 +6,8 @@ import { useRouter } from 'next/router';
 import { ChessPiece } from './scripts/piece';
 import { ChessPlayer } from './scripts/player';
 import { SetStateAction, useEffect, useState } from 'react';
-import { posToNotation, getPieceName, readPieceFile, getPieceFile, findPiece, findKing, findGame, fillPseudoMoves } from './scripts/utils';
+import { posToNotation, getPieceName, readPieceFile, getPieceFile,
+    findPiece, findKing, findGame, findGameState, findCurrentPlayer, fillPseudoMoves } from './scripts/utils';
 import { lookForChecks } from './scripts/legalmoves';
 import { DefaultEventsMap } from '@socket.io/component-emitter';
 
@@ -33,18 +34,18 @@ const iconMappings: { [key: string]: string } = {
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
-async function setupBoard(setGamePieces: any, whitePlayer: ChessPlayer, blackPlayer: ChessPlayer) {
+async function setupBoard(setGamePieces: React.Dispatch<SetStateAction<ChessPiece[]>>, whitePlayer: ChessPlayer, blackPlayer: ChessPlayer) {
     for (let i = 0; i < BOARD_SIZE; i++) {
-        const blackPiece = new ChessPiece(PIECE_TYPES[i], { x: i, y: 7 }, blackPlayer, await readPieceFile(getPieceFile(PIECE_TYPES[i])));
+        const blackPiece = new ChessPiece(PIECE_TYPES[i], { x: i, y: 7 }, blackPlayer, null, await readPieceFile(getPieceFile(PIECE_TYPES[i])));
         blackPlayer.addPiece(blackPiece);
 
-        const blackPawn = new ChessPiece('P', { x: i, y: 6 }, blackPlayer, await readPieceFile(getPieceFile('P')));
-        blackPlayer.pieces.push(blackPawn);
+        const blackPawn = new ChessPiece('P', { x: i, y: 6 }, blackPlayer, null, await readPieceFile(getPieceFile('P')));
+        blackPlayer.addPiece(blackPawn);
 
-        const whitePiece = new ChessPiece(PIECE_TYPES[i], { x: i, y: 0 }, whitePlayer, await readPieceFile(getPieceFile(PIECE_TYPES[i])));
+        const whitePiece = new ChessPiece(PIECE_TYPES[i], { x: i, y: 0 }, whitePlayer, null, await readPieceFile(getPieceFile(PIECE_TYPES[i])));
         whitePlayer.addPiece(whitePiece);
 
-        const whitePawn = new ChessPiece('P', { x: i, y: 1 }, whitePlayer, await readPieceFile(getPieceFile('P')));
+        const whitePawn = new ChessPiece('P', { x: i, y: 1 }, whitePlayer, null, await readPieceFile(getPieceFile('P')));
         whitePlayer.addPiece(whitePawn);
     }
 
@@ -54,14 +55,46 @@ async function setupBoard(setGamePieces: any, whitePlayer: ChessPlayer, blackPla
     fillPseudoMoves(newGamePieces);
 }
 
-const sendMove = (originX: number, originY: number, xCalc: number, yCalc: number, socket: Socket<DefaultEventsMap, DefaultEventsMap>, game: string | string[]) => {
+async function loadBoard(setGamePieces: React.Dispatch<SetStateAction<ChessPiece[]>>, setCurrentPlayer: React.Dispatch<SetStateAction<ChessPlayer>>, whitePlayer: ChessPlayer, blackPlayer: ChessPlayer, game: string) {
+    let loadedGameState = await findGameState(game);
+
+    if (loadedGameState) {
+        // if game hasn't started yet, set up on client side
+        if (loadedGameState.length == 0) {
+            setupBoard(setGamePieces, whitePlayer, blackPlayer);
+            return;
+        }
+        for (let i = 0; i < loadedGameState.length; i++) {
+            // load each piece and store it on client side
+            const piece = loadedGameState[i];
+            const player = piece.player === 0 ? whitePlayer : blackPlayer;
+            const newPiece = new ChessPiece(piece.type, piece.position, player, piece.move, await readPieceFile(getPieceFile(piece.type)));
+            player.addPiece(newPiece);
+        }
+    }
+
+    let currentPlayer = await findCurrentPlayer(game) === 0 ? whitePlayer : blackPlayer;
+    const newGamePieces = [...blackPlayer.pieces, ...whitePlayer.pieces];
+
+    setCurrentPlayer(currentPlayer);
+    setGamePieces(newGamePieces);
+    removeIllegalSquares(whitePlayer, blackPlayer, newGamePieces, currentPlayer, setCurrentPlayer, true);
+}
+
+const sendMove = (originX: number, originY: number, xCalc: number, yCalc: number, socket: Socket<DefaultEventsMap, DefaultEventsMap>,
+        game: string, currentPlayer: number) => {
     const message = {
         originX,
         originY,
         x: xCalc,
         y: yCalc
     };
+
+    // send move and switch the player
     socket.emit('sendMove', { game, message });
+
+    let nextPlayer = currentPlayer === 0 ? 1 : 0;
+    socket.emit('setCurrentPlayer', { game, nextPlayer });
 };
 
 export default function Play() {
@@ -77,7 +110,17 @@ export default function Play() {
     const [onlinePlayer, setOnlinePlayer] = useState<ChessPlayer | null>(null);
 
     const router = useRouter();
-    const { game } = router.query;
+    const { game } = router.query as { game: string };
+
+    const setPlayerFromLocalStorage = (gameId: string | undefined) => {
+        // find player from local storage and set it
+        const localPlayer = localStorage.getItem(gameId + 'player');
+        if (localPlayer === 'player0') {
+            setOnlinePlayer(whitePlayer);
+        } else if (localPlayer === 'player1') {
+            setOnlinePlayer(blackPlayer);
+        }
+    };
 
     useEffect(() => {
         const joinGameAndListen = async () => {
@@ -94,11 +137,16 @@ export default function Play() {
 
             if (socket) {
                 let localPlayer = localStorage.getItem(game + 'player');
-                if (!onlineGame) {
+
+                // ensure they are actually on an online url
+                if (!onlineGame && game && game[0] != "") {
                     socket.emit('joinGame', { game });
+
+                    // set player if not already set
                     if (!localPlayer) {
                         socket.emit('setPlayer', { game });
                     }
+                    loadBoard(setGamePieces, setCurrentPlayer, whitePlayer, blackPlayer, game);
                     setOnlineGame(true);
                 }
 
@@ -115,39 +163,30 @@ export default function Play() {
                         currentPlayer,
                         setCurrentPlayer,
                         whitePlayer,
-                        blackPlayer
+                        blackPlayer,
+                        game
                     );
                 });
 
-                const setPlayerFromLocalStorage = () => {
-                    if (localPlayer === 'player0') {
-                        setOnlinePlayer(whitePlayer);
-                    } else if (localPlayer === 'player1') {
-                        setOnlinePlayer(blackPlayer);
-                    }
-                };
-
-                setPlayerFromLocalStorage();
                 if (!localPlayer) {
+                    // set local storage player so they can rejoin
                     socket.on('startGame', (message) => {
                         localStorage.setItem(game + 'player', message);
-                        setPlayerFromLocalStorage();
+                        setPlayerFromLocalStorage(game);
                     });
+                } else {
+                    setPlayerFromLocalStorage(game);
                 }
             }
         };
 
         joinGameAndListen();
-        return () => {
-            if (socket) {
-                socket.off('receiveMove');
-                socket.off('startGame');
-            }
-        };
-    }, [game, onlineGame, gamePieces, currentPlayer]);
+    }, [game, onlineGame, gamePieces, whitePlayer, blackPlayer, currentPlayer]);
 
     useEffect(() => {
-        setupBoard(setGamePieces, whitePlayer, blackPlayer);
+        if (!game) {
+            setupBoard(setGamePieces, whitePlayer, blackPlayer);
+        }
     }, [whitePlayer, blackPlayer]);
 
     const createBoard = () => (
@@ -171,6 +210,7 @@ export default function Play() {
                                 {piece && (
                                     <Draggable position={positions[column * 8 + row]}
                                         onMouseDown={() => {
+                                            // ensure players can only move their own pieces
                                             if (game && onlinePlayer && currentPlayer == onlinePlayer || !game) {
                                                 setSelectedPiece(piece);
                                                 if (piece && piece.player == currentPlayer) {
@@ -182,8 +222,10 @@ export default function Play() {
                                         onStop={(e, data) => {
                                             if (game && onlinePlayer && currentPlayer == onlinePlayer || !game) {
                                                 setLegalSquares([]);
-                                                const adjustedColumn = effectiveOnlinePlayerColour === 1 && onlineGame ? 7 - column : column;
-                                                const adjustedRow = effectiveOnlinePlayerColour === 1 && onlineGame ? 7 - row : row;
+
+                                                // board is flipped for black player in online games
+                                                const adjustedColumn = effectiveOnlinePlayerColour === 1 && game ? 7 - column : column;
+                                                const adjustedRow = effectiveOnlinePlayerColour === 1 && game ? 7 - row : row;
 
                                                 movePiece(adjustedColumn, adjustedRow, data, positions, setPositions, gamePieces, setGamePieces, currentPlayer,
                                                     setCurrentPlayer, selectedPiece, whitePlayer, blackPlayer, game, effectiveOnlinePlayerColour);
@@ -239,15 +281,15 @@ async function setSocket() {
 
 function serverMove(originX: number, originY: number, xCalc: number, yCalc: number, positions: any[], setPositions: React.Dispatch<SetStateAction<any[]>>,
     gamePieces: ChessPiece[], setGamePieces: React.Dispatch<SetStateAction<ChessPiece[]>>, currentPlayer: ChessPlayer,
-    setCurrentPlayer: React.Dispatch<SetStateAction<ChessPlayer>>, whitePlayer: ChessPlayer, blackPlayer: ChessPlayer) {
+    setCurrentPlayer: React.Dispatch<SetStateAction<ChessPlayer>>, whitePlayer: ChessPlayer, blackPlayer: ChessPlayer, game: string | undefined) {
 
     const pieceToMove = findPiece(gamePieces, originX, originY);
-    updateGameState(gamePieces, setGamePieces, currentPlayer, setCurrentPlayer, whitePlayer, blackPlayer, positions, setPositions, xCalc, yCalc, pieceToMove);
+    updateGameState(gamePieces, setGamePieces, currentPlayer, setCurrentPlayer, whitePlayer, blackPlayer, positions, setPositions, xCalc, yCalc, pieceToMove, game);
 }
 
 function movePiece(i: number, j: number, data: DraggableData | null, positions: any[], setPositions: React.Dispatch<SetStateAction<any[]>>, gamePieces: ChessPiece[],
     setGamePieces: React.Dispatch<SetStateAction<ChessPiece[]>>, currentPlayer: ChessPlayer, setCurrentPlayer: React.Dispatch<SetStateAction<ChessPlayer>>,
-    pieceToMove: ChessPiece | null, whitePlayer: ChessPlayer, blackPlayer: ChessPlayer, game: string | string[] | undefined, onlinePlayerColour: number): void {
+    pieceToMove: ChessPiece | null, whitePlayer: ChessPlayer, blackPlayer: ChessPlayer, game: string | undefined, onlinePlayerColour: number): void {
 
     if (!pieceToMove || pieceToMove.player !== currentPlayer) {
         return;
@@ -260,12 +302,15 @@ function movePiece(i: number, j: number, data: DraggableData | null, positions: 
 
     // if data is null, the move was made automatically (for bot stuff if i ever do that)
     if (data) {
-        if (onlinePlayerColour == 0) {
+        if (game && onlinePlayerColour == 0) {
             xCalc = Math.round((data.x + initialX) / CELL_SIZE);
             yCalc = 7 - Math.round((data.y + initialY) / CELL_SIZE);
-        } else {
+        } else if (game && onlinePlayerColour == 1){
             xCalc = 7 - Math.round((data.x + initialX) / CELL_SIZE);
             yCalc = Math.round((data.y + initialY) / CELL_SIZE);
+        } else {
+            xCalc = Math.round((data.x + initialX) / CELL_SIZE);
+            yCalc = 7 - Math.round((data.y + initialY) / CELL_SIZE);
         }
     } else {
         xCalc = i;
@@ -278,15 +323,17 @@ function movePiece(i: number, j: number, data: DraggableData | null, positions: 
     }
 
     if (game) {
-        sendMove(pieceToMove.position.x, pieceToMove.position.y, xCalc, yCalc, socket, game);
+        sendMove(pieceToMove.position.x, pieceToMove.position.y, xCalc, yCalc, socket, game, currentPlayer.colour);
     }
 
-    updateGameState(gamePieces, setGamePieces, currentPlayer, setCurrentPlayer, whitePlayer, blackPlayer, positions, setPositions, xCalc, yCalc, pieceToMove);
+    // move player data client side
+    updateGameState(gamePieces, setGamePieces, currentPlayer, setCurrentPlayer,
+        whitePlayer, blackPlayer, positions, setPositions, xCalc, yCalc, pieceToMove, game);
 }
 
 function updateGameState(gamePieces: ChessPiece[], setGamePieces: React.Dispatch<SetStateAction<ChessPiece[]>>, currentPlayer: ChessPlayer,
     setCurrentPlayer: React.Dispatch<SetStateAction<ChessPlayer>>, whitePlayer: ChessPlayer, blackPlayer: ChessPlayer, positions: any[],
-    setPositions: React.Dispatch<SetStateAction<any[]>>, xCalc: number, yCalc: number, pieceToMove: ChessPiece | null) {
+    setPositions: React.Dispatch<SetStateAction<any[]>>, xCalc: number, yCalc: number, pieceToMove: ChessPiece | null, game: string | undefined) {
 
     // find piece to move
     const targetPiece = findPiece(gamePieces, xCalc, yCalc);
@@ -303,13 +350,35 @@ function updateGameState(gamePieces: ChessPiece[], setGamePieces: React.Dispatch
 
     // update board positions and re-calculate legal squares
     setPositions([...positions]);
+    removeIllegalSquares(whitePlayer, blackPlayer, gamePieces, currentPlayer, setCurrentPlayer);
+
+    
+    // not all piece data needs to be transfered
+    if (game) {
+        const simplifiedGamePieces = gamePieces.map(piece => ({
+            type: piece.type,
+            position: piece.position,
+            player: piece.player.colour,
+            move: piece.move
+        }));
+        socket.emit('setState', { game, message: JSON.parse(JSON.stringify(simplifiedGamePieces))});
+    }
+}
+
+function removeIllegalSquares(whitePlayer: ChessPlayer, blackPlayer: ChessPlayer, gamePieces: ChessPiece[],
+    currentPlayer: ChessPlayer, setCurrentPlayer: React.Dispatch<SetStateAction<ChessPlayer>>, initialLoad: boolean = false) {
+
+    // clear pseudo legal moves
     whitePlayer.clearPseudoSquares();
     blackPlayer.clearPseudoSquares();
     fillPseudoMoves(gamePieces);
 
     // switch player and look for checks
-    const nextPlayer = switchPlayer(currentPlayer, whitePlayer, blackPlayer);
-    setCurrentPlayer(nextPlayer);
+    let nextPlayer = currentPlayer;
+    if (!initialLoad) {
+        nextPlayer = switchPlayer(currentPlayer, whitePlayer, blackPlayer);
+        setCurrentPlayer(nextPlayer);
+    }
     const king = findKing(gamePieces, nextPlayer);
     nextPlayer.check = false;
 

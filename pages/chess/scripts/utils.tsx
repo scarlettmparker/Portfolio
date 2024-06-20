@@ -2,6 +2,8 @@ import { ChessPiece } from './piece';
 import { ChessPlayer } from './player';
 import { processMoves, generatePseudoMoves } from './legalmoves';
 
+const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
+
 const helper: React.FC = () => {
     return null;
 };
@@ -75,4 +77,24 @@ export async function findGame(gameId: string) {
     });
     const jsonResponse = await response.json();
     return jsonResponse.exists;
+}
+
+// FIND GAME STATE REQUEST
+export async function findGameState(gameId: string) {
+    const response = await fetch(`../api/chess/loadstate`, {
+        method: 'POST',
+        body: JSON.stringify(gameId)
+    });
+    const jsonResponse = await response.json();
+    return jsonResponse.state;
+}
+
+// FIND CURRENT PLAYER REQUEST
+export async function findCurrentPlayer(gameId: string) {
+    const response = await fetch(`../api/chess/loadcurrentplayer`, {
+        method: 'POST',
+        body: JSON.stringify(gameId)
+    });
+    const jsonResponse = await response.json();
+    return jsonResponse.player;
 }
