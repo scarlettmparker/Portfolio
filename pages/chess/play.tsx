@@ -212,7 +212,7 @@ export default function Play() {
                                             //if (game && onlinePlayer && currentPlayer == onlinePlayer || !game) {
                                                 setSelectedPiece(piece);
                                                 //if (piece && piece.player == currentPlayer) {
-                                                    const legalSquares = piece.legalSquares;
+                                                    const legalSquares = piece.pseudoSquares;
                                                     setLegalSquares(legalSquares);
                                                 //}
                                             //}
