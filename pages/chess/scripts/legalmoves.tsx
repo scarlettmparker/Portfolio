@@ -105,10 +105,8 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
                         removeSquare(piece.legalSquares, x, y);
                         if (piece.player.colour == 0) {
                             removeSquare(piece.legalSquares, x, y + 1);
-                            removeSquare(piece.pseudoSquares, x, y + 1);
                         } else {
                             removeSquare(piece.legalSquares, x, y - 1);
-                            removeSquare(piece.pseudoSquares, x, y - 1);
                         }
                     }
                 }
@@ -153,7 +151,7 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
 
     piece.pseudoSquares.forEach(([x, y]) => {
         let checkPiece = findPiece(gamePieces, x, y);
-        if (checkPiece && checkPiece.player == piece.player) {
+        if (checkPiece && checkPiece.player == piece.player && piece.type != "P") {
             piece.player.pseudoSquares[x][y] = 1;
             removeSquare(piece.legalSquares, x, y);
         }

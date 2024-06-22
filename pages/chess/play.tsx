@@ -211,10 +211,10 @@ export default function Play() {
                                             // ensure players can only move their own pieces
                                             if (game && onlinePlayer && currentPlayer == onlinePlayer || !game) {
                                                 setSelectedPiece(piece);
-                                                if (piece && piece.player == currentPlayer) {
-                                                    const legalSquares = piece.legalSquares;
+                                                
+                                                    const legalSquares = piece.pseudoSquares;
                                                     setLegalSquares(legalSquares);
-                                                }
+                                                
                                             }
                                         }}
                                         onStop={(e, data) => {
