@@ -244,7 +244,7 @@ function restrictSquares(player: ChessPlayer, opponent: ChessPlayer, king: Chess
     const checkingSquares = generateLineSquares(checkingPiece, king);
 
     if (checkingSquares == -1) {
-        player.pieces.forEach(piece => {
+        /**player.pieces.forEach(piece => {
             if (piece.type != "K") {
                 const validSquares: number[][] = [];
                 if (piece.legalSquares.some(([x, y]) => x === checkingPiece.position.x && y === checkingPiece.position.y)) {
@@ -253,25 +253,25 @@ function restrictSquares(player: ChessPlayer, opponent: ChessPlayer, king: Chess
                 piece.legalSquares = validSquares;
             }
         });
-        return;
-    }
+        return;*/
+    } else {
+        player.pieces.forEach(piece => {
+            if (piece.type != "K") {
+                const validSquares: number[][] = [];
+                checkingSquares.forEach(([cx, cy]) => {
+                    if (piece.legalSquares.some(([x, y]) => x === cx && y === cy)) {
+                        validSquares.push([cx, cy]);
+                    }
+                });
 
-    player.pieces.forEach(piece => {
-        if (piece.type != "K") {
-            const validSquares: number[][] = [];
-            checkingSquares.forEach(([cx, cy]) => {
-                if (piece.legalSquares.some(([x, y]) => x === cx && y === cy)) {
-                    validSquares.push([cx, cy]);
+                if (piece.legalSquares.some(([x, y]) => x === checkingPiece.position.x && y === checkingPiece.position.y)) {
+                    validSquares.push([checkingPiece.position.x, checkingPiece.position.y]);
                 }
-            });
 
-            if (piece.legalSquares.some(([x, y]) => x === checkingPiece.position.x && y === checkingPiece.position.y)) {
-                validSquares.push([checkingPiece.position.x, checkingPiece.position.y]);
+                piece.legalSquares = validSquares;
             }
-
-            piece.legalSquares = validSquares;
-        }
-    });
+        });
+    }
 }
 
 function findCheckingPiece(opponent: ChessPlayer, king: ChessPiece) {
