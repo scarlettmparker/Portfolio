@@ -139,7 +139,7 @@ export default function Play() {
                 let localPlayer = localStorage.getItem(game + 'player');
 
                 // ensure they are actually on an online url
-                if (!onlineGame && game && game[0] != "") {
+                if (!onlineGame && game && game[0]) {
                     socket.emit('joinGame', { game });
 
                     // set player if not already set
@@ -184,10 +184,8 @@ export default function Play() {
     }, [game, onlineGame, gamePieces, whitePlayer, blackPlayer, currentPlayer]);
 
     useEffect(() => {
-        if (!game) {
-            setupBoard(setGamePieces, whitePlayer, blackPlayer);
-        }
-    }, [whitePlayer, blackPlayer]);
+        //setupBoard(setGamePieces, whitePlayer, blackPlayer);
+    }, [whitePlayer, blackPlayer, onlineGame]);
 
     const createBoard = () => (
         Array(8).fill(0).map((_, j) => {
