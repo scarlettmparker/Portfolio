@@ -244,7 +244,7 @@ function restrictSquares(player: ChessPlayer, opponent: ChessPlayer, king: Chess
     const checkingSquares = generateLineSquares(checkingPiece, king);
 
     if (checkingSquares == -1) {
-        /**player.pieces.forEach(piece => {
+        player.pieces.forEach(piece => {
             if (piece.type != "K") {
                 const validSquares: number[][] = [];
                 if (piece.legalSquares.some(([x, y]) => x === checkingPiece.position.x && y === checkingPiece.position.y)) {
@@ -253,7 +253,6 @@ function restrictSquares(player: ChessPlayer, opponent: ChessPlayer, king: Chess
                 piece.legalSquares = validSquares;
             }
         });
-        return;*/
     } else {
         player.pieces.forEach(piece => {
             if (piece.type != "K") {
@@ -288,7 +287,7 @@ function generateLineSquares(attacker: ChessPiece, king: ChessPiece) {
     const testX = king.position.x - attacker.position.x;
     const testY = king.position.y - attacker.position.y;
 
-    const isDirectionalMove = (testX === 0 || testY === 0 || Math.abs(testX) === Math.abs(testY));
+    const isDirectionalMove = (Math.abs(testX) === Math.abs(testY));
 
     if (!isDirectionalMove) {
         return -1;
