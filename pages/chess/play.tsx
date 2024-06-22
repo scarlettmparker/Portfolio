@@ -209,13 +209,13 @@ export default function Play() {
                                     <Draggable position={positions[column * 8 + row]}
                                         onMouseDown={() => {
                                             // ensure players can only move their own pieces
-                                            if (game && onlinePlayer && currentPlayer == onlinePlayer || !game) {
+                                            //if (game && onlinePlayer && currentPlayer == onlinePlayer || !game) {
                                                 setSelectedPiece(piece);
-                                                
-                                                    const legalSquares = piece.pseudoSquares;
+                                                //if (piece && piece.player == currentPlayer) {
+                                                    const legalSquares = piece.legalSquares;
                                                     setLegalSquares(legalSquares);
-                                                
-                                            }
+                                                //}
+                                            //}
                                         }}
                                         onStop={(e, data) => {
                                             if (game && onlinePlayer && currentPlayer == onlinePlayer || !game) {
