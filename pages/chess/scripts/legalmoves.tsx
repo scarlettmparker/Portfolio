@@ -105,8 +105,10 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
                         removeSquare(piece.legalSquares, x, y);
                         if (piece.player.colour == 0) {
                             removeSquare(piece.legalSquares, x, y + 1);
+                            removeSquare(piece.pseudoSquares, x, y + 1);
                         } else {
                             removeSquare(piece.legalSquares, x, y - 1);
+                            removeSquare(piece.pseudoSquares, x, y - 1);
                         }
                     }
                 }
