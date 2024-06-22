@@ -112,6 +112,10 @@ export function generatePseudoMoves(gamePieces: ChessPiece[], piece: ChessPiece)
                 }
                 if (x == currentX) {
                     removeSquare(piece.pseudoSquares, x, y);
+                    removeSquare(piece.pseudoSquares, x, y - 2);
+                    removeSquare(piece.pseudoSquares, x, y - 1);
+                    removeSquare(piece.pseudoSquares, x, y + 1);
+                    removeSquare(piece.pseudoSquares, x, y + 2);
                 }
             }
 
