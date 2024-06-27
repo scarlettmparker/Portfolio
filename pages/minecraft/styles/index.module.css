@@ -72,7 +72,7 @@
     top: -8.5%;
     width: 15em;
     height: 10em;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
     border-radius: 50%;
     border-width: 3px;
     border-style: solid;
@@ -85,10 +85,10 @@
     top: -15.5%;
     width: 15em;
     height: 4.5em;
-    background-color: rgba(0, 0, 0, 1);
-    border-width: 3px;
+    background-color: rgb(7, 12, 25);
+    border-width: 2px;
     border-style: solid;
-    border-color: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.4);
     z-index: 3;
 }
 
@@ -99,7 +99,7 @@
     background-color: transparent;
     border: none;
     font-size: 1.5rem;
-    color: white;
+    color: rgb(180, 180, 180);
     text-align: center;
     letter-spacing: 0.06em;
     left: -2%;

@@ -11,7 +11,7 @@ export async function getUUID(username: string) {
         body: JSON.stringify(username)
     });
     const jsonResponse = await response.json();
-    return jsonResponse.uuid;
+    return jsonResponse;
 }
 
 // CHECK IF USERNAME -> UUID EXISTS IN DATABASE
@@ -30,6 +30,7 @@ export async function getSkin(uuid: string) {
         method: 'POST',
         body: JSON.stringify(uuid)
     });
+    
     const jsonResponse = await response.json();
     return jsonResponse;
 }
