@@ -1,0 +1,138 @@
+@font-face {
+    font-family: "Reo Sans";
+    src: url('/assets/minecraft/fonts/Reo Sans Light.otf');
+}
+
+.htmlWrapper {
+    width: 100vw;
+    height: auto;
+    padding-top: 5.625em;
+    padding-bottom: 5.625em;
+    background-image: url('/assets/minecraft/images/background.png');
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.titleWrapper {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+    height: fit-content;
+}
+
+.title, .date, .infoText, .readMoreText {
+    font-family: "Reo Sans";
+}
+
+.title, .date {
+    color: #e7e49d;
+}
+
+.title {
+    font-size: 6.75rem;
+    letter-spacing: 0.017em;
+}
+
+.date {
+    align-self: last baseline;
+    font-size: 2.15rem;
+    margin-top: -0.35em;
+}
+
+.playerWrapper {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    top: 35em;
+    right: 25rem;
+    transform: translateY(-50%);
+    height: 25.5em;
+}
+
+.player {
+    position: relative;
+    left: 50%;
+    transform: translateX(-35%);
+    z-index: 3;
+}
+
+.book {
+    position: absolute;
+    z-index: 4;
+    left: 7%;
+    top: 40%;
+}
+
+.stand {
+    position: relative;
+    top: -12.5%;
+    width: 15em;
+    height: 5em;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    border-width: 3px;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.25);
+    z-index: 2;
+}
+
+.expandedInfoWrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    left: 11.25vw;
+    top: 5.625rem;
+    width: 780px;
+}
+
+.infoWrapper {
+    position: relative;
+    width: 780px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.pluginInfoWrapper, .dataInfoWrapper {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 5.625em;
+}
+
+.infoTextWrapper {
+    position: relative;
+    height: 320px;
+    width: 95%;
+}
+
+.readMoreButton {
+    position: absolute;
+    bottom: -8%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgb(28,3,38);
+    background: linear-gradient(0deg, rgba(28,3,38,1) 0%, rgba(27,3,37,1) 100%);
+    padding: 0.625em 3em;
+    width: fit-content;
+    border-radius: 15px;
+    border-width: 3px;
+    border-style: solid;
+    border-color: black;
+}
+
+.infoText {
+    position: absolute;
+    margin-left: 1.5rem;
+    margin-top: 1.2rem;
+}
+
+.infoText, .readMoreText {
+    color: white;
+    font-size: 1.875rem;
+    letter-spacing: 0.05em;
+}
+
+.readMoreText {
+    user-select: none;
+}
