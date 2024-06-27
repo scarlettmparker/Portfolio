@@ -85,6 +85,7 @@
     top: -15.5%;
     width: 15em;
     height: 4.5em;
+    padding-bottom: 0.15em;
     background-color: rgb(7, 12, 25);
     border-width: 2px;
     border-style: solid;
@@ -98,8 +99,8 @@
     height: 100%;
     background-color: transparent;
     border: none;
-    font-size: 1.5rem;
-    color: rgb(180, 180, 180);
+    font-size: 1.35rem;
+    color: rgb(210, 210, 210);
     text-align: center;
     letter-spacing: 0.06em;
     left: -2%;
@@ -159,7 +160,7 @@
 
 .infoText, .readMoreText {
     color: white;
-    font-size: 1.875rem;
+    font-size: 1.55rem;
     letter-spacing: 0.05em;
 }
 

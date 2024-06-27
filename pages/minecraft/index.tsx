@@ -52,7 +52,7 @@ const handleSearchUpdate = (setPlayerSkin: React.Dispatch<React.SetStateAction<P
 
     // set player skin URL and type
     setPlayerSkin({ url: skinUrl, type: skinType });
-}, 1500); // 1.5 second debounce
+}, 500); // half second debounce
 
 // decode base 64 data from skin
 function decodeBase64(data: string) {
@@ -110,14 +110,14 @@ export default function Home() {
                     <div className={styles.expandedInfoWrapper}>
                         <div className={styles.pluginInfoWrapper}>
                             <InfoSection 
-                                infoText="Secret Life was a 6 week long Minecraft event hosted for University of Exeter students 
-                                running once a week with 30 active players per session."
+                                infoText="Secret Life was a 6 week long Minecraft event hosted for University of Exeter students, 
+                                running once a week with 30 active players a session."
                                 buttonText="Read More"
                             />
                         </div>
                         <div className={styles.dataInfoWrapper}>
                             <InfoSection 
-                                infoText="Across the sessions, player data was gathered and these statistics can be found below."
+                                infoText="Across the sessions, player data was gathered and processed. These statistics can be found below."
                                 buttonText="Read More"
                             />
                         </div>
@@ -161,8 +161,8 @@ async function drawSkin(url: string, canvas: HTMLCanvasElement | null) {
                 legRight: { sx: 4, sy: 20, sw: 4, sh: 12, dx: partWidth * 2 - 0.25, dy: partHeight * 5, dw: partWidth, dh: partHeight * 3, mirror: true },
                 headAccessory: { sx: 40, sy: 8, sw: 8, sh: 8, dx: partWidth, dy: 0, dw: partWidth * 2, dh: partHeight * 2, layer: true },
                 bodyAccessory: { sx: 20, sy: 36, sw: 8, sh: 12, dx: partWidth, dy: partHeight * 2, dw: partWidth * 2, dh: partHeight * 3, layer: true },
-                armLeftAccessory: { sx: 44, sy: 36, sw: 4, sh: 12, dx: 0, dy: partHeight * 2, dw: partWidth, dh: partHeight * 3, layer: true },
-                armRightAccessory: { sx: 44, sy: 52, sw: 4, sh: 12, dx: partWidth * 8, dy: partHeight * 2, dw: partWidth, dh: partHeight * 3, mirror: true },
+                armLeftAccessory: { sx: 60, sy: 52, sw: 4, sh: 12, dx: -4, dy: partHeight * 2, dw: partWidth, dh: partHeight * 3},
+                armRightAccessory: { sx: 52, sy: 52, sw: 4, sh: 12, dx: partWidth * 3, dy: partHeight * 2, dw: partWidth, dh: partHeight * 3 },
                 legLeftAccessory: { sx: 4, sy: 36, sw: 4, sh: 12, dx: partWidth - 2, dy: partHeight * 5, dw: partWidth, dh: partHeight * 3, layer: true },
                 legRightAccessory: { sx: 4, sy: 52, sw: 4, sh: 12, dx: partWidth * 2 - 4, dy: partHeight * 5, dw: partWidth, dh: partHeight * 3, layer: true }
             };
@@ -180,7 +180,7 @@ async function drawSkin(url: string, canvas: HTMLCanvasElement | null) {
                     ctx.scale(1.1, 1.1);
                     ctx.translate(-part.dw / 9, -part.dh / 10);
                 }
-                ctx.drawImage(img, part.sx, part.sy, part.sw, part.sh, part.dx, part.dy + 16, part.dw, part.dh);
+                ctx.drawImage(img, part.sx, part.sy, part.sw, part.sh, part.dx + 2, part.dy + 16, part.dw, part.dh);
                 ctx.restore();
             };
 
