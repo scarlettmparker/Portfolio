@@ -23,7 +23,7 @@
     height: fit-content;
 }
 
-.title, .date, .infoText, .readMoreText {
+.title, .date, .infoText, .readMoreText, .searchBox {
     font-family: "Reo Sans";
 }
 
@@ -48,8 +48,9 @@
     flex-direction: column;
     top: 35em;
     right: 25rem;
-    transform: translateY(-50%);
-    height: 25.5em;
+    transform: translateY(-60%);
+    height: 26.5em;
+    max-height: auto;
 }
 
 .player {
@@ -62,21 +63,50 @@
 .book {
     position: absolute;
     z-index: 4;
-    left: 7%;
+    left: 6%;
     top: 40%;
 }
 
 .stand {
     position: relative;
-    top: -12.5%;
+    top: -8.5%;
     width: 15em;
-    height: 5em;
+    height: 10em;
     background-color: rgba(0, 0, 0, 0.5);
     border-radius: 50%;
     border-width: 3px;
     border-style: solid;
     border-color: rgba(255, 255, 255, 0.25);
     z-index: 2;
+}
+
+.searchWrapper {
+    position: relative;
+    top: -15.5%;
+    width: 15em;
+    height: 4.5em;
+    background-color: rgba(0, 0, 0, 1);
+    border-width: 3px;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 0.25);
+    z-index: 3;
+}
+
+.searchBox {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: white;
+    text-align: center;
+    letter-spacing: 0.06em;
+    left: -2%;
+}
+
+.searchBox:focus {
+    outline: none;
 }
 
 .expandedInfoWrapper {
