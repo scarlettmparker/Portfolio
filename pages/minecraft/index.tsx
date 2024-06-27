@@ -11,13 +11,15 @@ interface PlayerSkin {
 }
 
 // debounce function to limit the number of times a function is called
-function debounce(func: { (event: any, setPlayerSkin: any): Promise<void>; apply?: any; }, delay: number) {
+function debounce(func: (event: React.ChangeEvent<HTMLInputElement>) => void, delay: number) {
     let debounceTimer: NodeJS.Timeout;
-    return function(this: any) {
-        const context = this;
-        const args = arguments;
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+    return function(event: React.ChangeEvent<HTMLInputElement>) {
+        if (debounceTimer) {
+            clearTimeout(debounceTimer);
+        }
+        debounceTimer = setTimeout(() => {
+            func(event);
+        }, delay);
     };
 }
 
@@ -34,6 +36,11 @@ const handleSearchUpdate = (setPlayerSkin: React.Dispatch<React.SetStateAction<P
     } else {
         console.log("Player doesn't exist!")
         uuid = await getUUID(username);
+        if (uuid.exists == false) {
+            setPlayerSkin({ url: '/assets/minecraft/images/steve.png', type: 'normal' });
+            return;
+        }
+        uuid = uuid.uuid;
         // add player to database along with uuid
     }
 
@@ -88,11 +95,11 @@ export default function Home() {
                             <canvas ref={canvasRef} width={161} height={323} style={{ imageRendering: 'pixelated' }} />
                         </div>
                         <div className={styles.stand}></div>
-                        <div className={styles.searchWrapper}>
+                        <div className={styles.searchWrapper}>  
                             <input type="text"
                             placeholder="enter username..."
                             className={styles.searchBox}
-                            onChange={(e) => handleSearchUpdate(setPlayerSkin)(e)}
+                            onChange={handleSearchUpdate(setPlayerSkin)}
                             />
                         </div>
                     </div>
