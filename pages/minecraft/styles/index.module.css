@@ -14,6 +14,18 @@
     background-attachment: fixed;
 }
 
+.sceneWrapper {
+    overflow: hidden;
+}
+
+.threeJsWrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    pointer-events: none;
+}
+
 .titleWrapper {
     display: flex;
     flex-direction: column;
@@ -142,8 +154,7 @@
     bottom: -8%;
     left: 50%;
     transform: translateX(-50%);
-    background: rgb(28,3,38);
-    background: linear-gradient(0deg, rgba(28,3,38,1) 0%, rgba(27,3,37,1) 100%);
+    background: linear-gradient(0deg, rgba(12,18,37,1) 0%, rgba(15,23,47,1) 100%);
     padding: 0.625em 3em;
     width: fit-content;
     border-radius: 15px;

@@ -26,14 +26,14 @@ export function createCamera(sizes: { width: any; height: any; }) {
 }
 
 // RENDERER
-export function createRenderer(sizes: { width: any; height: any; }, backgroundColor: string) {
+export function createRenderer(sizes: { width: any; height: any; }, backgroundColor: string, transparent: number = 1) {
     const canvas = document.createElement('canvas');
     const renderer = new THREE.WebGLRenderer({ canvas });
 
     // set the renderer size and pixel ratio
     renderer.setSize(sizes.width, sizes.height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(new THREE.Color(backgroundColor), 1);
+    renderer.setClearColor(new THREE.Color(backgroundColor), transparent);
 
     renderer.state.buffers.stencil.setTest(true);
 
