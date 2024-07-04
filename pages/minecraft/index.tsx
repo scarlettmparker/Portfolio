@@ -21,6 +21,11 @@ interface PlayerSkin {
     type: string;
 }
 
+// splash screen interface
+interface SplashScreenProps {
+    onEnter: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}
+
 // debounce function to limit the number of times a function is called
 function debounce(func: (event: React.ChangeEvent<HTMLInputElement>) => void, delay: number) {
     let debounceTimer: NodeJS.Timeout;
@@ -31,6 +36,19 @@ function debounce(func: (event: React.ChangeEvent<HTMLInputElement>) => void, de
         debounceTimer = setTimeout(() => {
             func(event);
         }, delay);
+    };
+}
+
+// resizing debounce function
+function resizeDebounce(func: (...args: any[]) => void, wait: number | undefined) {
+    let timeout: string | number | NodeJS.Timeout | undefined;
+    return function executedFunction(...args: any[]) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
     };
 }
 
@@ -134,8 +152,9 @@ function fadeAudio() {
             let newVolume = whispers.volume - initialVolume / (fadeOutDuration * 10);
             if (newVolume < 0) {
                 whispers.volume = 0;
+            } else {
+                whispers.volume = newVolume;
             }
-            whispers.volume = newVolume;
         } else {
             // stop the audio and clear the interval
             whispers.volume = 0;
@@ -169,23 +188,40 @@ function playWhispers(attempt = 1) {
     });
 }
 
+// create splash screen so audios can load (user interaction required)
+function SplashScreen({ onEnter }: SplashScreenProps) {
+    return (
+        <div className={styles.splashScreen}>
+            <div className={styles.splashText}>Secret Life</div>
+            <button className={styles.enterButton} onClick={onEnter}>Click to Enter</button>
+        </div>
+    );
+}
+
 // main page component
 export default function Home() {
-    let renderer: THREE.WebGLRenderer, scene;
-    let steve = '/assets/minecraft/images/steve.png';
-
-    scene = new THREE.Scene();
-    const init = async () => {
-        renderScene(renderer, scene);
+    // disable splash screen and show page when needed
+    const [showSplash, setShowSplash] = useState(true);
+    const handleEnter = () => {
+        setShowSplash(false);
     };
 
-    useEffect(() => {
-        init();
-    }, []);
+    let renderer: THREE.WebGLRenderer, scene;
 
     // state for player skin
+    let steve = '/assets/minecraft/images/steve.png';
     const [playerSkin, setPlayerSkin] = useState({ url: steve, type: 'normal' });
+
+    scene = new THREE.Scene();
     const canvasRef = useRef(null);
+
+    // initialise page and draw skin on page load
+    useEffect(() => {
+        if (!showSplash && canvasRef.current) {
+            drawSkin(steve, canvasRef.current);
+            renderScene(renderer, scene);
+        }
+    }, [showSplash]);
 
     useEffect(() => {
         if (playerSkin.url) {
@@ -197,48 +233,51 @@ export default function Home() {
 
     return (
         <>
-            <div className={styles.pageWrapper}>
-                <div className={styles.threeJsWrapper}>
-                    <div id="sceneWrapper" className={styles.sceneWrapper}></div>
+            {showSplash && <SplashScreen onEnter={handleEnter} />}
+            {!showSplash && (
+                <div className={styles.pageWrapper}>
+                    <div className={styles.threeJsWrapper}>
+                        <div id="sceneWrapper" className={styles.sceneWrapper}></div>
+                    </div>
+                    <div className={styles.htmlWrapper}>
+                        <div className={styles.playerWrapper}>
+                            <div className={styles.book} id="book">
+                                <NextImage src="/assets/minecraft/images/book.png" alt="book" width={82} height={82} draggable={false}/>
+                            </div>
+                            <div className={styles.player}>
+                                <canvas ref={canvasRef} width={161} height={323} style={{ imageRendering: 'pixelated' }} />
+                            </div>
+                            <div className={styles.stand}></div>
+                            <div className={styles.searchWrapper}>  
+                                <input type="text"
+                                placeholder="enter username..."
+                                className={styles.searchBox}
+                                onChange={handleSearchUpdate(setPlayerSkin)}
+                                />
+                            </div>
+                        </div>
+                        <div className={styles.titleWrapper}>
+                            <span className={styles.title}>Secret Life</span>
+                            <span className={styles.date}>Tue 4 Jun - Tue 9 Jul</span>
+                        </div>
+                        <div className={styles.expandedInfoWrapper}>
+                            <div className={styles.pluginInfoWrapper}>
+                                <InfoSection 
+                                    infoText="Secret Life was a 6 week long Minecraft event hosted for University of Exeter students, 
+                                    running once a week with 30 active players a session."
+                                    buttonText="Read More"
+                                />
+                            </div>
+                            <div className={styles.dataInfoWrapper}>
+                                <InfoSection 
+                                    infoText="Across the sessions, player data was gathered and processed. These statistics can be found below."
+                                    buttonText="Read More"
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className={styles.htmlWrapper}>
-                    <div className={styles.playerWrapper}>
-                        <div className={styles.book}>
-                            <NextImage src="/assets/minecraft/images/book.png" alt="book" width={82} height={82} draggable={false}/>
-                        </div>
-                        <div className={styles.player}>
-                            <canvas ref={canvasRef} width={161} height={323} style={{ imageRendering: 'pixelated' }} />
-                        </div>
-                        <div className={styles.stand}></div>
-                        <div className={styles.searchWrapper}>  
-                            <input type="text"
-                            placeholder="enter username..."
-                            className={styles.searchBox}
-                            onChange={handleSearchUpdate(setPlayerSkin)}
-                            />
-                        </div>
-                    </div>
-                    <div className={styles.titleWrapper}>
-                        <span className={styles.title}>Secret Life</span>
-                        <span className={styles.date}>Tue 4 Jun - Tue 9 Jul</span>
-                    </div>
-                    <div className={styles.expandedInfoWrapper}>
-                        <div className={styles.pluginInfoWrapper}>
-                            <InfoSection 
-                                infoText="Secret Life was a 6 week long Minecraft event hosted for University of Exeter students, 
-                                running once a week with 30 active players a session."
-                                buttonText="Read More"
-                            />
-                        </div>
-                        <div className={styles.dataInfoWrapper}>
-                            <InfoSection 
-                                infoText="Across the sessions, player data was gathered and processed. These statistics can be found below."
-                                buttonText="Read More"
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
+            )}
         </>
     );
 }
@@ -255,8 +294,11 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
 
     // TEXTURE LOADER
     const loader = new THREE.TextureLoader();
-    const bookMesh = createBookMesh(loader);
+    const playerWrapper = document.getElementById('book') as HTMLElement;
+
+    // CAMERA
     const camera = createCamera(sizes);
+    const bookMesh = createBookMesh(loader, playerWrapper, camera);
 
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
@@ -273,6 +315,7 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
     window.addEventListener('resize', () => updateSizes(camera, renderer, sizes));
 
     // SCENE
+    scene.add(camera);
     scene.add(bookMesh);
 
     // CLOCK
@@ -321,12 +364,30 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
     wrapper?.appendChild(renderer.domElement);
 }
 
+const visibleHeightAtZDepth = ( depth: number, camera: { position: { z: any; }; fov: number; } ) => {
+    // compensate for cameras not positioned at z=0
+    const cameraOffset = camera.position.z;
+    if ( depth < cameraOffset ) depth -= cameraOffset;
+    else depth += cameraOffset;
+  
+    // vertical fov in radians
+    const vFOV = camera.fov * Math.PI / 180; 
+  
+    // Math.abs to ensure the result is always positive
+    return 2 * Math.tan( vFOV / 2 ) * Math.abs( depth );
+  };
+  
+const visibleWidthAtZDepth = ( depth: number, camera: { aspect: number; position: { z: any; }; fov: number; } ) => {
+    const height = visibleHeightAtZDepth( depth, camera );
+    return height * camera.aspect;
+};
+
 // BOOK MESH
-function createBookMesh(loader: THREE.TextureLoader) {
+function createBookMesh(loader: THREE.TextureLoader, container: HTMLElement, camera: THREE.PerspectiveCamera) {
     const bookTexture = loader.load('/assets/minecraft/images/book.png');
     const bookGeometry = new THREE.PlaneGeometry(1, 1, 1, 1);
 
-    // create invisible book for event listening
+    // make book material transparent so effects can be applied later
     const bookMaterial = new THREE.MeshBasicMaterial({
         map: bookTexture,
         transparent: true,
@@ -336,15 +397,23 @@ function createBookMesh(loader: THREE.TextureLoader) {
     const bookMesh = new THREE.Mesh(bookGeometry, bookMaterial);
     bookMesh.scale.set(0.25, 0.25, 0.25);
 
-    // update position based on page width and height
-    function updateMeshPositionsAndScales() {
-        const aspectRatio = window.innerWidth / window.innerHeight;
-        const shiftFactor = (1 - aspectRatio) / (5.4 / 9);
-        bookMesh.position.set(-shiftFactor - 0.5675, -0.125, 0);
+    // update mesh position dynamically
+    function updateMeshPosition() {
+        if (!container) return;
+        const { left, top, width, height } = container.getBoundingClientRect();
+        const x = left + width / 2;
+        const y = top + height / 2;
+
+        // get the true window width and height
+        let windowWidth = visibleWidthAtZDepth(0, camera) / 2;
+        let windowHeight = visibleHeightAtZDepth(0, camera) / 2;
+
+        bookMesh.position.set(windowWidth - 1.95, windowHeight - 1.65, 0);
     }
 
-    updateMeshPositionsAndScales();
-    window.addEventListener('resize', updateMeshPositionsAndScales);
+    // auto update mesh position with a debounce to avoid incorrect resizes
+    updateMeshPosition();
+    window.addEventListener('resize', resizeDebounce(() => updateMeshPosition(), 50));
 
     return bookMesh;
 }
@@ -455,7 +524,8 @@ function detectBlackBackground(ctx: CanvasRenderingContext2D, mainParts: { sx: n
         }
     }
 
-    return 1 - (blackPixels / totalPixels) > 0.8;
+    let ratio = 1 - (blackPixels / totalPixels);
+    return ratio > 0.8 && ratio != 1;
 }
 
 // draw all skin parts
