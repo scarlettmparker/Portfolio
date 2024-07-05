@@ -2,18 +2,19 @@ import NextImage from 'next/image';
 import styles from './styles/index.module.css';
 import { useState, useRef, useEffect } from 'react';
 import { getUUID, checkUUIDExists, getSkin } from "./utils";
+import { manageWhispers, stopWhispers, playBackground } from './musicutils';
+import { drawSkin } from './skinutils';
 import { createCamera, createRenderer } from '../index/SceneUtils';
 import { startAnimationLoop } from '../index/SceneCleanup';
 import * as THREE from 'three';
 import './styles/global.css';
 
 // GLOBAL VARIABLES
-let whispers: HTMLAudioElement;
-let whispersIntervalId: string | number | NodeJS.Timeout | undefined;
-
-if (typeof window !== 'undefined') {
-    whispers = new Audio('/assets/minecraft/sound/the secrets.mp3');
-}
+let enchantmentGraphics: string[] = [];
+let lastResetTimes: number[] = [];
+let currentlyOnBook: boolean = false;
+let mouseParticles: THREE.Group<THREE.Object3DEventMap>;
+let extraMouseParticles: THREE.Group<THREE.Object3DEventMap>;
 
 // interface for player skin data
 interface PlayerSkin {
@@ -24,6 +25,57 @@ interface PlayerSkin {
 // splash screen interface
 interface SplashScreenProps {
     onEnter: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}
+
+// load image for the enchantment graphics
+function splitEnchantmentImage() {
+    let img = new Image();
+    img.src = '/assets/minecraft/images/font-map.png';
+    img.onload = () => {
+        let canvas = document.createElement('canvas');
+        
+        // get image width and height to iterate over
+        canvas.width = img.width;
+        canvas.height = img.height;
+        let ctx = canvas.getContext('2d');
+
+        if (ctx) {
+            // split image into smaller parts
+            ctx.drawImage(img, 0, 0);
+            let width = 110;
+            let height = 120;
+
+            // crop each part of the image
+            let croppedWidth = width - 20;
+            let croppedHeight = height - 20;
+            let i = 0;
+            for (let y = 0; y < img.height; y += height) {
+                for (let x = 0; x < img.width; x += width) {
+                    // only get first 27 entries
+                    if (i > 27) break;
+                    let startX = x + 10;
+                    let startY = y + 10;
+
+                    // ensure cropped area doesn't exceed boundaries
+                    startX = Math.max(0, Math.min(startX, img.width - croppedWidth));
+                    startY = Math.max(0, Math.min(startY, img.height - croppedHeight));
+                    let data = ctx.getImageData(startX, startY, croppedWidth, croppedHeight);
+
+                    // create canvas for each cropped image
+                    let canvas = document.createElement('canvas');
+                    canvas.width = croppedWidth;
+                    canvas.height = croppedHeight;
+                    let ctx2 = canvas.getContext('2d');
+
+                    if (ctx2) {
+                        ctx2.putImageData(data, 0, 0);
+                        enchantmentGraphics.push(canvas.toDataURL());
+                        i++;
+                    }
+                }
+            }
+        }
+    };
 }
 
 // debounce function to limit the number of times a function is called
@@ -100,94 +152,6 @@ const InfoSection = ({ infoText, buttonText }: { infoText: string; buttonText: s
     </div>
 );
 
-// stop the whisper sound effect with a convolver node (reverb effect)
-function stopWhispers() {
-    // create audio context and source
-    const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-    const audioContext = new AudioContext();
-    const whispersSourceUrl = whispers.src;
-    const whispersCurrentTime = whispers.currentTime;
-
-    // create gain node to control volume
-    const gainNode = audioContext.createGain();
-    gainNode.gain.value = 0.1;
-
-    Promise.all([
-        // fetch impulse response for the reverb sound effect
-        fetch('/assets/minecraft/sound/impulse.wav').then(response => response.arrayBuffer()),
-        fetch(whispersSourceUrl).then(response => response.arrayBuffer())
-    ]).then(([impulseBuffer, whispersBuffer]) => {
-        audioContext.decodeAudioData(impulseBuffer, (decodedImpulseData) => {
-            audioContext.decodeAudioData(whispersBuffer, (decodedWhispersData) => {
-                const whispersSource = audioContext.createBufferSource();
-                whispersSource.buffer = decodedWhispersData;
-
-                // create convolver node for impulse response
-                const convolver = audioContext.createConvolver();
-                convolver.buffer = decodedImpulseData;
-
-                // connect nodes to play the audio
-                whispersSource.connect(gainNode);
-                gainNode.connect(convolver);
-                convolver.connect(audioContext.destination);
-                whispersSource.start(audioContext.currentTime, whispersCurrentTime);
-
-                // pause whispers audio
-                fadeAudio();
-                clearInterval(whispersIntervalId);
-
-                whispersSource.stop(audioContext.currentTime + 1);
-            }, (error) => console.error("Error decoding whispers data:", error));
-        }, (error) => console.error("Error decoding impulse data:", error));
-    }).catch(error => console.error("Failed to load files:", error));
-}
-
-// fade out the audio
-function fadeAudio() {
-    const fadeOutDuration = 1; // duration for fade out in seconds
-    const initialVolume = whispers.volume;
-
-    const fadeOut = setInterval(() => {
-        if (whispers.volume > 0.01) {
-            let newVolume = whispers.volume - initialVolume / (fadeOutDuration * 10);
-            if (newVolume < 0) {
-                whispers.volume = 0;
-            } else {
-                whispers.volume = newVolume;
-            }
-        } else {
-            // stop the audio and clear the interval
-            whispers.volume = 0;
-            whispers.pause();
-            whispers.currentTime = 0;
-            clearInterval(fadeOut);
-        }
-    }, 100); // slowly fade audio out
-}
-
-// manage the whisper sound effect
-function manageWhispers() {
-    // lower the volume
-    whispers.volume = 0.2;
-    playWhispers();
-
-    // play whispers every 39 seconds
-    clearInterval(whispersIntervalId);
-    whispersIntervalId = setInterval(() => {
-        playWhispers();
-    }, 39000); 
-}
-
-// play the whispering audio
-function playWhispers(attempt = 1) {
-    whispers.play().catch(error => {
-        console.error("Audio play failed:", error);
-        if (attempt < 5) {
-            setTimeout(() => playWhispers(attempt + 1), 1000); // retry after 1 second
-        }
-    });
-}
-
 // create splash screen so audios can load (user interaction required)
 function SplashScreen({ onEnter }: SplashScreenProps) {
     return (
@@ -220,9 +184,12 @@ export default function Home() {
         if (!showSplash && canvasRef.current) {
             drawSkin(steve, canvasRef.current);
             renderScene(renderer, scene);
+            playBackground();
+            splitEnchantmentImage();
         }
     }, [showSplash]);
 
+    // draw skin when player skin changes
     useEffect(() => {
         if (playerSkin.url) {
             drawSkin(playerSkin.url, canvasRef.current);
@@ -304,6 +271,20 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
     const mouse = new THREE.Vector2();
 
     let mouseOnBook = false;
+    const mousePosition = new THREE.Vector3();
+
+    // handle mouse movement
+    const handleMouseMove: EventListener = (event: Event) => {
+        const mouseEvent = event as MouseEvent;
+        const rect = renderer.domElement.getBoundingClientRect();
+        const mouse = new THREE.Vector2();
+        mouse.x = ((mouseEvent.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((mouseEvent.clientY - rect.top) / rect.height) * 2 + 1;
+        mousePosition.set(mouse.x, mouse.y, 0.8);
+        mousePosition.unproject(camera);
+    };
+    
+    window.addEventListener('mousemove', handleMouseMove);
 
     // EVENT LISTENERS
     function onMouseMove(event: { clientX: number; clientY: number; }) {
@@ -320,20 +301,37 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
 
     // CLOCK
     const clock = new THREE.Clock();
+    let hasRemoved = false;
 
     // ANIMATION LOOP
     const tick = () => {
+        const elapsedTime = clock.getElapsedTime();
         raycaster.setFromCamera(mouse, camera);
 
         // calculate objects intersecting the picking ray
         const intersects = raycaster.intersectObjects(scene.children);
+        currentlyOnBook = false;
 
-        let currentlyOnBook = false;
         for (let i = 0; i < intersects.length; i++) {
             if (intersects[i].object === bookMesh && mouse.x != 0 && mouse.y != 0) {
                 currentlyOnBook = true;
                 // mouse is on the book for first time
                 if (!mouseOnBook) {
+                    // remove mouse particles just in case
+                    scene.remove(mouseParticles);
+                    scene.remove(extraMouseParticles);
+
+                    // create particles around the mouse
+                    mouseParticles = createMouseParticles(mousePosition);
+                    extraMouseParticles = createMouseParticles(mousePosition, 150, false);
+
+                    // add particles to scene
+                    scene.add(mouseParticles);
+                    scene.add(extraMouseParticles);
+                    mouseParticles.name = 'mouseParticles';
+                    extraMouseParticles.name = 'mouseParticles';
+
+                    // play whispers audio
                     manageWhispers();
                     mouseOnBook = true;
                 }
@@ -341,8 +339,13 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
             }
         }
 
+        if (scene.getObjectByName('mouseParticles')) {
+            updateMouseParticles(mouseParticles, mousePosition);
+            updateMouseParticles(extraMouseParticles, mousePosition);
+        }
+
         // mouse just left the book
-        if (!currentlyOnBook && mouseOnBook) { 
+        if (!currentlyOnBook && mouseOnBook) {
             stopWhispers();
             mouseOnBook = false;
         }
@@ -364,6 +367,142 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
     wrapper?.appendChild(renderer.domElement);
 }
 
+// MOUSE PARTICLE MOVEMENT
+function updateMouseParticles(mouseParticles: THREE.Group<THREE.Object3DEventMap>, mousePosition: THREE.Vector2Like) {
+    const currentTime = Date.now();
+    const movementSpeed = 0.0075;
+    const rotationSpeed = 0.02;
+
+    // loop through all the particles
+    mouseParticles.children.forEach((child, index) => {
+        if (child instanceof THREE.Points) {
+            const positionAttr = child.geometry.attributes.position as THREE.BufferAttribute;
+            const initialPositionAttr = child.geometry.attributes.initialPosition as THREE.BufferAttribute;
+
+            // get the position of the particle
+            const particleVec = new THREE.Vector3(
+                positionAttr.getX(0),
+                positionAttr.getY(0),
+                positionAttr.getZ(0)
+            );
+
+            // get the initial position of the particle
+            const initialVec = new THREE.Vector3(
+                initialPositionAttr.getX(0),
+                initialPositionAttr.getY(0),
+                initialPositionAttr.getZ(0)
+            );
+
+            // calculate the direction towards the mouse position
+            const direction = new THREE.Vector2(mousePosition.x - particleVec.x, mousePosition.y - particleVec.y);
+            direction.setLength(movementSpeed);
+
+            particleVec.add(new THREE.Vector3(direction.x, direction.y, 0));
+            const particle2D = new THREE.Vector2(particleVec.x, particleVec.y);
+
+            // if the particle is close to the mouse, reset to random position in radius around mouse for continuous movement
+            if (particle2D.distanceTo(mousePosition) < 0.06 || currentTime - lastResetTimes[index] > 700) {
+                if (currentlyOnBook) {
+                    setParticlePosition(particleVec, mousePosition, currentTime, index);
+                } else {
+                    particleVec.z = 2;
+                }
+            }
+
+            // calculate the angle of rotation and rotate clockwise for even index counterclockwise for odd index
+            const angle = rotationSpeed * (index % 2 === 0 ? 1 : -1); 
+
+            // Translate particle to origin (relative to its initial position), rotate, and translate back
+            const offsetX = particleVec.x - initialVec.x;
+            const offsetY = particleVec.y - initialVec.y;
+            const rotatedX = offsetX * Math.cos(angle) - offsetY * Math.sin(angle);
+            const rotatedY = offsetX * Math.sin(angle) + offsetY * Math.cos(angle);
+
+            particleVec.x = initialVec.x + rotatedX;
+            particleVec.y = initialVec.y + rotatedY;
+
+            // update the position of the particle
+            positionAttr.setXYZ(0, particleVec.x, particleVec.y, particleVec.z);
+            positionAttr.needsUpdate = true;
+        }
+    });
+}
+
+// CREATE MOUSE PARTICLES
+function createMouseParticles(position: THREE.Vector3, particleCount: number = 30, customMaterial: boolean = true): THREE.Group<THREE.Object3DEventMap> {
+    const particles = new THREE.Group<THREE.Object3DEventMap>();
+
+    for (let i = 0; i < particleCount; i++) {
+        // create geometry for the particle
+        const geometry = new THREE.BufferGeometry();
+        const vertices = new Float32Array(3);
+        const initialPositions = new Float32Array(3);
+
+        const angle = Math.random() * 2 * Math.PI;
+        const distance = 0;
+
+        // set initial position of the particle
+        vertices[0] = initialPositions[0] = position.x + distance * Math.cos(angle);
+        vertices[1] = initialPositions[1] = position.y + distance * Math.sin(angle);
+        vertices[2] = initialPositions[2] = position.z;
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+        geometry.setAttribute('initialPosition', new THREE.BufferAttribute(initialPositions, 3));
+
+        // create material for the particle
+        let material: THREE.PointsMaterial;
+        material = customMaterial ? createMouseMaterial(i) : new THREE.PointsMaterial({
+            color: 0xffffff,
+            size: 0.005
+        });
+
+        const particle = new THREE.Points(geometry, material);
+        particles.add(particle);
+    }
+
+    return particles;
+}
+
+// SET PARTICLE POSITION
+function setParticlePosition(particle: THREE.Vector3, mousePosition: THREE.Vector2Like,
+    currentTime: number, i: number, radius = 0.25) {
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.random() * radius + 0.06;
+
+    // set x and y pos based on circle and mouse pos
+    const x = mousePosition.x + Math.cos(angle) * distance;
+    const y = mousePosition.y + Math.sin(angle) * distance;
+
+    // set position & reset timer if a particle is reset
+    particle.set(x, y, 1);
+    lastResetTimes[i] = currentTime;
+}
+
+// CREATE TEXTURE FROM BASE64
+function createTextureFromBase64(base64Image: string): THREE.Texture {
+    const image = new Image();
+    image.src = base64Image;
+    const texture = new THREE.Texture(image);
+    image.onload = () => {
+        texture.needsUpdate = true;
+    };
+    return texture;
+}
+
+// CREATE MOUSE MATERIAL
+function createMouseMaterial(index: number): THREE.PointsMaterial {
+    const selectedImage = enchantmentGraphics[index % enchantmentGraphics.length];
+    const texture = createTextureFromBase64(selectedImage);
+
+    return new THREE.PointsMaterial({
+        map: texture,
+        size: 0.075,
+        transparent: true,
+        depthWrite: false
+    });
+}
+
+// 3D SCENE UTILS
 const visibleHeightAtZDepth = ( depth: number, camera: { position: { z: any; }; fov: number; } ) => {
     // compensate for cameras not positioned at z=0
     const cameraOffset = camera.position.z;
@@ -375,7 +514,7 @@ const visibleHeightAtZDepth = ( depth: number, camera: { position: { z: any; }; 
   
     // Math.abs to ensure the result is always positive
     return 2 * Math.tan( vFOV / 2 ) * Math.abs( depth );
-  };
+};
   
 const visibleWidthAtZDepth = ( depth: number, camera: { aspect: number; position: { z: any; }; fov: number; } ) => {
     const height = visibleHeightAtZDepth( depth, camera );
@@ -408,6 +547,7 @@ function createBookMesh(loader: THREE.TextureLoader, container: HTMLElement, cam
         let windowWidth = visibleWidthAtZDepth(0, camera) / 2;
         let windowHeight = visibleHeightAtZDepth(0, camera) / 2;
 
+        // sets the position relative to top right of scene
         bookMesh.position.set(windowWidth - 1.95, windowHeight - 1.65, 0);
     }
 
@@ -418,6 +558,7 @@ function createBookMesh(loader: THREE.TextureLoader, container: HTMLElement, cam
     return bookMesh;
 }
 
+// UPDATE SIZES
 function updateSizes(camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, sizes: { width: any; height: any; }) {
     sizes.width = window.innerWidth;
     sizes.height = window.innerHeight;
@@ -427,159 +568,4 @@ function updateSizes(camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRende
 
     renderer.setSize(sizes.width, sizes.height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-}
-
-// canvas context for skin drawing
-function initializeCanvasContext(canvas: HTMLCanvasElement | null): CanvasRenderingContext2D | null {
-    return canvas?.getContext('2d') || null;
-}
-
-// load image and handle cross origin request
-async function loadImage(url: string): Promise<HTMLImageElement> {
-    return new Promise((resolve) => {
-        const img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.src = url;
-        img.onload = () => resolve(img);
-    });
-}
-
-// skin map for coordinates of each part
-function getSkinMap(partWidth: number, partHeight: number) {
-    return {
-        head: { sx: 8, sy: 8, sw: 8, sh: 8, dx: partWidth, dy: 0, dw: partWidth * 2, dh: partHeight * 2 },
-        body: { sx: 20, sy: 20, sw: 8, sh: 12, dx: partWidth, dy: partHeight * 2, dw: partWidth * 2, dh: partHeight * 3 },
-        armLeft: { sx: 44, sy: 20, sw: 4, sh: 12, dx: 0, dy: partHeight * 2, dw: partWidth, dh: partHeight * 3 },
-        armRight: { sx: 44, sy: 20, sw: 4, sh: 12, dx: partWidth * 3, dy: partHeight * 2, dw: partWidth, dh: partHeight * 3, mirror: true },
-        legLeft: { sx: 4, sy: 20, sw: 4, sh: 12, dx: partWidth, dy: partHeight * 5, dw: partWidth + 0.25, dh: partHeight * 3 },
-        legRight: { sx: 4, sy: 20, sw: 4, sh: 12, dx: partWidth * 2 - 0.25, dy: partHeight * 5, dw: partWidth, dh: partHeight * 3, mirror: true },
-        headAccessory: { sx: 40, sy: 8, sw: 8, sh: 8, dx: partWidth, dy: 0, dw: partWidth * 2, dh: partHeight * 2, layer: true },
-        bodyAccessory: { sx: 20, sy: 36, sw: 8, sh: 12, dx: partWidth, dy: partHeight * 2, dw: partWidth * 2, dh: partHeight * 3, layer: true },
-        armLeftAccessory: { sx: 60, sy: 52, sw: 4, sh: 12, dx: -4, dy: partHeight * 2, dw: partWidth, dh: partHeight * 3 },
-        armRightAccessory: { sx: 52, sy: 52, sw: 4, sh: 12, dx: partWidth * 3, dy: partHeight * 2, dw: partWidth, dh: partHeight * 3 },
-        legLeftAccessory: { sx: 4, sy: 36, sw: 4, sh: 12, dx: partWidth - 2, dy: partHeight * 5, dw: partWidth, dh: partHeight * 3, layer: true },
-        legRightAccessory: { sx: 4, sy: 52, sw: 4, sh: 12, dx: partWidth * 2 - 4, dy: partHeight * 5, dw: partWidth, dh: partHeight * 3, layer: true }
-    };
-}
-
-
-// draw each individual part
-function drawPart(ctx: CanvasRenderingContext2D, img: HTMLImageElement, part: { sx: number; sy: number; sw: number; sh: number; dx: number; dy: number; dw: number; dh: number; layer?: boolean; mirror?: boolean }) {
-    ctx.save();
-    if (part.mirror) {
-        // flip horizontally
-        ctx.scale(-1, 1);
-        part.dx = -part.dx - part.dw;
-    }
-    if (part.layer) {
-        // scale to give a sense of depth
-        ctx.scale(1.1, 1.1);
-        ctx.translate(-part.dw / 9, -part.dh / 10);
-    }
-    ctx.drawImage(img, part.sx, part.sy, part.sw, part.sh, part.dx + 2, part.dy + 16, part.dw, part.dh);
-    ctx.restore();
-}
-
-// function to check if over x% of the background pixels are black
-function detectBlackBackground(ctx: CanvasRenderingContext2D, mainParts: { sx: number; sy: number; sw: number; sh: number; dx: number; dy: number; dw: number; dh: number; }[], width: number, height: number) {
-    const imageData = ctx.getImageData(0, 0, width, height);
-    const pixels = imageData.data;
-
-    let totalPixels = 0;
-    let blackPixels = 0;
-    let excludedPixels = new Set();
-
-    // pixels covered by main parts get excluded
-    for (const part of mainParts) {
-        const { dx, dy, dw, dh } = part;
-        for (let y = dy; y < dy + dh; y++) {
-            for (let x = dx; x < dx + dw; x++) {
-                excludedPixels.add(y * width + x);
-            }
-        }
-    }
-
-    // only go through pixels in exclusion set
-    for (let pixelIndex = 0; pixelIndex < pixels.length; pixelIndex += 4) {
-        const x = (pixelIndex / 4) % width;
-        const y = Math.floor((pixelIndex / 4) / width);
-
-        // go through each background pixel
-        if (!excludedPixels.has(y * width + x) && y < 64 && x < 64) {
-            const r = pixels[pixelIndex];
-            const g = pixels[pixelIndex + 1];
-            const b = pixels[pixelIndex + 2];
-            const a = pixels[pixelIndex + 3];
-
-            if (r == 0 && g == 0 && b == 0 && a == 0) {
-                continue;
-            }
-
-            totalPixels++;
-
-            // check if pixel is black
-            if (r < 20 && g < 20 && b < 20 && a > 235) {
-                blackPixels++;
-            }
-        }
-    }
-
-    let ratio = 1 - (blackPixels / totalPixels);
-    return ratio > 0.8 && ratio != 1;
-}
-
-// draw all skin parts
-function drawAllParts(ctx: CanvasRenderingContext2D, img: HTMLImageElement, skinMap: { [key: string]: { sx: number; sy: number; sw: number; sh: number; dx: number; dy: number; dw: number; dh: number; layer?: boolean; mirror?: boolean } }, drawAccessories: boolean) {
-    const bodyParts = ['body', 'armLeft', 'armRight', 'legLeft', 'legRight'];
-    const accessoryParts = ['bodyAccessory', 'armLeftAccessory', 'armRightAccessory', 'legLeftAccessory', 'legRightAccessory'];
-
-    bodyParts.forEach(partName => {
-        drawPart(ctx, img, skinMap[partName]);
-    });
-
-    // draw head parts separately so they render on top
-    const headParts = ['head'];
-    if (drawAccessories) {
-        headParts.push('headAccessory');
-        accessoryParts.forEach(partName => {
-            drawPart(ctx, img, skinMap[partName]);
-        });
-    }
-
-    headParts.forEach(partName => {
-        drawPart(ctx, img, skinMap[partName]);
-    });
-}
-
-// main skin drawing function
-async function drawSkin(url: string, canvas: HTMLCanvasElement | null) {
-    const ctx = initializeCanvasContext(canvas);
-    if (!ctx) return;
-
-    const img = await loadImage(url);
-    const width = canvas!.width;
-    const height = canvas!.height;
-
-    ctx.clearRect(0, 0, width, height);
-
-    // makes it so skins remain pixelated
-    ctx.imageSmoothingEnabled = false;
-
-    // dimensions of each part of the player in the final canvas, scaled up
-    const partWidth = width / 4;
-    const partHeight = height / 8;
-    const skinMap = getSkinMap(partWidth, partHeight);
-
-    // draw main parts
-    const mainParts = [
-        skinMap.head, skinMap.body, skinMap.armLeft, skinMap.armRight, skinMap.legLeft, skinMap.legRight
-    ];
-
-    mainParts.forEach(part => {
-        drawPart(ctx, img, part);
-    });
-
-    // draw all parts, conditionally drawing accessories
-    const drawAccessories = !detectBlackBackground(ctx, mainParts, width, height);
-    drawAllParts(ctx, img, skinMap, drawAccessories);
 }
