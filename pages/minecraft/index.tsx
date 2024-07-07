@@ -1,22 +1,27 @@
 import NextImage from 'next/image';
 import styles from './styles/index.module.css';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, MutableRefObject } from 'react';
 import { getUUID, checkUUIDExists, getSkin } from "./utils";
 import { manageWhispers, stopWhispers, playBackground } from './musicutils';
 import { drawSkin } from './skinutils';
 import { createCamera, createRenderer } from '../index/SceneUtils';
 import { startAnimationLoop } from '../index/SceneCleanup';
+import { vertexShader, fragmentShader } from './shaders/bookshader';
 import * as THREE from 'three';
 import './styles/global.css';
 
 // GLOBAL VARIABLES
+let fadeInterrupt = false;
 let enchantmentGraphics: string[] = [];
 let lastResetTimes: number[] = [];
 let currentlyOnBook: boolean = false;
 let mouseParticles: THREE.Group<THREE.Object3DEventMap>;
 let extraMouseParticles: THREE.Group<THREE.Object3DEventMap>;
-let bookX = 0.26, bookY = 0;
-const bookPosition: THREE.Vector3 = new THREE.Vector3();
+let shinyMaterial: THREE.ShaderMaterial;
+let bookPosition: THREE.Vector3 = new THREE.Vector3();
+let tanFOV: number, windowHeight: number;
+let renderer: THREE.WebGLRenderer;
+let bookX = 0.25, bookY = 0;
 
 // interface for player skin data
 interface PlayerSkin {
@@ -172,7 +177,7 @@ export default function Home() {
         setShowSplash(false);
     };
 
-    let renderer: THREE.WebGLRenderer, scene;
+    let scene;
 
     // state for player skin
     let steve = '/assets/minecraft/images/steve.png';
@@ -184,10 +189,7 @@ export default function Home() {
     // initialise page and draw skin on page load
     useEffect(() => {
         if (!showSplash && canvasRef.current) {
-            drawSkin(steve, canvasRef.current);
-            renderScene(renderer, scene);
-            playBackground();
-            splitEnchantmentImage();
+            setupAfterSplash(steve, canvasRef, scene);
         }
     }, [showSplash]);
 
@@ -228,12 +230,12 @@ export default function Home() {
                         </div>
                         <div className={styles.titleWrapper}>
                             <span className={styles.title}>Secret Life</span>
-                            <span className={styles.date}>Tue 4 Jun - Tue 9 Jul</span>
+                            <span className={styles.date}>Tue 4 Jun - Tue 16 Jul</span>
                         </div>
                         <div className={styles.expandedInfoWrapper}>
                             <div className={styles.pluginInfoWrapper}>
                                 <InfoSection
-                                    infoText="Secret Life was a 6 week long Minecraft event hosted for University of Exeter students, 
+                                    infoText="Secret Life was a 7 week long Minecraft event hosted for University of Exeter students, 
                                             running once a week with 30 active players a session."
                                     buttonText="Read More"
                                 />
@@ -253,11 +255,24 @@ export default function Home() {
     );
 }
 
+// setup the page after the splash screen
+function setupAfterSplash(steve: string, canvasRef: MutableRefObject<null>, scene: THREE.Scene) {
+    drawSkin(steve, canvasRef.current);
+    renderScene(renderer, scene);
+    playBackground();
+    splitEnchantmentImage();
+
+    // fake resize event dispatch because spaghetti code
+    let resizeEvent = new Event('resize');
+    window.dispatchEvent(resizeEvent);
+}
+
+// RENDER SCENE
 function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
     // WINDOW SIZES
     const sizes = {
         width: window.innerWidth,
-        height: window.innerHeight,
+        height: 950,
     };
 
     // RENDERER
@@ -265,12 +280,11 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
 
     // TEXTURE LOADER
     const loader = new THREE.TextureLoader();
-    const playerWrapper = document.getElementById('book') as HTMLElement;
 
     // CAMERA
     const camera = createCamera(sizes);
-    const bookMesh = createBookMesh(loader, playerWrapper, camera);
-    const shinyBook = createShinyBookMesh(loader, playerWrapper, camera);
+    const bookMesh = createBookMesh(loader, camera);
+    const shinyBook = createShinyBookMesh(loader, camera);
 
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
@@ -299,26 +313,22 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
 
     window.addEventListener('mousemove', onMouseMove, false);
 
-    let windowHeight = window.innerHeight;
-    let tanFOV = Math.tan( ( ( Math.PI / 180 ) * camera.fov / 2 ) );
+    windowHeight = 950;
+    tanFOV = Math.tan( ( ( Math.PI / 180 ) * camera.fov / 2 ) );
     window.addEventListener('resize', () => updateSizes(camera, renderer, tanFOV, windowHeight));
 
     // SCENE
     scene.add(camera);
     scene.add(bookMesh);
 
-    // CLOCK
-    const clock = new THREE.Clock();
-    let hasRemoved = false;
-
     // ANIMATION LOOP
     const tick = () => {
-        const elapsedTime = clock.getElapsedTime();
         raycaster.setFromCamera(mouse, camera);
 
         // calculate objects intersecting the picking ray
         const intersects = raycaster.intersectObjects(scene.children);
         currentlyOnBook = false;
+        fadeInterrupt = false;
 
         for (let i = 0; i < intersects.length; i++) {
             if (intersects[i].object === bookMesh && mouse.x != 0 && mouse.y != 0) {
@@ -333,6 +343,9 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
                     // create particles around the mouse
                     mouseParticles = createMouseParticles(mousePosition);
                     extraMouseParticles = createMouseParticles(mousePosition, 150, false);
+
+                    fadeInterrupt = true;
+                    shinyMaterial.uniforms.opacity.value = 1.0;
 
                     // add particles to scene
                     scene.add(mouseParticles);
@@ -350,6 +363,7 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
             }
         }
 
+        // update mouse particles depending on mouse position
         if (scene.getObjectByName('mouseParticles') && mousePosition.x != 0 && mousePosition.y != 0 && currentlyOnBook) {
             updateMouseParticles(mouseParticles, bookPosition);
             updateMouseParticles(extraMouseParticles, bookPosition);
@@ -362,11 +376,18 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
         if (!currentlyOnBook && mouseOnBook) {
             stopWhispers();
             mouseOnBook = false;
-            scene.remove(shinyBook);
+            if (shinyMaterial.uniforms.opacity.value == 1) {
+                fadeOutObject(scene, shinyBook, 2000);
+            }
+
         }
 
         renderer.clearStencil();
         renderer.render(scene, camera);
+
+        // animate the enchantment effect
+        const time = performance.now() * 0.001;
+        shinyBook.material.uniforms.time.value = time;
 
         startAnimationLoop(tick);
     };
@@ -380,6 +401,36 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
     }
 
     wrapper?.appendChild(renderer.domElement);
+}
+
+        
+// FADE OUT AN OBJECT
+function fadeOutObject(scene: THREE.Scene, object: THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial, THREE.Object3DEventMap>, duration: number) {
+    // set up fade out animation
+    var startOpacity = 1.0;
+    var targetOpacity = 0.0;
+    var startTime = performance.now();
+
+    function animate() {
+        var currentTime = performance.now();
+        var deltaTime = currentTime - startTime;
+        var progress = deltaTime / duration;
+
+        // update opacity uniform for fade out
+        shinyMaterial.uniforms.opacity.value = startOpacity * (1 - progress) + targetOpacity * progress;
+        if (progress < 1) {
+            if (!fadeInterrupt) {
+                requestAnimationFrame(animate);
+            } else {
+                // user has hovered over the book again
+                shinyMaterial.uniforms.opacity.value = 1.0;
+            }
+        } else {
+            scene.remove(object);
+        }
+    }
+        
+    animate();
 }
 
 // MOUSE PARTICLE MOVEMENT
@@ -518,7 +569,7 @@ function createMouseMaterial(index: number): THREE.PointsMaterial {
 }
 
 // BOOK MESH
-function createBookMesh(loader: THREE.TextureLoader, container: HTMLElement, camera: THREE.PerspectiveCamera) {
+function createBookMesh(loader: THREE.TextureLoader, camera: THREE.PerspectiveCamera) {
     const bookTexture = loader.load('/assets/minecraft/images/book.png');
     const bookGeometry = new THREE.PlaneGeometry(1, 1, 1, 1);
 
@@ -526,35 +577,40 @@ function createBookMesh(loader: THREE.TextureLoader, container: HTMLElement, cam
     const bookMaterial = new THREE.MeshBasicMaterial({
         map: bookTexture,
         transparent: true,
-        opacity: 0
+        opacity: 0.0
     });
 
     const bookMesh = new THREE.Mesh(bookGeometry, bookMaterial);
 
     // auto update mesh position with a debounce to avoid incorrect resizes
-    updateMeshPosition(container, camera, bookMesh, bookX, bookY);
-    window.addEventListener('resize', resizeDebounce(() => updateMeshPosition(container, camera, bookMesh, bookX, bookY), 50));
+    updateMeshPosition(camera, bookMesh, bookX, bookY);
+    window.addEventListener('resize', resizeDebounce(() => updateMeshPosition(camera, bookMesh, bookX, bookY), 50));
 
     return bookMesh;
 }
 
 // SHINY BOOK MESH
-function createShinyBookMesh(loader: THREE.TextureLoader, container: HTMLElement, camera: THREE.PerspectiveCamera) {
+function createShinyBookMesh(loader: THREE.TextureLoader, camera: THREE.PerspectiveCamera) {
     const bookTexture = loader.load('/assets/minecraft/images/book.png');
-    const bookGeometry = new THREE.PlaneGeometry(1, 1, 1, 1);
+    const bookGeometry = new THREE.PlaneGeometry(1, 1);
 
-    // make book material transparent so effects can be applied later
-    const bookMaterial = new THREE.MeshBasicMaterial({
-        map: bookTexture,
+    // enchantment effect
+    shinyMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+            baseTexture: { value: bookTexture },
+            time: { value: 0.0 },
+            opacity: { value: 1.0 }
+        },
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
         transparent: true,
-        opacity: 0.5
     });
 
-    const bookMesh = new THREE.Mesh(bookGeometry, bookMaterial);
+    shinyMaterial.needsUpdate = true;
 
-    // auto update mesh position with a debounce to avoid incorrect resizes
-    updateMeshPosition(container, camera, bookMesh, bookX, bookY);
-    window.addEventListener('resize', resizeDebounce(() => updateMeshPosition(container, camera, bookMesh, bookX, bookY), 50));
+    const bookMesh = new THREE.Mesh(bookGeometry, shinyMaterial);
+    updateMeshPosition(camera, bookMesh, bookX, bookY);
+    window.addEventListener('resize', resizeDebounce(() => updateMeshPosition(camera, bookMesh, bookX, bookY), 50));
 
     return bookMesh;
 }
@@ -578,9 +634,8 @@ const visibleWidthAtZDepth = ( depth: number, camera: { aspect: number; position
 };
 
 // DYNAMIC POSITION UPDATING
-function updateMeshPosition(container: HTMLElement, camera: THREE.PerspectiveCamera, mesh: THREE.Mesh, offsetX: number, offsetY: number) {
-    if (!container) return;
-
+function updateMeshPosition(camera: THREE.PerspectiveCamera, mesh: THREE.Mesh, offsetX: number, offsetY: number) {
+    // get window width and height in 3d space
     let windowWidth = visibleWidthAtZDepth(0, camera) / 4.45;
     let windowHeight = visibleHeightAtZDepth(0, camera) / 23;
 
@@ -589,7 +644,9 @@ function updateMeshPosition(container: HTMLElement, camera: THREE.PerspectiveCam
 
     let scale = 0.25;
 
+    // starting at fixed 950px to avoid scaling and positioning issues
     mesh.position.set(bookPosX, bookPosY, 0)
+
     mesh.scale.set(scale, scale, scale);
     bookPosition.set(mesh.position.x / 2, mesh.position.y / 2,1);
 }

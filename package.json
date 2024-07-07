@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.15.1",
+    "@tweenjs/tween.js": "^23.1.2",
     "d3-color": "^3.1.0",
     "d3-interpolate": "^3.0.1",
     "dat-gui": "^0.5.0",
