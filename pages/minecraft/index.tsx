@@ -15,6 +15,8 @@ let lastResetTimes: number[] = [];
 let currentlyOnBook: boolean = false;
 let mouseParticles: THREE.Group<THREE.Object3DEventMap>;
 let extraMouseParticles: THREE.Group<THREE.Object3DEventMap>;
+let bookX = 0.26, bookY = 0;
+const bookPosition: THREE.Vector3 = new THREE.Vector3();
 
 // interface for player skin data
 interface PlayerSkin {
@@ -33,7 +35,7 @@ function splitEnchantmentImage() {
     img.src = '/assets/minecraft/images/font-map.png';
     img.onload = () => {
         let canvas = document.createElement('canvas');
-        
+
         // get image width and height to iterate over
         canvas.width = img.width;
         canvas.height = img.height;
@@ -81,7 +83,7 @@ function splitEnchantmentImage() {
 // debounce function to limit the number of times a function is called
 function debounce(func: (event: React.ChangeEvent<HTMLInputElement>) => void, delay: number) {
     let debounceTimer: NodeJS.Timeout;
-    return function(event: React.ChangeEvent<HTMLInputElement>) {
+    return function (event: React.ChangeEvent<HTMLInputElement>) {
         if (debounceTimer) {
             clearTimeout(debounceTimer);
         }
@@ -105,7 +107,7 @@ function resizeDebounce(func: (...args: any[]) => void, wait: number | undefined
 }
 
 // function to handle the search input, used to update skin display
-const handleSearchUpdate = (setPlayerSkin: React.Dispatch<React.SetStateAction<PlayerSkin>>) => debounce(async function(event: React.ChangeEvent<HTMLInputElement>) {
+const handleSearchUpdate = (setPlayerSkin: React.Dispatch<React.SetStateAction<PlayerSkin>>) => debounce(async function (event: React.ChangeEvent<HTMLInputElement>) {
     let username = event.target.value;
     let check = await checkUUIDExists(username);
     let uuid;
@@ -202,24 +204,25 @@ export default function Home() {
         <>
             {showSplash && <SplashScreen onEnter={handleEnter} />}
             {!showSplash && (
-                <div className={styles.pageWrapper}>
-                    <div className={styles.threeJsWrapper}>
-                        <div id="sceneWrapper" className={styles.sceneWrapper}></div>
-                    </div>
+                <>
+                <div className={styles.threeJsWrapper}>
+                    <div id="sceneWrapper" className={styles.sceneWrapper}></div>
+                </div>
+                <div className={styles.zoomContainer}>
                     <div className={styles.htmlWrapper}>
                         <div className={styles.playerWrapper}>
                             <div className={styles.book} id="book">
-                                <NextImage src="/assets/minecraft/images/book.png" alt="book" width={82} height={82} draggable={false}/>
+                                <NextImage src="/assets/minecraft/images/book.png" alt="book" width={82} height={82} draggable={false} />
                             </div>
                             <div className={styles.player}>
                                 <canvas ref={canvasRef} width={161} height={323} style={{ imageRendering: 'pixelated' }} />
                             </div>
                             <div className={styles.stand}></div>
-                            <div className={styles.searchWrapper}>  
+                            <div className={styles.searchWrapper}>
                                 <input type="text"
-                                placeholder="enter username..."
-                                className={styles.searchBox}
-                                onChange={handleSearchUpdate(setPlayerSkin)}
+                                    placeholder="enter username..."
+                                    className={styles.searchBox}
+                                    onChange={handleSearchUpdate(setPlayerSkin)}
                                 />
                             </div>
                         </div>
@@ -229,14 +232,14 @@ export default function Home() {
                         </div>
                         <div className={styles.expandedInfoWrapper}>
                             <div className={styles.pluginInfoWrapper}>
-                                <InfoSection 
+                                <InfoSection
                                     infoText="Secret Life was a 6 week long Minecraft event hosted for University of Exeter students, 
-                                    running once a week with 30 active players a session."
+                                            running once a week with 30 active players a session."
                                     buttonText="Read More"
                                 />
                             </div>
                             <div className={styles.dataInfoWrapper}>
-                                <InfoSection 
+                                <InfoSection
                                     infoText="Across the sessions, player data was gathered and processed. These statistics can be found below."
                                     buttonText="Read More"
                                 />
@@ -244,6 +247,7 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
+                </>
             )}
         </>
     );
@@ -266,6 +270,7 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
     // CAMERA
     const camera = createCamera(sizes);
     const bookMesh = createBookMesh(loader, playerWrapper, camera);
+    const shinyBook = createShinyBookMesh(loader, playerWrapper, camera);
 
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
@@ -293,7 +298,10 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
     }
 
     window.addEventListener('mousemove', onMouseMove, false);
-    window.addEventListener('resize', () => updateSizes(camera, renderer, sizes));
+
+    let windowHeight = window.innerHeight;
+    let tanFOV = Math.tan( ( ( Math.PI / 180 ) * camera.fov / 2 ) );
+    window.addEventListener('resize', () => updateSizes(camera, renderer, tanFOV, windowHeight));
 
     // SCENE
     scene.add(camera);
@@ -320,6 +328,7 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
                     // remove mouse particles just in case
                     scene.remove(mouseParticles);
                     scene.remove(extraMouseParticles);
+                    scene.remove(shinyBook);
 
                     // create particles around the mouse
                     mouseParticles = createMouseParticles(mousePosition);
@@ -328,6 +337,8 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
                     // add particles to scene
                     scene.add(mouseParticles);
                     scene.add(extraMouseParticles);
+                    scene.add(shinyBook);
+
                     mouseParticles.name = 'mouseParticles';
                     extraMouseParticles.name = 'mouseParticles';
 
@@ -339,7 +350,10 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
             }
         }
 
-        if (scene.getObjectByName('mouseParticles')) {
+        if (scene.getObjectByName('mouseParticles') && mousePosition.x != 0 && mousePosition.y != 0 && currentlyOnBook) {
+            updateMouseParticles(mouseParticles, bookPosition);
+            updateMouseParticles(extraMouseParticles, bookPosition);
+        } else if (!currentlyOnBook && scene.getObjectByName('mouseParticles')) {
             updateMouseParticles(mouseParticles, mousePosition);
             updateMouseParticles(extraMouseParticles, mousePosition);
         }
@@ -348,6 +362,7 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
         if (!currentlyOnBook && mouseOnBook) {
             stopWhispers();
             mouseOnBook = false;
+            scene.remove(shinyBook);
         }
 
         renderer.clearStencil();
@@ -410,7 +425,7 @@ function updateMouseParticles(mouseParticles: THREE.Group<THREE.Object3DEventMap
             }
 
             // calculate the angle of rotation and rotate clockwise for even index counterclockwise for odd index
-            const angle = rotationSpeed * (index % 2 === 0 ? 1 : -1); 
+            const angle = rotationSpeed * (index % 2 === 0 ? 1 : -1);
 
             // Translate particle to origin (relative to its initial position), rotate, and translate back
             const offsetX = particleVec.x - initialVec.x;
@@ -502,7 +517,48 @@ function createMouseMaterial(index: number): THREE.PointsMaterial {
     });
 }
 
-// 3D SCENE UTILS
+// BOOK MESH
+function createBookMesh(loader: THREE.TextureLoader, container: HTMLElement, camera: THREE.PerspectiveCamera) {
+    const bookTexture = loader.load('/assets/minecraft/images/book.png');
+    const bookGeometry = new THREE.PlaneGeometry(1, 1, 1, 1);
+
+    // make book material transparent so effects can be applied later
+    const bookMaterial = new THREE.MeshBasicMaterial({
+        map: bookTexture,
+        transparent: true,
+        opacity: 0
+    });
+
+    const bookMesh = new THREE.Mesh(bookGeometry, bookMaterial);
+
+    // auto update mesh position with a debounce to avoid incorrect resizes
+    updateMeshPosition(container, camera, bookMesh, bookX, bookY);
+    window.addEventListener('resize', resizeDebounce(() => updateMeshPosition(container, camera, bookMesh, bookX, bookY), 50));
+
+    return bookMesh;
+}
+
+// SHINY BOOK MESH
+function createShinyBookMesh(loader: THREE.TextureLoader, container: HTMLElement, camera: THREE.PerspectiveCamera) {
+    const bookTexture = loader.load('/assets/minecraft/images/book.png');
+    const bookGeometry = new THREE.PlaneGeometry(1, 1, 1, 1);
+
+    // make book material transparent so effects can be applied later
+    const bookMaterial = new THREE.MeshBasicMaterial({
+        map: bookTexture,
+        transparent: true,
+        opacity: 0.5
+    });
+
+    const bookMesh = new THREE.Mesh(bookGeometry, bookMaterial);
+
+    // auto update mesh position with a debounce to avoid incorrect resizes
+    updateMeshPosition(container, camera, bookMesh, bookX, bookY);
+    window.addEventListener('resize', resizeDebounce(() => updateMeshPosition(container, camera, bookMesh, bookX, bookY), 50));
+
+    return bookMesh;
+}
+
 const visibleHeightAtZDepth = ( depth: number, camera: { position: { z: any; }; fov: number; } ) => {
     // compensate for cameras not positioned at z=0
     const cameraOffset = camera.position.z;
@@ -521,51 +577,29 @@ const visibleWidthAtZDepth = ( depth: number, camera: { aspect: number; position
     return height * camera.aspect;
 };
 
-// BOOK MESH
-function createBookMesh(loader: THREE.TextureLoader, container: HTMLElement, camera: THREE.PerspectiveCamera) {
-    const bookTexture = loader.load('/assets/minecraft/images/book.png');
-    const bookGeometry = new THREE.PlaneGeometry(1, 1, 1, 1);
+// DYNAMIC POSITION UPDATING
+function updateMeshPosition(container: HTMLElement, camera: THREE.PerspectiveCamera, mesh: THREE.Mesh, offsetX: number, offsetY: number) {
+    if (!container) return;
 
-    // make book material transparent so effects can be applied later
-    const bookMaterial = new THREE.MeshBasicMaterial({
-        map: bookTexture,
-        transparent: true,
-        opacity: 0
-    });
+    let windowWidth = visibleWidthAtZDepth(0, camera) / 4.45;
+    let windowHeight = visibleHeightAtZDepth(0, camera) / 23;
 
-    const bookMesh = new THREE.Mesh(bookGeometry, bookMaterial);
-    bookMesh.scale.set(0.25, 0.25, 0.25);
+    let bookPosX = windowWidth - offsetX;
+    let bookPosY = -(windowHeight - offsetY);
 
-    // update mesh position dynamically
-    function updateMeshPosition() {
-        if (!container) return;
-        const { left, top, width, height } = container.getBoundingClientRect();
-        const x = left + width / 2;
-        const y = top + height / 2;
+    let scale = 0.25;
 
-        // get the true window width and height
-        let windowWidth = visibleWidthAtZDepth(0, camera) / 2;
-        let windowHeight = visibleHeightAtZDepth(0, camera) / 2;
-
-        // sets the position relative to top right of scene
-        bookMesh.position.set(windowWidth - 1.95, windowHeight - 1.65, 0);
-    }
-
-    // auto update mesh position with a debounce to avoid incorrect resizes
-    updateMeshPosition();
-    window.addEventListener('resize', resizeDebounce(() => updateMeshPosition(), 50));
-
-    return bookMesh;
+    mesh.position.set(bookPosX, bookPosY, 0)
+    mesh.scale.set(scale, scale, scale);
+    bookPosition.set(mesh.position.x / 2, mesh.position.y / 2,1);
 }
 
 // UPDATE SIZES
-function updateSizes(camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, sizes: { width: any; height: any; }) {
-    sizes.width = window.innerWidth;
-    sizes.height = window.innerHeight;
-
-    camera.aspect = sizes.width / sizes.height;
+function updateSizes(camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, tanFOV: number, windowHeight: number) {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.fov = (360 / Math.PI) * Math.atan(tanFOV * (window.innerHeight / windowHeight));
     camera.updateProjectionMatrix();
 
-    renderer.setSize(sizes.width, sizes.height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
 }
