@@ -486,45 +486,51 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
         raycaster.setFromCamera(mouse, camera);
 
         // calculate objects intersecting the picking ray
-        const intersects = raycaster.intersectObjects(scene.children);
+        let intersects;
+        if (mouse.x == 0 && mouse.y == 0) {
+            intersects = raycaster.intersectObjects(scene.children);
+        }
+        
         const hdImageWrapper = document.getElementById('hdImageWrapper') as HTMLElement;
         currentlyOnBook = false;
         fadeInterrupt = false;
 
-        for (let i = 0; i < intersects.length; i++) {
-            if (intersects[i].object === bookMesh && mouse.x != 0 && mouse.y != 0) {
-                // ensure effects don't happen while images are full screened
-                if (hdImageWrapper && hdImageWrapper.style.display == 'block') {
+        if (intersects) {
+            for (let i = 0; i < intersects.length; i++) {
+                if (intersects[i].object === bookMesh && mouse.x && mouse.y ) {
+                    // ensure effects don't happen while images are full screened
+                    if (hdImageWrapper && hdImageWrapper.style.display == 'block') {
+                        break;
+                    }
+                    currentlyOnBook = true;
+                    // mouse is on the book for first time
+                    if (!mouseOnBook) {
+                        // remove mouse particles just in case
+                        scene.remove(mouseParticles);
+                        scene.remove(extraMouseParticles);
+                        scene.remove(shinyBook);
+
+                        // create particles around the mouse
+                        mouseParticles = createMouseParticles(mousePosition);
+                        extraMouseParticles = createMouseParticles(mousePosition, 150, false);
+
+                        fadeInterrupt = true;
+                        shinyMaterial.uniforms.opacity.value = 1.0;
+
+                        // add particles to scene
+                        scene.add(mouseParticles);
+                        scene.add(extraMouseParticles);
+                        scene.add(shinyBook);
+
+                        mouseParticles.name = 'mouseParticles';
+                        extraMouseParticles.name = 'mouseParticles';
+
+                        // play whispers audio   
+                        manageWhispers();
+                        mouseOnBook = true;
+                    }
                     break;
                 }
-                currentlyOnBook = true;
-                // mouse is on the book for first time
-                if (!mouseOnBook) {
-                    // remove mouse particles just in case
-                    scene.remove(mouseParticles);
-                    scene.remove(extraMouseParticles);
-                    scene.remove(shinyBook);
-
-                    // create particles around the mouse
-                    mouseParticles = createMouseParticles(mousePosition);
-                    extraMouseParticles = createMouseParticles(mousePosition, 150, false);
-
-                    fadeInterrupt = true;
-                    shinyMaterial.uniforms.opacity.value = 1.0;
-
-                    // add particles to scene
-                    scene.add(mouseParticles);
-                    scene.add(extraMouseParticles);
-                    scene.add(shinyBook);
-
-                    mouseParticles.name = 'mouseParticles';
-                    extraMouseParticles.name = 'mouseParticles';
-
-                    // play whispers audio   
-                    manageWhispers();
-                    mouseOnBook = true;
-                }
-                break;
             }
         }
 
