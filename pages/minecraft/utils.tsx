@@ -34,3 +34,10 @@ export async function getSkin(uuid: string) {
     const jsonResponse = await response.json();
     return jsonResponse;
 }
+
+// GET NUMBER OF IMAGES IN GALLERY
+export async function getGalleryCount() {
+    const response = await fetch(`../api/minecraft/getgallerycount`);
+    const jsonResponse = await response.json();
+    return jsonResponse.pngCount;
+}

@@ -1,8 +1,8 @@
-import NextImage from 'next/image';
 import styles from './styles/index.module.css';
 import infostyles from './styles/info.module.css';
+import ReactDOM from 'react-dom';
 import { useState, useRef, useEffect, MutableRefObject } from 'react';
-import { getUUID, checkUUIDExists, getSkin } from "./utils";
+import { getUUID, checkUUIDExists, getSkin, getGalleryCount } from "./utils";
 import { manageWhispers, stopWhispers, playBackground } from './musicutils';
 import { drawSkin } from './skinutils';
 import { createCamera, createRenderer } from '../index/SceneUtils';
@@ -150,19 +150,40 @@ function decodeBase64(data: string) {
     return JSON.parse(Buffer.from(data, 'base64').toString('utf-8'));
 }
 
+// for multiple image sizes
+interface NextImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+    srcSet?: string;
+    sizes?: string;
+}
+
+const NextImage: React.FC<NextImageProps> = ({ src, alt, width, height, srcSet, sizes, ...rest }) => {
+    return <img src={src} alt={alt} width={width} height={height} srcSet={srcSet} sizes={sizes} {...rest} />;
+};
+
 // template for the info section divs
-const InfoSection = ({ infoText, buttonText, infoType, isExpanded, setExpanded }: { infoText: string; buttonText: string,
-        infoType: number, isExpanded: boolean, setExpanded: React.Dispatch<React.SetStateAction<boolean>>}) => {
+const InfoSection = ({ infoText, buttonText, infoType, isExpanded, setExpanded }: {
+    infoText: string; buttonText: string,
+    infoType: number, isExpanded: boolean, setExpanded: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
     const infoSectionRef = useRef<HTMLDivElement>(null);
-    const numberImages = 0;
+    const [numberImages, setNumberImages] = useState(0);
     const [currentButtonText, setCurrentButtonText] = useState(buttonText);
     const [selectedID, setSelectedID] = useState("1");
     const [currentImage, setCurrentImage] = useState(0);
-    
+
     const handleSelect = (id: string) => {
         setSelectedID(id);
     };
 
+    // get gallery image count from the api
+    useEffect(() => {
+        const fetchGalleryCount = async () => {
+            const count = await getGalleryCount();
+            setNumberImages(count);
+        };
+
+        fetchGalleryCount();
+    }, []);
 
     const expandInfoWrapper = (ref: React.RefObject<HTMLDivElement>, infoType: number) => {
         let parent = ref.current;
@@ -183,7 +204,8 @@ const InfoSection = ({ infoText, buttonText, infoType, isExpanded, setExpanded }
                 ))}
             </div>
             {isExpanded && (
-                <PluginInfoSection selectedID={selectedID} handleSelect={handleSelect} currentImage={0} setCurrentImage={setCurrentImage} numberImages={numberImages}/>
+                <PluginInfoSection selectedID={selectedID} handleSelect={handleSelect}
+                    currentImage={currentImage} setCurrentImage={setCurrentImage} numberImages={numberImages} />
             )}
             <div className={styles.readMoreButton} onClick={() => expandInfoWrapper(infoSectionRef, infoType)}>
                 <span className={styles.readMoreText}>{currentButtonText}</span>
@@ -193,48 +215,81 @@ const InfoSection = ({ infoText, buttonText, infoType, isExpanded, setExpanded }
 };
 
 // extra info section for plugin section
-const PluginInfoSection = ({selectedID, handleSelect, currentImage, setCurrentImage, numberImages}:
-        {selectedID: string, handleSelect: (arg0: string) => void, currentImage: number, setCurrentImage: (arg0: number) => void, numberImages: number}) => {
+const PluginInfoSection = ({ selectedID, handleSelect, currentImage, setCurrentImage, numberImages }:
+    { selectedID: string, handleSelect: (arg0: string) => void, currentImage: number, setCurrentImage: (arg0: number) => void, numberImages: number }) => {
     const extraInfoRef = useRef<HTMLDivElement>(null);
     return (
         <div ref={extraInfoRef} className={infostyles.extraInfoWrapper}>
             <span className={infostyles.extraNavBar}>
                 <span className={`${infostyles.navItem} ${selectedID === "1" ? infostyles.selectedNavItem : ''}`}
-                id={"1"} onClick={() => handleSelect("1")}>Plugin</span> |
+                    id={"1"} onClick={() => handleSelect("1")}>Plugin</span> |
                 <span className={`${infostyles.navItem} ${selectedID === "2" ? infostyles.selectedNavItem : ''}`}
-                id={"2"} onClick={() => handleSelect("2")}>Gallery</span> |
+                    id={"2"} onClick={() => handleSelect("2")}>Gallery</span> |
                 <span className={`${infostyles.navItem} ${selectedID === "3" ? infostyles.selectedNavItem : ''}`}
-                id={"3"} onClick={() => handleSelect("3")}>Tasks</span> | 
+                    id={"3"} onClick={() => handleSelect("3")}>Tasks</span> |
                 <span className={`${infostyles.navItem} ${selectedID === "4" ? infostyles.selectedNavItem : ''}`}
-                id={"4"} onClick={() => handleSelect("4")}>Stats</span>
+                    id={"4"} onClick={() => handleSelect("4")}>Stats</span>
             </span>
-            {selectedID === "2" && <GallerySection currentImage={currentImage} setCurrentImage={setCurrentImage} numberImages={numberImages}/>}
+            {selectedID === "2" && <GallerySection currentImage={currentImage} setCurrentImage={setCurrentImage} numberImages={numberImages} />}
         </div>
     );
 };
 
 // gallery section in plugin info
-const GallerySection = ({currentImage, setCurrentImage, numberImages}: {currentImage: number, setCurrentImage: (arg0: number) => void, numberImages: number}) => {
+const GallerySection = ({ currentImage, setCurrentImage, numberImages }:
+    { currentImage: number, setCurrentImage: (arg0: number) => void, numberImages: number }) => {
+    const [showHDImage, setShowHDImage] = useState(false);
+    const [isImageLoaded, setIsImageLoaded] = useState(false);
+
+    const toggleHDImage = () => {
+        setShowHDImage(!showHDImage);
+        setIsImageLoaded(false);
+
+        // disable overflow when image is expanded
+        const currentOverflow = document.body.style.overflowY;
+        document.body.style.overflowY = currentOverflow === 'auto' || !currentOverflow ? 'hidden' : 'auto';
+    };
+
+    const handleImageLoaded = () => setIsImageLoaded(true);
+
     return (
-        <div className={infostyles.galleryWrapper}>
-            <ArrowButton direction="left" rotation={90} onClick={switchImage(-1, currentImage, setCurrentImage)}/>
-            <ArrowButton direction="right" rotation={270} onClick={switchImage(1, currentImage, setCurrentImage)}/>
-            <div className={infostyles.galleryImageWrapper}>
-                <NextImage 
-                    src={`/assets/minecraft/images/gallery/${currentImage}.png`}
-                    alt="Gallery Image" 
-                    width={540} 
-                    height={300} 
-                />
-            </div>
-        </div>
+        <>
+            {showHDImage ? ReactDOM.createPortal(
+                <>
+                    <div
+                        style={{ display: isImageLoaded ? 'block' : 'none' }}
+                        id="hdImageWrapper"
+                        className={infostyles.hdImageWrapper}
+                        onClick={toggleHDImage}
+                    >
+                        <img
+                            src={`/assets/minecraft/images/gallery/large/${currentImage}.png`}
+                            alt="HD Gallery Image"
+                            width={1842}
+                            height={1024}
+                            onLoad={handleImageLoaded} // ensure div is shown only when image has loaded
+                        />
+                    </div>
+                    <div className={infostyles.backgroundCover}></div>
+                </>,
+                document.body // Renders on top of everything else
+            ) : (
+                <div className={infostyles.galleryWrapper}>
+                    <ArrowButton direction="left" rotation={90} currentImage={currentImage} setCurrentImage={setCurrentImage} numberImages={numberImages} />
+                    <ArrowButton direction="right" rotation={270} currentImage={currentImage} setCurrentImage={setCurrentImage} numberImages={numberImages} />
+                    <div className={infostyles.galleryImageWrapper} onClick={toggleHDImage}>
+                        <img
+                            src={`/assets/minecraft/images/gallery/small/${currentImage}.png`}
+                            alt="Gallery Image"
+                            width={540}
+                            height={300}
+                        />
+                    </div>
+                </div>
+            )}
+        </>
     );
 };
-
-function switchImage(increment: number, currentImage: number, setCurrentImage: (arg0: number) => void) {
-
-    setCurrentImage(currentImage + increment);
-}
 
 // show more information when divs are expanded
 function showExpandedInformation(setCurrentButtonText: { (value: React.SetStateAction<string>): void; (arg0: string): void; },
@@ -432,11 +487,16 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
 
         // calculate objects intersecting the picking ray
         const intersects = raycaster.intersectObjects(scene.children);
+        const hdImageWrapper = document.getElementById('hdImageWrapper') as HTMLElement;
         currentlyOnBook = false;
         fadeInterrupt = false;
 
         for (let i = 0; i < intersects.length; i++) {
             if (intersects[i].object === bookMesh && mouse.x != 0 && mouse.y != 0) {
+                // ensure effects don't happen while images are full screened
+                if (hdImageWrapper && hdImageWrapper.style.display == 'block') {
+                    break;
+                }
                 currentlyOnBook = true;
                 // mouse is on the book for first time
                 if (!mouseOnBook) {
@@ -460,7 +520,7 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
                     mouseParticles.name = 'mouseParticles';
                     extraMouseParticles.name = 'mouseParticles';
 
-                    // play whispers audio
+                    // play whispers audio   
                     manageWhispers();
                     mouseOnBook = true;
                 }
