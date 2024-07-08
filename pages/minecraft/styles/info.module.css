@@ -1,0 +1,86 @@
+.extraInfoWrapper {
+    top: 0;
+    height: fit-content;
+}
+
+.extraNavBar {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    color: white;
+    white-space: nowrap;
+    font-size: 1.5rem;
+    font-family: "Reo Sans";
+}
+
+.navItem {
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.3s ease;
+}
+
+.navItem:hover {
+    color: #e7e49d;
+}
+
+.navItem:not(:last-child) {
+    position: relative;
+}
+
+.selectedNavItem {
+    color: #e7e49d;
+    cursor: default;
+}
+
+.galleryWrapper {
+    position: relative;
+    width: 600px;
+    height: 300px;
+    left: 50%;
+    margin-top: 2em;
+    transform: translateX(-50%);
+    display: flex;
+}
+
+.galleryImageWrapper {
+    width: 540px;
+    height: 300px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    position: relative;
+    border-width: 3px;
+    border-style: solid;
+    border-color: white;
+}
+
+.rightArrow {
+    right: 0;
+}
+
+.arrow {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(25, 25, 25);
+    color: white;
+    opacity: 0.6;
+    font-size: 16px;
+    border-color: white;
+    border-radius: 50px;
+    transition: width 0.2s ease-in-out, height 0.2s ease-in-out, opacity 0.2s ease-in-out, 
+            margin-bottom 0.2s ease-in-out, margin-top 0.2s ease-in-out;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.arrow:hover {
+    height: 70px;
+    opacity: 0.9;
+}

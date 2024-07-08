@@ -1,5 +1,6 @@
 import NextImage from 'next/image';
 import styles from './styles/index.module.css';
+import infostyles from './styles/info.module.css';
 import { useState, useRef, useEffect, MutableRefObject } from 'react';
 import { getUUID, checkUUIDExists, getSkin } from "./utils";
 import { manageWhispers, stopWhispers, playBackground } from './musicutils';
@@ -7,8 +8,10 @@ import { drawSkin } from './skinutils';
 import { createCamera, createRenderer } from '../index/SceneUtils';
 import { startAnimationLoop } from '../index/SceneCleanup';
 import { vertexShader, fragmentShader } from './shaders/bookshader';
+import { ArrowButton } from './arrowbutton';
 import * as THREE from 'three';
 import './styles/global.css';
+import React from 'react';
 
 // GLOBAL VARIABLES
 let fadeInterrupt = false;
@@ -148,16 +151,105 @@ function decodeBase64(data: string) {
 }
 
 // template for the info section divs
-const InfoSection = ({ infoText, buttonText }: { infoText: string; buttonText: string }) => (
-    <div className={styles.infoWrapper}>
-        <div className={styles.infoTextWrapper}>
-            <span className={styles.infoText}>{infoText}</span>
+const InfoSection = ({ infoText, buttonText, infoType, isExpanded, setExpanded }: { infoText: string; buttonText: string,
+        infoType: number, isExpanded: boolean, setExpanded: React.Dispatch<React.SetStateAction<boolean>>}) => {
+    const infoSectionRef = useRef<HTMLDivElement>(null);
+    const numberImages = 0;
+    const [currentButtonText, setCurrentButtonText] = useState(buttonText);
+    const [selectedID, setSelectedID] = useState("1");
+    const [currentImage, setCurrentImage] = useState(0);
+    
+    const handleSelect = (id: string) => {
+        setSelectedID(id);
+    };
+
+
+    const expandInfoWrapper = (ref: React.RefObject<HTMLDivElement>, infoType: number) => {
+        let parent = ref.current;
+        if (parent) {
+            // toggle css, ensure the div expands
+            showExpandedInformation(setCurrentButtonText, buttonText, parent, setExpanded);
+        }
+    };
+
+    return (
+        <div ref={infoSectionRef} className={`${styles.infoWrapper} ${isExpanded ? styles.moreTextWrapper : ''}`}>
+            <div className={styles.infoTextWrapper}>
+                {infoText.split('\n').map((line, index) => (
+                    <React.Fragment key={index}>
+                        <span className={styles.infoText}>{line}</span>
+                        <br />
+                    </React.Fragment>
+                ))}
+            </div>
+            {isExpanded && (
+                <PluginInfoSection selectedID={selectedID} handleSelect={handleSelect} currentImage={0} setCurrentImage={setCurrentImage} numberImages={numberImages}/>
+            )}
+            <div className={styles.readMoreButton} onClick={() => expandInfoWrapper(infoSectionRef, infoType)}>
+                <span className={styles.readMoreText}>{currentButtonText}</span>
+            </div>
         </div>
-        <div className={styles.readMoreButton}>
-            <span className={styles.readMoreText}>{buttonText}</span>
+    );
+};
+
+// extra info section for plugin section
+const PluginInfoSection = ({selectedID, handleSelect, currentImage, setCurrentImage, numberImages}:
+        {selectedID: string, handleSelect: (arg0: string) => void, currentImage: number, setCurrentImage: (arg0: number) => void, numberImages: number}) => {
+    const extraInfoRef = useRef<HTMLDivElement>(null);
+    return (
+        <div ref={extraInfoRef} className={infostyles.extraInfoWrapper}>
+            <span className={infostyles.extraNavBar}>
+                <span className={`${infostyles.navItem} ${selectedID === "1" ? infostyles.selectedNavItem : ''}`}
+                id={"1"} onClick={() => handleSelect("1")}>Plugin</span> |
+                <span className={`${infostyles.navItem} ${selectedID === "2" ? infostyles.selectedNavItem : ''}`}
+                id={"2"} onClick={() => handleSelect("2")}>Gallery</span> |
+                <span className={`${infostyles.navItem} ${selectedID === "3" ? infostyles.selectedNavItem : ''}`}
+                id={"3"} onClick={() => handleSelect("3")}>Tasks</span> | 
+                <span className={`${infostyles.navItem} ${selectedID === "4" ? infostyles.selectedNavItem : ''}`}
+                id={"4"} onClick={() => handleSelect("4")}>Stats</span>
+            </span>
+            {selectedID === "2" && <GallerySection currentImage={currentImage} setCurrentImage={setCurrentImage} numberImages={numberImages}/>}
         </div>
-    </div>
-);
+    );
+};
+
+// gallery section in plugin info
+const GallerySection = ({currentImage, setCurrentImage, numberImages}: {currentImage: number, setCurrentImage: (arg0: number) => void, numberImages: number}) => {
+    return (
+        <div className={infostyles.galleryWrapper}>
+            <ArrowButton direction="left" rotation={90} onClick={switchImage(-1, currentImage, setCurrentImage)}/>
+            <ArrowButton direction="right" rotation={270} onClick={switchImage(1, currentImage, setCurrentImage)}/>
+            <div className={infostyles.galleryImageWrapper}>
+                <NextImage 
+                    src={`/assets/minecraft/images/gallery/${currentImage}.png`}
+                    alt="Gallery Image" 
+                    width={540} 
+                    height={300} 
+                />
+            </div>
+        </div>
+    );
+};
+
+function switchImage(increment: number, currentImage: number, setCurrentImage: (arg0: number) => void) {
+
+    setCurrentImage(currentImage + increment);
+}
+
+// show more information when divs are expanded
+function showExpandedInformation(setCurrentButtonText: { (value: React.SetStateAction<string>): void; (arg0: string): void; },
+    buttonText: string, parent: HTMLDivElement, setExpanded: React.Dispatch<React.SetStateAction<boolean>>) {
+    // toggle css class for expanding div
+    if (parent.classList.contains(styles.moreTextWrapper)) {
+        parent.classList.remove(styles.moreTextWrapper);
+        setCurrentButtonText(buttonText);
+        setExpanded(false);
+    } else {
+        parent.classList.add(styles.moreTextWrapper);
+        setCurrentButtonText("Read Less");
+        setExpanded(true);
+    }
+}
 
 // create splash screen so audios can load (user interaction required)
 function SplashScreen({ onEnter }: SplashScreenProps) {
@@ -173,6 +265,9 @@ function SplashScreen({ onEnter }: SplashScreenProps) {
 export default function Home() {
     // disable splash screen and show page when needed
     const [showSplash, setShowSplash] = useState(true);
+    const [isPluginExpanded, setIsPluginExpanded] = useState(false);
+    const [isDataExpanded, setIsDataExpanded] = useState(false);
+
     const handleEnter = () => {
         setShowSplash(false);
     };
@@ -206,50 +301,60 @@ export default function Home() {
         <>
             {showSplash && <SplashScreen onEnter={handleEnter} />}
             {!showSplash && (
-                <>
-                <div className={styles.threeJsWrapper}>
-                    <div id="sceneWrapper" className={styles.sceneWrapper}></div>
-                </div>
-                <div className={styles.zoomContainer}>
-                    <div className={styles.htmlWrapper}>
-                        <div className={styles.playerWrapper}>
-                            <div className={styles.book} id="book">
-                                <NextImage src="/assets/minecraft/images/book.png" alt="book" width={82} height={82} draggable={false} />
+                <div className={styles.pageContainer}>
+                    <div className={styles.threeJsWrapper}>
+                        <div id="sceneWrapper" className={styles.sceneWrapper}></div>
+                    </div>
+                    <div className={styles.mainContent}>
+                        <div className={styles.zoomContainer}>
+                            <div className={styles.playerWrapper}>
+                                <div className={styles.book} id="book">
+                                    <NextImage src="/assets/minecraft/images/book.png" alt="book" width={82} height={82} draggable={false} />
+                                </div>
+                                <div className={styles.player}>
+                                    <canvas ref={canvasRef} width={161} height={323} style={{ imageRendering: 'pixelated' }} />
+                                </div>
+                                <div className={styles.stand}></div>
+                                <div className={styles.searchWrapper}>
+                                    <input type="text"
+                                        placeholder="enter username..."
+                                        className={styles.searchBox}
+                                        onChange={handleSearchUpdate(setPlayerSkin)}
+                                    />
+                                </div>
                             </div>
-                            <div className={styles.player}>
-                                <canvas ref={canvasRef} width={161} height={323} style={{ imageRendering: 'pixelated' }} />
+                            <div className={styles.titleWrapper}>
+                                <span className={styles.title}>Secret Life</span>
+                                <span className={styles.date}>Tue 4 Jun - Tue 16 Jul</span>
                             </div>
-                            <div className={styles.stand}></div>
-                            <div className={styles.searchWrapper}>
-                                <input type="text"
-                                    placeholder="enter username..."
-                                    className={styles.searchBox}
-                                    onChange={handleSearchUpdate(setPlayerSkin)}
-                                />
-                            </div>
-                        </div>
-                        <div className={styles.titleWrapper}>
-                            <span className={styles.title}>Secret Life</span>
-                            <span className={styles.date}>Tue 4 Jun - Tue 16 Jul</span>
-                        </div>
-                        <div className={styles.expandedInfoWrapper}>
-                            <div className={styles.pluginInfoWrapper}>
-                                <InfoSection
-                                    infoText="Secret Life was a 7 week long Minecraft event hosted for University of Exeter students, 
-                                            running once a week with 30 active players a session."
-                                    buttonText="Read More"
-                                />
-                            </div>
-                            <div className={styles.dataInfoWrapper}>
-                                <InfoSection
-                                    infoText="Across the sessions, player data was gathered and processed. These statistics can be found below."
-                                    buttonText="Read More"
-                                />
+                            <div className={styles.expandedInfoWrapper}>
+                                <div className={styles.pluginInfoWrapper}>
+                                    <InfoSection
+                                        infoText={`Secret Life was a 7 week long Minecraft event hosted for students at the University of Exeter, running once a week with 30 active players a session.
+                            
+                                                In Secret Life, players are assigned a task at the start of every session that they complete as discretely as possible.
+                            
+                                                Across the 7 sessions, over 250 tasks were written and distributed. Tasks usually involve doing something social, which helps bring players together.`}
+                                        buttonText="Read More"
+                                        infoType={0}
+                                        isExpanded={isPluginExpanded}
+                                        setExpanded={setIsPluginExpanded}
+                                    />
+                                </div>
+                                <div className={styles.dataInfoWrapper}>
+                                    <InfoSection
+                                        infoText="Across the sessions, player data was gathered through the plugin. Once the server ended, this data was processed. This data can be found below."
+                                        buttonText="Read More"
+                                        infoType={1}
+                                        isExpanded={isDataExpanded}
+                                        setExpanded={setIsDataExpanded}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div className={styles.backgroundCover}></div>
                 </div>
-                </>
             )}
         </>
     );
@@ -302,7 +407,7 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
         mousePosition.set(mouse.x, mouse.y, 0.8);
         mousePosition.unproject(camera);
     };
-    
+
     window.addEventListener('mousemove', handleMouseMove);
 
     // EVENT LISTENERS
@@ -314,7 +419,7 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
     window.addEventListener('mousemove', onMouseMove, false);
 
     windowHeight = 950;
-    tanFOV = Math.tan( ( ( Math.PI / 180 ) * camera.fov / 2 ) );
+    tanFOV = Math.tan(((Math.PI / 180) * camera.fov / 2));
     window.addEventListener('resize', () => updateSizes(camera, renderer, tanFOV, windowHeight));
 
     // SCENE
@@ -403,7 +508,7 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
     wrapper?.appendChild(renderer.domElement);
 }
 
-        
+
 // FADE OUT AN OBJECT
 function fadeOutObject(scene: THREE.Scene, object: THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial, THREE.Object3DEventMap>, duration: number) {
     // set up fade out animation
@@ -429,7 +534,7 @@ function fadeOutObject(scene: THREE.Scene, object: THREE.Mesh<THREE.PlaneGeometr
             scene.remove(object);
         }
     }
-        
+
     animate();
 }
 
@@ -615,21 +720,21 @@ function createShinyBookMesh(loader: THREE.TextureLoader, camera: THREE.Perspect
     return bookMesh;
 }
 
-const visibleHeightAtZDepth = ( depth: number, camera: { position: { z: any; }; fov: number; } ) => {
+const visibleHeightAtZDepth = (depth: number, camera: { position: { z: any; }; fov: number; }) => {
     // compensate for cameras not positioned at z=0
     const cameraOffset = camera.position.z;
-    if ( depth < cameraOffset ) depth -= cameraOffset;
+    if (depth < cameraOffset) depth -= cameraOffset;
     else depth += cameraOffset;
-  
+
     // vertical fov in radians
-    const vFOV = camera.fov * Math.PI / 180; 
-  
+    const vFOV = camera.fov * Math.PI / 180;
+
     // Math.abs to ensure the result is always positive
-    return 2 * Math.tan( vFOV / 2 ) * Math.abs( depth );
+    return 2 * Math.tan(vFOV / 2) * Math.abs(depth);
 };
-  
-const visibleWidthAtZDepth = ( depth: number, camera: { aspect: number; position: { z: any; }; fov: number; } ) => {
-    const height = visibleHeightAtZDepth( depth, camera );
+
+const visibleWidthAtZDepth = (depth: number, camera: { aspect: number; position: { z: any; }; fov: number; }) => {
+    const height = visibleHeightAtZDepth(depth, camera);
     return height * camera.aspect;
 };
 
@@ -648,7 +753,7 @@ function updateMeshPosition(camera: THREE.PerspectiveCamera, mesh: THREE.Mesh, o
     mesh.position.set(bookPosX, bookPosY, 0)
 
     mesh.scale.set(scale, scale, scale);
-    bookPosition.set(mesh.position.x / 2, mesh.position.y / 2,1);
+    bookPosition.set(mesh.position.x / 2, mesh.position.y / 2, 1);
 }
 
 // UPDATE SIZES

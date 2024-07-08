@@ -1,3 +1,9 @@
+const helper: React.FC = () => {
+    return null;
+};
+  
+export default helper;
+
 // canvas context for skin drawing
 function initializeCanvasContext(canvas: HTMLCanvasElement | null): CanvasRenderingContext2D | null {
     return canvas?.getContext('2d') || null;

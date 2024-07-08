@@ -1,3 +1,9 @@
+const helper: React.FC = () => {
+    return null;
+};
+  
+export default helper;
+
 // GLOBAL VARIABLES
 let whispers: HTMLAudioElement;
 let background: HTMLAudioElement;
