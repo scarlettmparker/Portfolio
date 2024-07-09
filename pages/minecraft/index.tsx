@@ -204,7 +204,7 @@ const InfoSection = ({ infoText, buttonText, infoType, isExpanded, setExpanded }
                 ))}
             </div>
             {isExpanded && (
-                <PluginInfoSection selectedID={selectedID} handleSelect={handleSelect}
+                <ExtraPluginInfoSection selectedID={selectedID} handleSelect={handleSelect}
                     currentImage={currentImage} setCurrentImage={setCurrentImage} numberImages={numberImages} />
             )}
             <div className={styles.readMoreButton} onClick={() => expandInfoWrapper(infoSectionRef, infoType)}>
@@ -215,11 +215,10 @@ const InfoSection = ({ infoText, buttonText, infoType, isExpanded, setExpanded }
 };
 
 // extra info section for plugin section
-const PluginInfoSection = ({ selectedID, handleSelect, currentImage, setCurrentImage, numberImages }:
+const ExtraPluginInfoSection = ({ selectedID, handleSelect, currentImage, setCurrentImage, numberImages }:
     { selectedID: string, handleSelect: (arg0: string) => void, currentImage: number, setCurrentImage: (arg0: number) => void, numberImages: number }) => {
-    const extraInfoRef = useRef<HTMLDivElement>(null);
     return (
-        <div ref={extraInfoRef} className={infostyles.extraInfoWrapper}>
+        <div className={infostyles.extraInfoWrapper}>
             <span className={infostyles.extraNavBar}>
                 <span className={`${infostyles.navItem} ${selectedID === "1" ? infostyles.selectedNavItem : ''}`}
                     id={"1"} onClick={() => handleSelect("1")}>Plugin</span> |
@@ -230,7 +229,69 @@ const PluginInfoSection = ({ selectedID, handleSelect, currentImage, setCurrentI
                 <span className={`${infostyles.navItem} ${selectedID === "4" ? infostyles.selectedNavItem : ''}`}
                     id={"4"} onClick={() => handleSelect("4")}>Stats</span>
             </span>
-            {selectedID === "2" && <GallerySection currentImage={currentImage} setCurrentImage={setCurrentImage} numberImages={numberImages} />}
+            {selectedID == "1" && <PluginSection />}
+            {selectedID == "2" && <GallerySection currentImage={currentImage} setCurrentImage={setCurrentImage} numberImages={numberImages} />}
+        </div>
+    );
+};
+
+
+// animate the life text in the plugin section
+function manageLifeAnimation() {
+    const lifeTextElement = document.getElementById('lifeText');
+    if (!lifeTextElement) return;
+
+    let isMouseOver = false;
+
+    // mouse enter, add class
+    const handleMouseEnter = () => {
+        isMouseOver = true;
+        lifeTextElement.classList.add(infostyles.colorSwitch);
+    };
+
+    // mouse leave, set mouse over to false
+    const handleMouseLeave = () => {
+        isMouseOver = false;
+    };
+
+    // animation iteration, remove class if mouse is not over
+    const handleAnimationIteration = () => {
+        if (!isMouseOver) {
+            lifeTextElement.classList.remove(infostyles.colorSwitch);
+        }
+    };
+
+    // add event listeners to the life text element
+    lifeTextElement.addEventListener('mouseenter', handleMouseEnter);
+    lifeTextElement.addEventListener('mouseleave', handleMouseLeave);
+    lifeTextElement.addEventListener('animationiteration', handleAnimationIteration);
+
+    // cleanup event listeners on component unmount
+    return () => {
+        lifeTextElement.removeEventListener('mouseenter', handleMouseEnter);
+        lifeTextElement.removeEventListener('mouseleave', handleMouseLeave);
+        lifeTextElement.removeEventListener('animationiteration', handleAnimationIteration);
+    };
+}
+
+// plugin information section
+const PluginSection: React.FC = () => {
+    // animate the life text in the plugin section
+    useEffect(() => {
+        manageLifeAnimation();
+    }, []);
+
+    let gitLink = "https://github.com/scarlettmparker/Life-Server-Plugin";
+
+    return (
+        <div className={infostyles.pluginWrapper}>
+            <span className={infostyles.pluginDescription}>
+                Secret Life was made possible through a custom<br />Minecraft plugin that was developed for the event.<br /><br />
+                The Secret Life plugin was used to manage <span id="lifeText" className={infostyles.lifeText}>lives</span>, distribute tasks, 
+                gather player data and house a variety of other custom features that can be found on the <a href={gitLink} target="_blank"><span className={infostyles.gitLink}>GitHub repository</span></a>.<br /><br />
+                Developed in Java over the course of a few weeks, this plugin can be used on any 1.20+ Minecraft server that supports Spigot plugins.<br /><br />
+                Support will <span className={infostyles.redText}>not be provided</span> for other Minecraft versions.
+            </span>
         </div>
     );
 };
@@ -240,6 +301,7 @@ const GallerySection = ({ currentImage, setCurrentImage, numberImages }:
     { currentImage: number, setCurrentImage: (arg0: number) => void, numberImages: number }) => {
     const [showHDImage, setShowHDImage] = useState(false);
     const [isImageLoaded, setIsImageLoaded] = useState(false);
+    const handleImageLoaded = () => setIsImageLoaded(true);
 
     const toggleHDImage = () => {
         setShowHDImage(!showHDImage);
@@ -249,8 +311,6 @@ const GallerySection = ({ currentImage, setCurrentImage, numberImages }:
         const currentOverflow = document.body.style.overflowY;
         document.body.style.overflowY = currentOverflow === 'auto' || !currentOverflow ? 'hidden' : 'auto';
     };
-
-    const handleImageLoaded = () => setIsImageLoaded(true);
 
     return (
         <>
@@ -272,7 +332,7 @@ const GallerySection = ({ currentImage, setCurrentImage, numberImages }:
                     </div>
                     <div className={infostyles.backgroundCover}></div>
                 </>,
-                document.body // Renders on top of everything else
+                document.body // renders on top of everything else
             ) : (
                 <div className={infostyles.galleryWrapper}>
                     <ArrowButton direction="left" rotation={90} currentImage={currentImage} setCurrentImage={setCurrentImage} numberImages={numberImages} />
@@ -487,17 +547,17 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
 
         // calculate objects intersecting the picking ray
         let intersects;
-        if (mouse.x == 0 && mouse.y == 0) {
+        if (mouse.x != 0 && mouse.y != 0) {
             intersects = raycaster.intersectObjects(scene.children);
         }
-        
+
         const hdImageWrapper = document.getElementById('hdImageWrapper') as HTMLElement;
         currentlyOnBook = false;
         fadeInterrupt = false;
 
         if (intersects) {
             for (let i = 0; i < intersects.length; i++) {
-                if (intersects[i].object === bookMesh && mouse.x && mouse.y ) {
+                if (intersects[i].object === bookMesh && mouse.x && mouse.y) {
                     // ensure effects don't happen while images are full screened
                     if (hdImageWrapper && hdImageWrapper.style.display == 'block') {
                         break;

@@ -4,3 +4,7 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
 }
+
+a {
+    text-decoration: none;
+}

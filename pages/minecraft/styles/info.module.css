@@ -10,7 +10,6 @@
     color: white;
     white-space: nowrap;
     font-size: 1.5rem;
-    font-family: "Reo Sans";
 }
 
 .navItem {
@@ -34,7 +33,7 @@
     cursor: default;
 }
 
-.galleryWrapper {
+.galleryWrapper, .pluginWrapper {
     position: relative;
     width: 600px;
     height: 300px;
@@ -42,6 +41,46 @@
     margin-top: 2em;
     transform: translateX(-50%);
     display: flex;
+}
+
+.extraNavBar, .pluginDescription {
+    font-family: "Reo Sans";
+}
+
+.pluginDescription {
+    font-size: 1.4rem;
+    color: white;
+}
+
+.redText {
+    color: #C82843
+}
+
+@keyframes colorSwitch {
+    0% { color: #FFFFFF; }
+    25% { color: #28C878; }
+    50% { color: #F4F19D; }
+    75% { color: #C82843; }
+    100% { color: #FFFFFF; }
+}
+
+.colorSwitch {
+    animation: colorSwitch 3s infinite;
+}
+
+.lifeText {
+    color: white;
+    transition: color 1s;
+}
+
+.gitLink {
+    color: #2596b7;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.gitLink:hover {
+    color: 	#762DD9;
 }
 
 .galleryImageWrapper {
