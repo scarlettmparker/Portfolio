@@ -1,0 +1,616 @@
+{
+  "TerrariaTrees": {
+    "name": "TerrariaTrees",
+    "sessionTasks": 2,
+    "lives": 2,
+    "deaths": [
+      {
+        "time": 1717518732,
+        "deathMessage": "TerrariaTrees was blown up by Creeper"
+      },
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "24",
+      "75",
+      "51",
+      "55"
+    ],
+    "tokens": 24,
+    "zombie": false,
+    "shop": false,
+    "taskDescription": "You are now a weeping angel until the end of the session. If you\u0027re aware that someone is looking at you, you are not allowed to move until they stop looking at you.",
+    "nextTask": "-1"
+  },
+  "scarwe": {
+    "name": "scarwe",
+    "sessionTasks": 9,
+    "lives": 1,
+    "deaths": [
+      {
+        "time": 1717512948,
+        "deathMessage": "scarwe was slain by Piglin Brute"
+      },
+      {
+        "time": 1718113067,
+        "deathMessage": "scarwe fell from a high place"
+      }
+    ],
+    "currentTask": "86",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "Wokeism",
+      "59",
+      "buildbattle",
+      "71",
+      "84",
+      "94",
+      "88",
+      "93",
+      "84",
+      "90",
+      "94",
+      "86"
+    ],
+    "tokens": 15,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "Use a redstone contraption to damage another player. You can\u0027t hit them with a redstone item, it must be some kind of trap or machine."
+  },
+  "Pink_Jellyfish": {
+    "name": "Pink_Jellyfish",
+    "sessionTasks": -1,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "3",
+      "5"
+    ],
+    "tokens": 9,
+    "zombie": false,
+    "shop": false
+  },
+  "RavingRaven43453": {
+    "name": "RavingRaven43453",
+    "sessionTasks": 4,
+    "lives": 1,
+    "deaths": [
+      {
+        "time": 1717508001,
+        "deathMessage": "RavingRaven43453 was slain by Piglin Brute"
+      },
+      {
+        "time": 1718114021,
+        "deathMessage": "RavingRaven43453 was slain by scarwe using §f[§oScarlett Slayer§f]"
+      }
+    ],
+    "currentTask": "85",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "raven",
+      "2",
+      "96",
+      "99",
+      "78",
+      "100",
+      "85"
+    ],
+    "tokens": 11,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "You are now MrKoolBuckzz\u0027s assassin. Brew or purchase an invisibility potion and kill them without them figuring out who you are. If you\u0027re figured out, you fail the task."
+  },
+  "OrcaHedral": {
+    "name": "OrcaHedral",
+    "sessionTasks": 2,
+    "lives": 2,
+    "deaths": [
+      {
+        "time": 1717517743,
+        "deathMessage": "OrcaHedral tried to swim in lava"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "40",
+      "18",
+      "meow"
+    ],
+    "tokens": 4,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "Meow once during a conversation without being called out/someone esle meowing. If called out, try again in a different conversation (preferably with other players)."
+  },
+  "Spectral_Blue": {
+    "name": "Spectral_Blue",
+    "sessionTasks": 1,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "43",
+      "13"
+    ],
+    "tokens": 22,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "Meet {player} and build a place to perform a stand-up comedy event near spawn, in front of at least 3 players. Zylphys must write every joke without telling the performer what they are, and the performer must then perform them live, completely blind."
+  },
+  "LightingLord854": {
+    "name": "LightingLord854",
+    "sessionTasks": 0,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "53",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "41",
+      "53"
+    ],
+    "tokens": 1,
+    "zombie": false,
+    "shop": false
+  },
+  "DejiLikesFizz": {
+    "name": "DejiLikesFizz",
+    "sessionTasks": -1,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "placeholder",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "0",
+      "25",
+      "placeholder"
+    ],
+    "tokens": 2,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "Task description hidden."
+  },
+  "Aryid": {
+    "name": "Aryid",
+    "sessionTasks": 1,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "9",
+      "6",
+      "47"
+    ],
+    "tokens": 23,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "Back seat __waffle\u0027s game for the next 10 minutes. If they call you out, move onto another player, for a maximum of 3 attempts before failure."
+  },
+  "OperationDusty": {
+    "name": "OperationDusty",
+    "sessionTasks": 1,
+    "lives": 2,
+    "deaths": [
+      {
+        "time": 1718121604,
+        "deathMessage": "OperationDusty was doomed to fall by RavingRaven43453"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "1",
+      "49",
+      "28",
+      "20"
+    ],
+    "tokens": 12,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "Move 5 people\u0027s chests at least once. If someone calls you out, that person doesn\u0027t count."
+  },
+  "Daisyrebelle": {
+    "name": "Daisyrebelle",
+    "sessionTasks": 0,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "48",
+      "39"
+    ],
+    "tokens": 0,
+    "zombie": false,
+    "shop": false,
+    "taskDescription": "[SL] Make a pun at every opportunity during a conversation. You must make at least 3 successful puns within a 5 minute time-span.",
+    "nextTask": "-1"
+  },
+  "Invictus_Delta": {
+    "name": "Invictus_Delta",
+    "sessionTasks": 0,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "31",
+      "buildbattle"
+    ],
+    "tokens": 9,
+    "zombie": false,
+    "shop": false,
+    "taskDescription": "You must participate in a build battle against scarwe, for any build of your choice. Get some players to judge the builds and the loser fails the task."
+  },
+  "koopafan69": {
+    "name": "koopafan69",
+    "sessionTasks": 1,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "42",
+      "46",
+      "19",
+      "grinch",
+      "compliments"
+    ],
+    "tokens": 18,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "Give 3 nonsense compliments to 3 separate players, and get them to thank you. For example, stare at them longingly and say \"has anyone ever told you that you have 2 eyes?\"."
+  },
+  "qeewifruit": {
+    "name": "qeewifruit",
+    "sessionTasks": -1,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "Pokemon",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "Pokemon"
+    ],
+    "tokens": 0,
+    "zombie": false,
+    "shop": false
+  },
+  "Nitura": {
+    "name": "Nitura",
+    "sessionTasks": 2,
+    "lives": 2,
+    "deaths": [
+      {
+        "time": 1717509583,
+        "deathMessage": "Nitura was slain by Vindicator"
+      },
+      {
+        "time": 1718111020,
+        "deathMessage": "Nitura fell from a high place"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "30",
+      "33",
+      "10",
+      "17",
+      "revenge"
+    ],
+    "tokens": 0,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "Say a line/lyric from Captain Sparklez\u0027s \"Revenge\" in at least 3 different conversations. Each line/lyric must be different for each conversation. If someone calls you out, that conversation doesn\u0027t count."
+  },
+  "Zylphys": {
+    "name": "Zylphys",
+    "sessionTasks": 1,
+    "lives": 3,
+    "deaths": [
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "Praise",
+      "62",
+      "78",
+      "trouble",
+      "14",
+    ],
+    "tokens": 20,
+    "zombie": false,
+    "shop": false,
+    "taskDescription": "[SL] Call people anything other than their name/username for the next hour.",
+    "nextTask": "-1"
+  },
+  "FizzyKinkajou49": {
+    "name": "FizzyKinkajou49",
+    "sessionTasks": 1,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "8",
+      "45",
+      "53",
+      "17"
+    ],
+    "tokens": 0,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "[SL] Be Aryid\u0027s hype person for the next 30 minutes and don\u0027t get called out. If you get called out, switch to any other player and reset the timer, or fail the task (your choice)."
+  },
+  "Tal_Doesnt_Exist": {
+    "name": "Tal_Doesnt_Exist",
+    "sessionTasks": 1,
+    "lives": 2,
+    "deaths": [
+      {
+        "time": 1717508142,
+        "deathMessage": "Tal_Doesnt_Exist drowned"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "Musk",
+      "23",
+      "helmet",
+      "32"
+    ],
+    "tokens": 5,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "Tell 3 jokes where the punchline is complete nonsense, tricking players into laughing at something they don\u0027t understand, and don\u0027t get called out. If you get called out, that joke doesn\u0027t count."
+  },
+  "Spectralwraith": {
+    "name": "Spectralwraith",
+    "sessionTasks": 1,
+    "lives": 2,
+    "deaths": [
+      {
+        "time": 1718119150,
+        "deathMessage": "Spectralwraith was burned to a crisp while fighting scarwe"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "38",
+      "4",
+      "22",
+      "50"
+    ],
+    "tokens": 10,
+    "zombie": false,
+    "shop": false,
+    "taskDescription": "For the next hour and a half, you are a serial yapper. Go on random tangents, talk way too much and take control of every conversation by telling random and irrelevant stories.",
+    "nextTask": "-1"
+  },
+  "Spicy_Trombone": {
+    "name": "Spicy_Trombone",
+    "sessionTasks": -1,
+    "lives": 2,
+    "deaths": [
+      {
+        "time": 1717505804,
+        "deathMessage": "Spicy_Trombone fell from a high place"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "52",
+      "36"
+    ],
+    "tokens": 0,
+    "zombie": false,
+    "shop": false
+  },
+  "flywiththenight": {
+    "name": "flywiththenight",
+    "sessionTasks": 1,
+    "lives": 3,
+    "deaths": [
+      {
+        "time": 1717518559,
+        "deathMessage": "flywiththenight was slain by Phantom"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "35",
+      "29",
+      "44",
+      "7"
+    ],
+    "tokens": 0,
+    "zombie": false,
+    "shop": false,
+    "taskDescription": "Steal 4 people\u0027s beds without being caught and make a shrine out of them. If you\u0027re caught, you fail the task.",
+    "nextTask": "-1"
+  },
+  "Yoavis": {
+    "name": "Yoavis",
+    "sessionTasks": 0,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "26",
+      "12",
+      "34"
+    ],
+    "tokens": 12,
+    "zombie": false,
+    "shop": false,
+    "taskDescription": "Go mining with a partner, and excitedly call them over at least 3 times for a big ore find. When they arrive and see nothing, blame a creeper explosion for the missing ore.",
+    "nextTask": "-1"
+  },
+  "MrKoolBuckzz": {
+    "name": "MrKoolBuckzz",
+    "sessionTasks": 1,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tokens": 0,
+    "zombie": false,
+    "nextTask": "-1",
+    "tasks": [
+      "27",
+      "15"
+    ],
+    "taskDescription": "[SL] Call people anything other than their name/username for the next hour.",
+    "shop": false
+  },
+  "SanguisAureus": {
+    "name": "SanguisAureus",
+    "sessionTasks": 0,
+    "lives": 2,
+    "deaths": [
+      {
+        "time": 1718122395,
+        "deathMessage": "SanguisAureus was slain by scarwe using §f[§oScarlett Slayer§f]"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tokens": 0,
+    "zombie": false,
+    "nextTask": "-1",
+    "tasks": [
+      "treasurer"
+    ],
+    "taskDescription": "Ask someone why Keanu is marked as Treasurer on the Discord when he\u0027s clearly President. You win when someone tells you the correct answer (stupid guild stuff).",
+    "shop": false
+  },
+  "jjorj": {
+    "name": "jjorj",
+    "sessionTasks": -1,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "votingbooth",
+    "shopping": false,
+    "punishments": [],
+    "tokens": 0,
+    "zombie": false,
+    "nextTask": "-1",
+    "tasks": [
+      "votingbooth"
+    ],
+    "taskDescription": "Two people will soon announce that they are running against each other for the position of president in the server. Your task is to build a voting booth and convince them to use it to count the votes. You fail if they refuse to use it for the election.",
+    "shop": false
+  },
+  "Whitbee": {
+    "name": "Whitbee",
+    "sessionTasks": -1,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "11",
+    "shopping": false,
+    "punishments": [],
+    "tokens": 0,
+    "zombie": false,
+    "nextTask": "-1",
+    "tasks": [
+      "11"
+    ],
+    "taskDescription": "Convince someone that you have the same task as them.",
+    "shop": false
+  },
+  "J0shuaW": {
+    "name": "J0shuaW",
+    "sessionTasks": -1,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tokens": 0,
+    "zombie": false,
+    "nextTask": "-1",
+    "tasks": [],
+    "taskDescription": "-1",
+    "shop": false
+  },
+  "__waffle": {
+    "name": "__waffle",
+    "sessionTasks": 0,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tokens": 0,
+    "zombie": false,
+    "nextTask": "-1",
+    "tasks": [
+      "blockplacer"
+    ],
+    "taskDescription": "Place as many excess blocks as you can around someone\u0027s base without them noticing while you\u0027re talking to them. You succeed if you place a minimum of 20 blocks. If you\u0027re caught, move on to a different player.",
+    "shop": false
+  },
+  "Spore__": {
+    "name": "Spore__",
+    "sessionTasks": 2,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tokens": 0,
+    "zombie": false,
+    "nextTask": "-1",
+    "tasks": [
+      "37",
+      "fakestory",
+      "9"
+    ],
+    "taskDescription": "Jumpscare another player.",
+    "shop": false
+  }
+}

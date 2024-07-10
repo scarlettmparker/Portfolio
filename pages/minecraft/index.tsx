@@ -24,7 +24,7 @@ let shinyMaterial: THREE.ShaderMaterial;
 let bookPosition: THREE.Vector3 = new THREE.Vector3();
 let tanFOV: number, windowHeight: number;
 let renderer: THREE.WebGLRenderer;
-let bookX = 0.25, bookY = 0;
+let bookX = 0.21, bookY = 0;
 
 // interface for player skin data
 interface PlayerSkin {
@@ -77,7 +77,7 @@ function splitEnchantmentImage() {
                     canvas.height = croppedHeight;
                     let ctx2 = canvas.getContext('2d');
 
-                    if (ctx2) {
+                    if (ctx2 && data) {
                         ctx2.putImageData(data, 0, 0);
                         enchantmentGraphics.push(canvas.toDataURL());
                         i++;
@@ -231,6 +231,7 @@ const ExtraPluginInfoSection = ({ selectedID, handleSelect, currentImage, setCur
             </span>
             {selectedID == "1" && <PluginSection />}
             {selectedID == "2" && <GallerySection currentImage={currentImage} setCurrentImage={setCurrentImage} numberImages={numberImages} />}
+            {selectedID == "3" && <TaskSection />}
         </div>
     );
 };
@@ -351,6 +352,20 @@ const GallerySection = ({ currentImage, setCurrentImage, numberImages }:
     );
 };
 
+const TaskSection = () => {
+    return (
+        <div className={infostyles.taskWrapper}>
+            <span className={infostyles.taskDescription}>
+                Task Name: Do something social<br />
+                Task Difficulty: Normal<br /><br />
+                Task Description: Do something social with another player.<br /><br />
+                Completed Task: Player Name, Player Name<br />
+                Failed Task: Player Name, Player Name<br />
+            </span>
+        </div>
+    );
+};
+
 // show more information when divs are expanded
 function showExpandedInformation(setCurrentButtonText: { (value: React.SetStateAction<string>): void; (arg0: string): void; },
     buttonText: string, parent: HTMLDivElement, setExpanded: React.Dispatch<React.SetStateAction<boolean>>) {
@@ -458,7 +473,7 @@ export default function Home() {
                                 </div>
                                 <div className={styles.dataInfoWrapper}>
                                     <InfoSection
-                                        infoText="Across the sessions, player data was gathered through the plugin. Once the server ended, this data was processed. This data can be found below."
+                                        infoText="Across the sessions, player data was gathered through the plugin. Once the server ends, this data will be processed. This data will be found below once processed."
                                         buttonText="Read More"
                                         infoType={1}
                                         isExpanded={isDataExpanded}
@@ -519,8 +534,10 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
         const mouse = new THREE.Vector2();
         mouse.x = ((mouseEvent.clientX - rect.left) / rect.width) * 2 - 1;
         mouse.y = -((mouseEvent.clientY - rect.top) / rect.height) * 2 + 1;
-        mousePosition.set(mouse.x, mouse.y, 0.8);
-        mousePosition.unproject(camera);
+        if (mouse.x && mouse.y) {
+            mousePosition.set(mouse.x, mouse.y, 0.8);
+            mousePosition.unproject(camera);
+        }
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -547,7 +564,7 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
 
         // calculate objects intersecting the picking ray
         let intersects;
-        if (mouse.x != 0 && mouse.y != 0) {
+        if (mousePosition.x && mousePosition.y && mouse.x && mouse.y) {
             intersects = raycaster.intersectObjects(scene.children);
         }
 
@@ -559,7 +576,8 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
             for (let i = 0; i < intersects.length; i++) {
                 if (intersects[i].object === bookMesh && mouse.x && mouse.y) {
                     // ensure effects don't happen while images are full screened
-                    if (hdImageWrapper && hdImageWrapper.style.display == 'block') {
+                    if (hdImageWrapper && hdImageWrapper.style.display == 'block'
+                            || !mousePosition.x || !mousePosition.y) {
                         break;
                     }
                     currentlyOnBook = true;
@@ -568,7 +586,6 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
                         // remove mouse particles just in case
                         scene.remove(mouseParticles);
                         scene.remove(extraMouseParticles);
-                        scene.remove(shinyBook);
 
                         // create particles around the mouse
                         mouseParticles = createMouseParticles(mousePosition);
@@ -595,7 +612,8 @@ function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
         }
 
         // update mouse particles depending on mouse position
-        if (scene.getObjectByName('mouseParticles') && mousePosition.x != 0 && mousePosition.y != 0 && currentlyOnBook) {
+        if (scene.getObjectByName('mouseParticles') && mousePosition.x != 0
+                && mousePosition.y != 0 && currentlyOnBook && mouseOnBook) {
             updateMouseParticles(mouseParticles, bookPosition);
             updateMouseParticles(extraMouseParticles, bookPosition);
         } else if (!currentlyOnBook && scene.getObjectByName('mouseParticles')) {
@@ -867,7 +885,7 @@ const visibleWidthAtZDepth = (depth: number, camera: { aspect: number; position:
 // DYNAMIC POSITION UPDATING
 function updateMeshPosition(camera: THREE.PerspectiveCamera, mesh: THREE.Mesh, offsetX: number, offsetY: number) {
     // get window width and height in 3d space
-    let windowWidth = visibleWidthAtZDepth(0, camera) / 4.45;
+    let windowWidth = visibleWidthAtZDepth(0, camera) / 4.6;
     let windowHeight = visibleHeightAtZDepth(0, camera) / 23;
 
     let bookPosX = windowWidth - offsetX;

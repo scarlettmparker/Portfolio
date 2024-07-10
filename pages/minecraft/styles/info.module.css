@@ -33,7 +33,7 @@
     cursor: default;
 }
 
-.galleryWrapper, .pluginWrapper {
+.galleryWrapper, .pluginWrapper, .taskWrapper {
     position: relative;
     width: 600px;
     height: 300px;
@@ -43,11 +43,11 @@
     display: flex;
 }
 
-.extraNavBar, .pluginDescription {
+.extraNavBar, .pluginDescription, .taskDescription {
     font-family: "Reo Sans";
 }
 
-.pluginDescription {
+.pluginDescription, .taskDescription {
     font-size: 1.4rem;
     color: white;
 }

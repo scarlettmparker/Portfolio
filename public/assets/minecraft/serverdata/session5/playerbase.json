@@ -1,0 +1,925 @@
+{
+  "TerrariaTrees": {
+    "name": "TerrariaTrees",
+    "sessionTasks": 2,
+    "lives": 0,
+    "deaths": [
+      {
+        "time": 1717518732,
+        "deathMessage": "TerrariaTrees was blown up by Creeper"
+      },
+      null,
+      {
+        "time": 1718725435,
+        "deathMessage": "TerrariaTrees fell from a high place"
+      },
+      {
+        "time": 1719932914,
+        "deathMessage": "TerrariaTrees fell from a high place"
+      }
+    ],
+    "currentTask": "badassassin",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "24",
+      "75",
+      "51",
+      "55",
+      "inconvenience",
+      "76",
+      "thanos",
+      "tag",
+      "unexpectedroommate",
+      "fishingrod",
+      "communalbuild",
+      "campfire",
+      "badassassin"
+    ],
+    "tokens": 19,
+    "zombie": false,
+    "shop": false,
+    "taskDescription": "Find a player to hire you to assassinate a player of their choice for a price. However, once you find them to attack them, fumble around and don\u0027t actually damage them (hit them with snowballs for example), but act as menancing as possible throughout.",
+    "nextTask": "-1",
+    "tagged": false
+  },
+  "scarwe": {
+    "name": "scarwe",
+    "sessionTasks": 0,
+    "lives": 0,
+    "deaths": [
+      {
+        "time": 1717512948,
+        "deathMessage": "scarwe was slain by Piglin Brute"
+      },
+      {
+        "time": 1718113067,
+        "deathMessage": "scarwe fell from a high place"
+      },
+      {
+        "time": 1718727453,
+        "deathMessage": "scarwe was slain by __waffle"
+      },
+      null
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "Wokeism",
+      "59",
+      "buildbattle",
+      "71",
+      "84",
+      "94",
+      "88",
+      "93",
+      "84",
+      "90",
+      "94",
+      "86",
+      "rapbattle",
+      "danger",
+      "87",
+      null
+    ],
+    "tokens": 20,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": ""
+  },
+  "Pink_Jellyfish": {
+    "name": "Pink_Jellyfish",
+    "sessionTasks": 1,
+    "lives": 4,
+    "deaths": [],
+    "currentTask": "adlibber",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "3",
+      "5",
+      "grinch",
+      "piston",
+      "basegift",
+      "annoyingblocks",
+      "masterbuilder",
+      "adlibber"
+    ],
+    "tokens": 0,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "Adlib whatever Aryid says in game for at least 20 minutes. Whenever they say something, add an extra useless word or 2, agreeing with them. (e.g. shout \"heck yes\" after they say something)."
+  },
+  "RavingRaven43453": {
+    "name": "RavingRaven43453",
+    "sessionTasks": 0,
+    "lives": 0,
+    "deaths": [
+      {
+        "time": 1717508001,
+        "deathMessage": "RavingRaven43453 was slain by Piglin Brute"
+      },
+      {
+        "time": 1718114021,
+        "deathMessage": "RavingRaven43453 was slain by scarwe using §f[§oScarlett Slayer§f]"
+      },
+      {
+        "time": 1718725965,
+        "deathMessage": "RavingRaven43453 was shot by Zylphys"
+      },
+      {
+        "time": 1719320040,
+        "deathMessage": "RavingRaven43453 hit the ground too hard while trying to escape Enderman"
+      },
+      {
+        "time": 1719329332,
+        "deathMessage": "RavingRaven43453 hit the ground too hard while trying to escape Warden"
+      }
+    ],
+    "currentTask": "57",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "raven",
+      "2",
+      "96",
+      "99",
+      "78",
+      "100",
+      "85",
+      "95",
+      "89",
+      "83",
+      "tag",
+      "gaslightfriendship"
+    ],
+    "tokens": 9,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "Do the opposite of what everyone tells you to do for the next 2 hours.",
+    "tagged": true
+  },
+  "OrcaHedral": {
+    "name": "OrcaHedral",
+    "sessionTasks": 2,
+    "lives": 2,
+    "deaths": [
+      {
+        "time": 1717517743,
+        "deathMessage": "OrcaHedral tried to swim in lava"
+      },
+      {
+        "time": 1718725119,
+        "deathMessage": "OrcaHedral was slain by DejiLikesFizz using §b[§oSOUL SNATCHER§b]"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "40",
+      "18",
+      "meow",
+      "15",
+      "boogey",
+      "prison",
+      "77",
+      "89",
+      "89",
+      "85",
+      "87",
+      "87",
+      "81",
+      "81",
+      "81",
+      "socialdeduction",
+      "mimic",
+      "18",
+      "puzzled"
+    ],
+    "tokens": 0,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "For the next hour, you are perpetually confused. Act like you have no idea what\u0027s happening, why are things going the way they are, what goes around you - like a clueless child."
+  },
+  "Spectral_Blue": {
+    "name": "Spectral_Blue",
+    "sessionTasks": 1,
+    "lives": 2,
+    "deaths": [
+      {
+        "time": 1719924736,
+        "deathMessage": "Spectral_Blue fell from a high place"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "43",
+      "13",
+      "reference",
+      "renovation",
+      "cleanup"
+    ],
+    "tokens": 40,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "For the next hour, you are the janitor of the server. Clean up the mess around spawn, cut down trees, and make the place look tidier. You may recruit the help of other players to complete this task."
+  },
+  "LightingLord854": {
+    "name": "LightingLord854",
+    "sessionTasks": 1,
+    "lives": 1,
+    "deaths": [
+      {
+        "time": 1719928153,
+        "deathMessage": "LightingLord854 was doomed to fall"
+      },
+      {
+        "time": 1719933522,
+        "deathMessage": "LightingLord854 was slain by Zylphys using §b[§o𝔗𝔥𝔢 𝔅𝔯𝔞𝔰𝔰 𝔒𝔯𝔡𝔞𝔫𝔞𝔫𝔠𝔢§b]"
+      }
+    ],
+    "currentTask": "suspiciousbutton",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "41",
+      "53",
+      "megalovania",
+      "book",
+      "cleanup",
+      "suspiciousbutton"
+    ],
+    "tokens": 13,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "Super suspiciously press a button mid-conversation and trick players into believing it\u0027s a trap. You succeed if nobody presses the button."
+  },
+  "DejiLikesFizz": {
+    "name": "DejiLikesFizz",
+    "sessionTasks": 0,
+    "lives": 2,
+    "deaths": [
+      {
+        "time": 1719926683,
+        "deathMessage": "DejiLikesFizz was shot by Daisyrebelle"
+      },
+      {
+        "time": 1719930682,
+        "deathMessage": "DejiLikesFizz hit the ground too hard while trying to escape Zylphys"
+      }
+    ],
+    "currentTask": "infection",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "0",
+      "25",
+      "placeholder",
+      "presents",
+      "badMic",
+      "socialdeduction",
+      "wwjd",
+      "infection"
+    ],
+    "tokens": 9,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "infection",
+    "taskDescription": "You are patient zero of the infection. Kill a player to infect them, and they must help you to bring every green name to a yellow name. Infected players cannot help out uninfected players. You have 2 hours to infect every green life."
+  },
+  "Aryid": {
+    "name": "Aryid",
+    "sessionTasks": 2,
+    "lives": 3,
+    "deaths": [
+      {
+        "time": 1718714410,
+        "deathMessage": "Aryid was slain by Zylphys"
+      },
+      {
+        "time": 1719321036,
+        "deathMessage": "Aryid was slain by DejiLikesFizz using §b[§oSOUL SNATCHER§b]"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "9",
+      "6",
+      "47",
+      "policy",
+      "ugly",
+      "socialdeduction",
+      "friendship",
+      "basecopy",
+      "interview"
+    ],
+    "tokens": 12,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "Interview at least 3 players on the server about their experience in the Secret Life server thus far, but ask them nonsense questions or make them recall events that never actually happened."
+  },
+  "OperationDusty": {
+    "name": "OperationDusty",
+    "sessionTasks": 0,
+    "lives": 3,
+    "deaths": [
+      {
+        "time": 1718121604,
+        "deathMessage": "OperationDusty was doomed to fall by RavingRaven43453"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "1",
+      "49",
+      "28",
+      "20",
+      "boogey",
+      "bet",
+      "socialdeduction",
+      "stick"
+    ],
+    "tokens": 34,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "Have a stick in your offhand during every conversation you participate in for the next hour. You can not talk to other players without it - you\u0027re physically mute without it. If you forget this, and talk to players without the stick, you fail."
+  },
+  "Daisyrebelle": {
+    "name": "Daisyrebelle",
+    "sessionTasks": 1,
+    "lives": 2,
+    "deaths": [
+      {
+        "time": 1718725659,
+        "deathMessage": "Daisyrebelle was slain by Invictus_Delta"
+      },
+      {
+        "time": 1719319989,
+        "deathMessage": "Daisyrebelle was doomed to fall by Ender Dragon"
+      },
+      {
+        "time": 1719932148,
+        "deathMessage": "Daisyrebelle was shot by LightingLord854 using §b[§oOrion MKII§b]"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "48",
+      "39",
+      "stare",
+      "socialdeduction",
+      "structuregaslight",
+      "piratespeak"
+    ],
+    "tokens": 2,
+    "zombie": false,
+    "shop": false,
+    "taskDescription": "Change your game language to \u0027Pirate Speak\u0027 for the next 2 hours. In conversation, you must only refer to items by their pirate names.",
+    "nextTask": "-1"
+  },
+  "Invictus_Delta": {
+    "name": "Invictus_Delta",
+    "sessionTasks": 0,
+    "lives": 2,
+    "deaths": [
+      {
+        "time": 1718725747,
+        "deathMessage": "Invictus_Delta drowned"
+      }
+    ],
+    "currentTask": "items",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "31",
+      "buildbattle",
+      "newsociety",
+      "bodyguard",
+      "parkour",
+      "fakeyellowbait",
+      "items"
+    ],
+    "tokens": 4,
+    "zombie": false,
+    "shop": false,
+    "taskDescription": "Get 5 players you aren\u0027t allied with to give you an item of your choice (must be a different item per player). Place all of the items you obtained on a wall in your base. If you have no base, build one.",
+    "nextTask": "-1"
+  },
+  "koopafan69": {
+    "name": "koopafan69",
+    "sessionTasks": 0,
+    "lives": 1,
+    "deaths": [
+      {
+        "time": 1718718399,
+        "deathMessage": "koopafan69 was slain by OperationDusty"
+      },
+      {
+        "time": 1718725822,
+        "deathMessage": "koopafan69 was slain by scarwe using §b[§oScarlett Slayer§b]"
+      },
+      {
+        "time": 1719323679,
+        "deathMessage": "koopafan69 was slain by Spectralwraith"
+      }
+    ],
+    "currentTask": "rumour",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "42",
+      "46",
+      "19",
+      "grinch",
+      "compliments",
+      "scarlettblock",
+      "conspiracy",
+      "narrator",
+      "prison",
+      "tag",
+      "rumour"
+    ],
+    "tokens": 7,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "Start a rumour. To pass this task, you must hear the rumour from another player (one you haven\u0027t told the rumour to).",
+    "tagged": false
+  },
+  "qeewifruit": {
+    "name": "qeewifruit",
+    "sessionTasks": 0,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "Pokemon"
+    ],
+    "tokens": 0,
+    "zombie": false,
+    "shop": false
+  },
+  "Nitura": {
+    "name": "Nitura",
+    "sessionTasks": 0,
+    "lives": 2,
+    "deaths": [
+      {
+        "time": 1717509583,
+        "deathMessage": "Nitura was slain by Vindicator"
+      },
+      {
+        "time": 1718111020,
+        "deathMessage": "Nitura fell from a high place"
+      },
+      {
+        "time": 1718726898,
+        "deathMessage": "Nitura was slain by scarwe using §b[§oscarwe§b]"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "30",
+      "33",
+      "10",
+      "17",
+      "revenge",
+      "pyramid",
+      "parkour",
+      "89",
+      "89",
+      "82",
+      "fakeproduct",
+      "explosive",
+      "sandtrap",
+      "gaslightfriendship",
+      "villager"
+    ],
+    "tokens": 1,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "casino",
+    "taskDescription": "Act like a villager until someone gives you an emerald. You do not need to do anything hostile for this task."
+  },
+  "Zylphys": {
+    "name": "Zylphys",
+    "sessionTasks": 2,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "Praise",
+      "62",
+      "78",
+      "trouble",
+      "14",
+      "presidentassassin",
+      "65",
+      "56",
+      "guessthebuild",
+      "39",
+      "specific"
+    ],
+    "tokens": 0,
+    "zombie": false,
+    "shop": false,
+    "taskDescription": "Be super specific for the next hour. Say everything in extreme detail, no matter how obvious and simple it is.",
+    "nextTask": "-1"
+  },
+  "FizzyKinkajou49": {
+    "name": "FizzyKinkajou49",
+    "sessionTasks": 2,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "8",
+      "45",
+      "53",
+      "17",
+      "fizzyhard",
+      "theletterL",
+      "skibidi",
+      "microphone",
+      "duolingo",
+      "secretroom"
+    ],
+    "tokens": 0,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "Add a secret room in the base of someone you\u0027re not teamed with and move your stuff there. You pass if you move at least half of your stuff and aren\u0027t caught in the process."
+  },
+  "Tal_Doesnt_Exist": {
+    "name": "Tal_Doesnt_Exist",
+    "sessionTasks": 2,
+    "lives": 1,
+    "deaths": [
+      {
+        "time": 1717508142,
+        "deathMessage": "Tal_Doesnt_Exist drowned"
+      },
+      {
+        "time": 1718727272,
+        "deathMessage": "Tal_Doesnt_Exist drowned"
+      },
+      {
+        "time": 1719928165,
+        "deathMessage": "Tal_Doesnt_Exist hit the ground too hard while trying to escape LightingLord854"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [
+      "weak2"
+    ],
+    "tasks": [
+      "Musk",
+      "23",
+      "helmet",
+      "32",
+      "restaurant",
+      "thirdperson",
+      "16"
+    ],
+    "tokens": 1,
+    "zombie": false,
+    "shop": false,
+    "nextTask": "-1",
+    "taskDescription": "Give someone a nickname and try to get at least 4 other people to call them by that nickname."
+  },
+  "Spectralwraith": {
+    "name": "Spectralwraith",
+    "sessionTasks": 0,
+    "lives": 0,
+    "deaths": [
+      {
+        "time": 1718119150,
+        "deathMessage": "Spectralwraith was burned to a crisp while fighting scarwe"
+      },
+      {
+        "time": 1719324072,
+        "deathMessage": "Spectralwraith fell from a high place"
+      },
+      {
+        "time": 1719326412,
+        "deathMessage": "Spectralwraith fell from a high place"
+      }
+    ],
+    "currentTask": "68",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "38",
+      "4",
+      "22",
+      "50",
+      "tag",
+      "68"
+    ],
+    "tokens": 0,
+    "zombie": false,
+    "shop": false,
+    "taskDescription": "Before the end of the session, do a 100 block high water bucket clutch in front of everyone on the server. You may reveal this secret without failing. You must take off all armour before performing the clutch. You only get one attempt - no practice runs, and no totems allowed.",
+    "nextTask": "-1",
+    "tagged": false
+  },
+  "Spicy_Trombone": {
+    "name": "Spicy_Trombone",
+    "sessionTasks": 0,
+    "lives": 2,
+    "deaths": [
+      {
+        "time": 1717505804,
+        "deathMessage": "Spicy_Trombone fell from a high place"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "52",
+      "36",
+      "fakejumpscare",
+      "20"
+    ],
+    "tokens": 6,
+    "zombie": false,
+    "shop": false,
+    "taskDescription": "Move 5 people\u0027s chests at least once. If someone calls you out, that person doesn\u0027t count.",
+    "nextTask": "-1"
+  },
+  "flywiththenight": {
+    "name": "flywiththenight",
+    "sessionTasks": 3,
+    "lives": 3,
+    "deaths": [
+      {
+        "time": 1717518559,
+        "deathMessage": "flywiththenight was slain by Phantom"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "35",
+      "29",
+      "44",
+      "7",
+      "fishing",
+      "rapbattle",
+      "ghost",
+      "ghost"
+    ],
+    "tokens": 0,
+    "zombie": false,
+    "shop": false,
+    "taskDescription": "Across at least 3 different conversations, say \"what would Jon do?\" at least once without other players saying it back in response.",
+    "nextTask": "-1"
+  },
+  "Yoavis": {
+    "name": "Yoavis",
+    "sessionTasks": 0,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tasks": [
+      "26",
+      "12",
+      "34"
+    ],
+    "tokens": 12,
+    "zombie": false,
+    "shop": false,
+    "taskDescription": "Go mining with a partner, and excitedly call them over at least 3 times for a big ore find. When they arrive and see nothing, blame a creeper explosion for the missing ore.",
+    "nextTask": "-1"
+  },
+  "MrKoolBuckzz": {
+    "name": "MrKoolBuckzz",
+    "sessionTasks": 0,
+    "lives": 0,
+    "deaths": [
+      {
+        "time": 1718714306,
+        "deathMessage": "MrKoolBuckzz was slain by Spider"
+      },
+      {
+        "time": 1718716703,
+        "deathMessage": "MrKoolBuckzz was slain by RavingRaven43453"
+      },
+      {
+        "time": 1718717937,
+        "deathMessage": "MrKoolBuckzz was slain by scarwe using §b[§oScarlett Slayer§b]"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tokens": 4,
+    "zombie": false,
+    "nextTask": "-1",
+    "tasks": [
+      "27",
+      "15",
+      "11",
+      "80"
+    ],
+    "taskDescription": "Repeatedly attack a player until they block you with a shield. If you kill them, you also succeed.",
+    "shop": false,
+    "tagged": false
+  },
+  "SanguisAureus": {
+    "name": "SanguisAureus",
+    "sessionTasks": 0,
+    "lives": 0,
+    "deaths": [
+      {
+        "time": 1718122395,
+        "deathMessage": "SanguisAureus was slain by scarwe using §f[§oScarlett Slayer§f]"
+      },
+      {
+        "time": 1718727200,
+        "deathMessage": "SanguisAureus was slain by scarwe using §b[§oscarwe§b]"
+      },
+      {
+        "time": 1719928177,
+        "deathMessage": "SanguisAureus was shot by LightingLord854 using §b[§oOrion MKII§b]"
+      }
+    ],
+    "currentTask": "tnt",
+    "shopping": false,
+    "punishments": [],
+    "tokens": 2,
+    "zombie": false,
+    "nextTask": "-1",
+    "tasks": [
+      "treasurer",
+      "tag",
+      "trivia",
+      "teacher",
+      "elements",
+      "tnt"
+    ],
+    "taskDescription": "Deal damage to a player using the explosion damage from a TNT.",
+    "shop": false,
+    "tagged": false
+  },
+  "jjorj": {
+    "name": "jjorj",
+    "sessionTasks": 0,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tokens": 0,
+    "zombie": false,
+    "nextTask": "-1",
+    "tasks": [
+      "votingbooth"
+    ],
+    "taskDescription": "Two people will soon announce that they are running against each other for the position of president in the server. Your task is to build a voting booth and convince them to use it to count the votes. You fail if they refuse to use it for the election.",
+    "shop": false
+  },
+  "Whitbee": {
+    "name": "Whitbee",
+    "sessionTasks": 0,
+    "lives": 2,
+    "deaths": [
+      {
+        "time": 1718717148,
+        "deathMessage": "Whitbee drowned"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tokens": 0,
+    "zombie": false,
+    "nextTask": "-1",
+    "tasks": [
+      "11",
+      "fakeyellowbait"
+    ],
+    "taskDescription": "Bait a yellow player into thinking that your task is to bait a yellow player.",
+    "shop": false
+  },
+  "J0shuaW": {
+    "name": "J0shuaW",
+    "sessionTasks": 0,
+    "lives": 2,
+    "deaths": [
+      {
+        "time": 1719930687,
+        "deathMessage": "J0shuaW fell from a high place"
+      }
+    ],
+    "currentTask": "32",
+    "shopping": false,
+    "punishments": [],
+    "tokens": 0,
+    "zombie": false,
+    "nextTask": "-1",
+    "tasks": [
+      "32"
+    ],
+    "taskDescription": "Tell 3 jokes where the punchline is complete nonsense, tricking players into laughing at something they don\u0027t understand, and don\u0027t get called out. If you get called out, that joke doesn\u0027t count.",
+    "shop": false
+  },
+  "__waffle": {
+    "name": "__waffle",
+    "sessionTasks": 0,
+    "lives": 0,
+    "deaths": [
+      {
+        "time": 1718727846,
+        "deathMessage": "__waffle was killed"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tokens": 0,
+    "zombie": false,
+    "nextTask": "-1",
+    "tasks": [
+      "blockplacer",
+      "badteacher",
+      "17"
+    ],
+    "taskDescription": "[SL] Be TerrariaTrees\u0027s hype person for the next 30 minutes and don\u0027t get called out. If you get called out, switch to any other player and reset the timer, or fail the task (your choice).",
+    "shop": false
+  },
+  "Spore__": {
+    "name": "Spore__",
+    "sessionTasks": 0,
+    "lives": 3,
+    "deaths": [],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tokens": 0,
+    "zombie": false,
+    "nextTask": "-1",
+    "tasks": [
+      "37",
+      "fakestory",
+      "9"
+    ],
+    "taskDescription": "Jumpscare another player.",
+    "shop": false
+  },
+  "BandSH": {
+    "name": "BandSH",
+    "sessionTasks": 0,
+    "lives": 1,
+    "deaths": [
+      {
+        "time": 1719327842,
+        "deathMessage": "BandSH was slain by Phantom"
+      }
+    ],
+    "currentTask": "-1",
+    "shopping": false,
+    "punishments": [],
+    "tagged": false,
+    "tokens": 12,
+    "zombie": false,
+    "nextTask": "-1",
+    "tasks": [
+      "mourner",
+      "holiday"
+    ],
+    "taskDescription": "Make up a holiday, then convince another player it is an actual holiday and get them to celebrate it with you. If they don\u0027t believe you, you can try with another player.",
+    "shop": false
+  }
+}

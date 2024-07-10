@@ -1,0 +1,1584 @@
+{
+  "raven": {
+    "name": "raven",
+    "completed": true,
+    "playerDescription": "Give nether wart that you have collected by yourself to a player of your choice before the end of the session.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 3,
+    "description": "Give nether wart that you have collected by yourself to a player of your choice before the end of the session.",
+    "reward": 13,
+    "priority": 0
+  },
+  "0": {
+    "name": "0",
+    "completed": false,
+    "playerDescription": "Get a minimum of 3 players to give you a total of at least 10 gravel.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Get a minimum of 3 players to give you a total of at least 10 gravel."
+  },
+  "1": {
+    "name": "1",
+    "completed": false,
+    "playerDescription": "Tell a story and get someone to leave before you finish it.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Tell a story and get someone to leave before you finish it."
+  },
+  "2": {
+    "name": "2",
+    "completed": true,
+    "playerDescription": "[SL] Dig a hole at least 3x3 wide down to Y \u003d 0. It can be your base if you want.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "[SL] Dig a hole at least 3x3 wide down to Y \u003d 0. It can be your base if you want."
+  },
+  "3": {
+    "name": "3",
+    "completed": true,
+    "playerDescription": "Don\u0027t call any mobs by their name for the next hour.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Don\u0027t call any mobs by their name for the next hour."
+  },
+  "4": {
+    "name": "4",
+    "completed": false,
+    "playerDescription": "[SL] Listen into another player\u0027s conversation then try to have the same conversation with either of them later and get them to claim deja vu.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "[SL] Listen into another player\u0027s conversation then try to have the same conversation with either of them later and get them to claim deja vu."
+  },
+  "5": {
+    "name": "5",
+    "completed": true,
+    "playerDescription": "[SL] Compliment someone whenever you see them take damage, for a total of 5 compliments. If you\u0027re called out, that player doesn\u0027t count.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "[SL] Compliment someone whenever you see them take damage, for a total of 5 compliments. If you\u0027re called out, that player doesn\u0027t count."
+  },
+  "6": {
+    "name": "6",
+    "completed": true,
+    "playerDescription": "[SL] Every time you see someone take damage, warn them a bit too late that they are about to be damaged or tell them how they could have avoided it, for a total of 5 times.  If you\u0027re called out, that player doesn\u0027t count.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "[SL] Every time you see someone take damage, warn them a bit too late that they are about to be damaged or tell them how they could have avoided it, for a total of 5 times.  If you\u0027re called out, that player doesn\u0027t count."
+  },
+  "7": {
+    "name": "7",
+    "completed": true,
+    "playerDescription": "Steal 4 people\u0027s beds without being caught and make a shrine out of them. If you\u0027re caught, you fail the task.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Steal 4 people\u0027s beds without being caught and make a shrine out of them. If you\u0027re caught, you fail the task."
+  },
+  "8": {
+    "name": "8",
+    "completed": true,
+    "playerDescription": "Do the worst trade you could possibly do with someone.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Do the worst trade you could possibly do with someone."
+  },
+  "9": {
+    "name": "9",
+    "completed": true,
+    "playerDescription": "Jumpscare another player.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Jumpscare another player.",
+    "excludedPlayers": [
+      "Aryid"
+    ]
+  },
+  "10": {
+    "name": "10",
+    "completed": true,
+    "playerDescription": "Build a statue of a peaceful minecraft mob near spawn (size is up to your discretion). If asked, claim that it is a Pokémon/mystical being of sorts.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Build a state of a peaceful Minecraft mob near spawn (size is up to your discretion). If asked, claim that it\u0027s a Pokémon/mystical being. You complete this task after finishing the build.",
+    "reward": 6
+  },
+  "11": {
+    "name": "11",
+    "completed": true,
+    "playerDescription": "Convince someone that you have the same task as them.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Convince someone that you have the same task as them."
+  },
+  "12": {
+    "name": "12",
+    "completed": true,
+    "playerDescription": "Ask someone what they think a good task would be, their response is now your task. If they don\u0027t give you an idea, you may ask someone else.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Ask someone what they think a good task would be, their response is now your task. If they don\u0027t give you an idea, you may ask someone else."
+  },
+  "13": {
+    "name": "13",
+    "completed": true,
+    "playerDescription": "Convince someone to take a leap of faith. You succeed if they do so and take no damage.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Convince someone to take a leap of faith. You succeed if they do so and take no damage."
+  },
+  "14": {
+    "name": "14",
+    "completed": true,
+    "playerDescription": "You must lie about everything in-game for the next hour.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "You must lie about everything in-game for the next hour."
+  },
+  "15": {
+    "name": "15",
+    "completed": true,
+    "playerDescription": "[SL] Call people anything other than their name/username for the next hour.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "[SL] Call people anything other than their name/username for the next hour."
+  },
+  "16": {
+    "name": "16",
+    "completed": false,
+    "playerDescription": "Give someone a nickname and try to get at least 4 other people to call them by that nickname.",
+    "receiver": "",
+    "excluded": false,
+    "difficulty": 1,
+    "description": "Give someone a nickname and try to get at least 4 other people to call them by that nickname.",
+    "reward": 17
+  },
+  "17": {
+    "name": "17",
+    "completed": true,
+    "playerDescription": "[SL] Be {receiver}\u0027s hype person for the next 30 minutes and don\u0027t get called out. If you get called out, switch to any other player and reset the timer, or fail the task (your choice).",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "[SL] Be {receiver}\u0027s hype person for the next 30 minutes and don\u0027t get called out. If you get called out, switch to any other player and reset the timer, or fail the task (your choice)."
+  },
+  "18": {
+    "name": "18",
+    "completed": true,
+    "playerDescription": "Make 3 bad jokes and get NO laughs.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Make 3 bad jokes and get NO laughs."
+  },
+  "19": {
+    "name": "19",
+    "completed": true,
+    "playerDescription": "[SL] Move 5 people\u0027s doors at least once. If someone calls you out, that person doesn\u0027t count.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "[SL] Move 5 people\u0027s doors at least once. If someone calls you out, that person doesn\u0027t count."
+  },
+  "20": {
+    "name": "20",
+    "completed": true,
+    "playerDescription": "Move 5 people\u0027s chests at least once. If someone calls you out, that person doesn\u0027t count.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Move 5 people\u0027s chests at least once. If someone calls you out, that person doesn\u0027t count."
+  },
+  "21": {
+    "name": "21",
+    "completed": false,
+    "playerDescription": "For the next 5 achievements that {receiver} obtains, you must also obtain the same.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "For the next 5 achievements that {receiver} obtains, you must also obtain the same."
+  },
+  "22": {
+    "name": "22",
+    "completed": true,
+    "playerDescription": "Convince a yellow name your task is to make granite your entire identity for the next hour.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Convince a yellow name your task is to make granite your entire identity for the next hour."
+  },
+  "23": {
+    "name": "23",
+    "completed": true,
+    "playerDescription": "Spy on FizzyKinkajou49 without getting caught for 10 minutes. If you\u0027re caught, move to another player.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Spy on {receiver} without getting caught for 10 minutes. If you\u0027re caught, move to another player."
+  },
+  "24": {
+    "name": "24",
+    "completed": false,
+    "playerDescription": "[SL] Lead someone on a wild goose chase that goes nowhere and wait for them to return empty handed.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "[SL] Lead someone on a wild goose chase that goes nowhere and wait for them to return empty handed."
+  },
+  "25": {
+    "name": "25",
+    "completed": true,
+    "playerDescription": "Leave cryptic signs at 5 different people\u0027s bases. If someone calls you out, that person doesn\u0027t count.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Leave cryptic signs at 5 different people\u0027s bases. If someone calls you out, that person doesn\u0027t count."
+  },
+  "26": {
+    "name": "26",
+    "completed": true,
+    "playerDescription": "Hide mobs across 3 players\u0027 bases without being caught (the mob sound should still be audible). If someone calls you out, that person doesn\u0027t count.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Hide mobs across 3 players\u0027 bases without being caught (the mob sound should still be audible). If someone calls you out, that person doesn\u0027t count."
+  },
+  "27": {
+    "name": "27",
+    "completed": false,
+    "playerDescription": "Convince a yellow name your task is to repeat everything that they say.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Convince a yellow name your task is to repeat everything that they say."
+  },
+  "28": {
+    "name": "28",
+    "completed": true,
+    "playerDescription": "Convince a yellow name your task is to speak in rhyme.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Convince a yellow name your task is to speak in rhyme."
+  },
+  "29": {
+    "name": "29",
+    "completed": true,
+    "playerDescription": "You must figure out OperationDusty\u0027s task and ensure they fail it.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "You must figure out {receiver}\u0027s task and ensure they fail it."
+  },
+  "30": {
+    "name": "30",
+    "completed": true,
+    "playerDescription": "You are now the server\u0027s \"sugar\" seller. You must sell \"sugar\" to at least 3 players.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "You are now the server\u0027s \"sugar\" seller. You must sell \"sugar\" to at least 3 players."
+  },
+  "31": {
+    "name": "31",
+    "completed": true,
+    "playerDescription": "For the next 3 conversations you have, you must at some point speak in rhyme (minimum 2 rhymes for the conversation). If you\u0027re called out, that conversation doesn\u0027t count.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "For the next 3 conversations you have, you must at some point speak in rhyme (minimum 2 rhymes for the conversation). If you\u0027re called out, that conversation doesn\u0027t count."
+  },
+  "32": {
+    "name": "32",
+    "completed": false,
+    "playerDescription": "Tell 3 jokes where the punchline is complete nonsense, tricking players into laughing at something they don\u0027t understand, and don\u0027t get called out. If you get called out, that joke doesn\u0027t count.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Tell 3 jokes where the punchline is complete nonsense, tricking players into laughing at something they don\u0027t understand, and don\u0027t get called out. If you get called out, that joke doesn\u0027t count."
+  },
+  "33": {
+    "name": "33",
+    "completed": false,
+    "playerDescription": "Make granite your entire identity for the next hour.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Make granite your entire identity for the next hour."
+  },
+  "34": {
+    "name": "34",
+    "completed": true,
+    "playerDescription": "Go mining with a partner, and excitedly call them over at least 3 times for a big ore find. When they arrive and see nothing, blame a creeper explosion for the missing ore.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Go mining with a partner, and excitedly call them over at least 3 times for a big ore find. When they arrive and see nothing, blame a creeper explosion for the missing ore."
+  },
+  "35": {
+    "name": "35",
+    "completed": true,
+    "playerDescription": "Completely agree with everything that everyone says for the next hour (this does not mean do what people say, just be a very nice and agreeable person). If someone calls you out, reset the timer or fail the task (your choice).",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Completely agree with everything that everyone says for the next hour (this does not mean do what people say, just be a very nice and agreeable person). If someone calls you out, reset the timer or fail the task (your choice)."
+  },
+  "36": {
+    "name": "36",
+    "completed": true,
+    "playerDescription": "Build a plank and get someone to walk/fall off it.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Build a plank and get someone to walk/fall off it."
+  },
+  "37": {
+    "name": "37",
+    "completed": true,
+    "playerDescription": "[sl] with a book and quill, write a really poorly-written poem for scarwe and get them to sign it.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "[SL] With a book and quill, write a really poorly-written poem for {receiver} and get them to sign it."
+  },
+  "38": {
+    "name": "38",
+    "completed": true,
+    "playerDescription": "Get accused of doing 2 tasks that you don\u0027t actually have (that you\u0027ve made up).",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Get accused of doing 2 tasks that you don\u0027t actually have (that you\u0027ve made up)."
+  },
+  "39": {
+    "name": "39",
+    "completed": false,
+    "playerDescription": "[SL] Make a pun at every opportunity during a conversation. You must make at least 3 successful puns within a 5 minute time-span.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "[SL] Make a pun at every opportunity during a conversation. You must make at least 3 successful puns within a 5 minute time-span."
+  },
+  "40": {
+    "name": "40",
+    "completed": true,
+    "playerDescription": "[SL] Become OperationDusty\u0027s absolute best friend for the next 30 minutes and don\u0027t get called out. If you get called out, switch to any other player and reset the timer or fail the task (your choice).",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "[SL] Become {receiver}\u0027s absolute best friend for the next 30 minutes and don\u0027t get called out. If you get called out, switch to any other player and reset the timer or fail the task (your choice)."
+  },
+  "41": {
+    "name": "41",
+    "completed": true,
+    "playerDescription": "You have now become a very indecisive introvert. For the next hour, if anybody tries to talk to you, run away and appear actively afraid, but then return almost immediately to the conversation.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "You have now become a very indecisive introvert. For the next hour, if anybody tries to talk to you, run away and appear actively afraid, but then return almost immediately to the conversation."
+  },
+  "42": {
+    "name": "42",
+    "completed": true,
+    "playerDescription": "[SL] Ask for a specific item 5 times in one conversation but never pick it up, and don\u0027t get called out. If you get called out or pick up the item, reset the count and choose a different item.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "[SL] Ask for a specific item 5 times in one conversation but never pick it up, and don\u0027t get called out. If you get called out or pick up the item, reset the count and choose a different item."
+  },
+  "43": {
+    "name": "43",
+    "completed": true,
+    "playerDescription": "Talk like a YouTuber/TikTok influencer for the 3 conversations you\u0027re in.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Talk like a YouTuber/TikTok influencer for the 3 conversations you\u0027re in."
+  },
+  "44": {
+    "name": "44",
+    "completed": true,
+    "playerDescription": "Leave at least 3 conversations in-game in a creative manner. For example, instead of walking away, dig straight down until you\u0027re out of ear-distance of any interlocutors. You may leave conversations normally, but this won\u0027t count towards your goal.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Leave at least 3 conversations in-game in a creative manner. For example, instead of walking away, dig straight down until you\u0027re out of ear-distance of any interlocutors. You may leave conversations normally, but this won\u0027t count towards your goal."
+  },
+  "45": {
+    "name": "45",
+    "completed": true,
+    "playerDescription": "Actively involve yourself in 3 conversations with DejiLikesFizz. For every conversation, mimic all their in-game movements without being caught. You fail if someone calls you out even once.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Actively involve yourself in 3 conversations with {receiver}. For every conversation, mimic all their in-game movements without being caught. You fail if someone calls you out even once."
+  },
+  "46": {
+    "name": "46",
+    "completed": false,
+    "playerDescription": "[SL] Say a line/lyric from Smash Mouth\u0027s \"All Star\" in at least 3 different conversations. Each line/lyric must be different for each conversation. If someone calls you out, that conversation doesn\u0027t count",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "[SL] Say a line/lyric from Smash Mouth\u0027s \"All Star\" in at least 3 different conversations. Each line/lyric must be different for each conversation. If someone calls you out, that conversation doesn\u0027t count"
+  },
+  "47": {
+    "name": "47",
+    "completed": false,
+    "playerDescription": "Back seat {receiver}\u0027s game for the next 10 minutes. If they call you out, move onto another player, for a maximum of 3 attempts before failure.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Back seat {receiver}\u0027s game for the next 10 minutes. If they call you out, move onto another player, for a maximum of 3 attempts before failure."
+  },
+  "48": {
+    "name": "48",
+    "completed": true,
+    "playerDescription": "[SL] Paranoia. For the next hour, whenever you talk to another player, you must pretend that someone else is nearby or following you.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "[SL] Paranoia. For the next hour, whenever you talk to another player, you must pretend that someone else is nearby or following you."
+  },
+  "49": {
+    "name": "49",
+    "completed": true,
+    "playerDescription": "Move into someone else\u0027s house and get them to evict you.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Move into someone else\u0027s house and get them to evict you."
+  },
+  "50": {
+    "name": "50",
+    "completed": true,
+    "playerDescription": "For the next hour and a half, you are a serial yapper. Go on random tangents, talk way too much and take control of every conversation by telling random and irrelevant stories.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "For the next hour and a half, you are a serial yapper. Go on random tangents, talk way too much and take control of every conversation by telling random and irrelevant stories."
+  },
+  "51": {
+    "name": "51",
+    "completed": true,
+    "playerDescription": "leave your book in another person\u0027s base/chest thereby exposing your task. if you are that other player reading this book, announce to the chat that scarwe has completed their task.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Leave your book in another person\u0027s base/chest thereby exposing your task. If you are that other player reading this book, announce to the chat that {sender} has completed their task."
+  },
+  "52": {
+    "name": "52",
+    "completed": false,
+    "playerDescription": "You have a new catchphrase for the next hour. In any predicament, you must say \"What would Jon do?\", and don\u0027t get called out. If you get called out, reset the timer or fail the task (your choice).",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "You have a new catchphrase for the next hour. In any predicament, you must say \"What would Jon do?\", and don\u0027t get called out. If you get called out, reset the timer or fail the task (your choice)."
+  },
+  "53": {
+    "name": "53",
+    "completed": true,
+    "playerDescription": "You are Daisyrebelle\u0027s terrible butler for the next hour. You must do anything they say, but get some aspect of it wrong. You can tell them you are their butler, but not anything else, and if you\u0027re figured out you fail.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "You are {receiver}\u0027s terrible butler for the next hour. You must do anything they say, but get some aspect of it wrong. You can tell them you are their butler, but not anything else, and if you\u0027re figured out you fail."
+  },
+  "54": {
+    "name": "54",
+    "completed": false,
+    "playerDescription": "You cannot deny any request or question from another player. You must say yes for the next 2 hours (unless it breaks the rules).",
+    "receiver": "",
+    "excluded": false,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "You cannot deny any request or question from another player. You must say yes for the next 2 hours (unless it breaks the rules)."
+  },
+  "55": {
+    "name": "55",
+    "completed": true,
+    "playerDescription": "You are now a weeping angel until the end of the session. If you\u0027re aware that someone is looking at you, you are not allowed to move until they stop looking at you.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "You are now a weeping angel until the end of the session. If you\u0027re aware that someone is looking at you, you are not allowed to move until they stop looking at you."
+  },
+  "56": {
+    "name": "56",
+    "completed": false,
+    "playerDescription": "Kill the Ender Dragon with a friend (you must re-spawn it if already killed).",
+    "receiver": "",
+    "excluded": false,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "Kill the Ender Dragon with a friend (you must re-spawn it if already killed)."
+  },
+  "57": {
+    "name": "57",
+    "completed": true,
+    "playerDescription": "Do the opposite of what everyone tells you to do for the next 2 hours.",
+    "receiver": "",
+    "excluded": false,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "Do the opposite of what everyone tells you to do for the next 2 hours."
+  },
+  "58": {
+    "name": "58",
+    "completed": false,
+    "playerDescription": "Kill the Wither with a friend. Exploits such as trapping the Wither under bedrock are not allowed.",
+    "receiver": "",
+    "excluded": false,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "Kill the Wither with a friend. Exploits such as trapping the Wither under bedrock are not allowed."
+  },
+  "59": {
+    "name": "59",
+    "completed": true,
+    "playerDescription": "Starting with a grass seed, trade your way up to 2 golden apples. There\u0027s no minimum trade requirement for this task.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "Starting with a grass seed, trade your way up to 2 golden apples. There\u0027s no minimum trade requirement for this task."
+  },
+  "60": {
+    "name": "60",
+    "completed": false,
+    "playerDescription": "Do the opposite of what any green name tells you to do for the next hour.",
+    "receiver": "",
+    "excluded": false,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "Do the opposite of what any green name tells you to do for the next hour."
+  },
+  "61": {
+    "name": "61",
+    "completed": true,
+    "playerDescription": "Kill Zylphys with an anvil.",
+    "receiver": "",
+    "excluded": false,
+    "difficulty": 1,
+    "description": "Kill a non-red player with an anvil.",
+    "reward": 17
+  },
+  "62": {
+    "name": "62",
+    "completed": true,
+    "playerDescription": "[SL] Build a TNT cannon that successfully hits or scares off another player from at least 50 blocks away.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "[SL] Build a TNT cannon that successfully hits or scares off another player from at least 50 blocks away."
+  },
+  "63": {
+    "name": "63",
+    "completed": true,
+    "playerDescription": "Convince a player to give you a life (you may not give it back, and it can\u0027t be a life that you gave them).",
+    "receiver": "",
+    "excluded": false,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "Convince a player to give you a life (you may not give it back, and it can\u0027t be a life that you gave them)."
+  },
+  "64": {
+    "name": "64",
+    "completed": false,
+    "playerDescription": "cause a player to die from suffocation.",
+    "receiver": "",
+    "excluded": false,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "Cause a player to die from suffocation."
+  },
+  "65": {
+    "name": "65",
+    "completed": false,
+    "playerDescription": "your life is now tied to scarwe. if they die in this session, you must kill yourself immediately after. you fail if they die, or if someone suspects there\u0027s a link between the two of you. telling scarwe this task won\u0027t cause you to fail. you\u0027re not allowed to manually choose to fail this task.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "Your life is now tied to {receiver}. If they die in this session, you must kill yourself immediately after. You fail if they die, or if someone suspects there\u0027s a link between the two of you. Telling {receiver} this task won\u0027t cause you to fail. You\u0027re not allowed to manually choose to fail this task."
+  },
+  "66": {
+    "name": "66",
+    "completed": false,
+    "playerDescription": "Build a completely friendly roller coaster with a track length of at least 200 blocks, and get at least 3 players to ride through it without them being suspicious that it\u0027s a trap.",
+    "receiver": "",
+    "excluded": false,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "Build a completely friendly roller coaster with a track length of at least 200 blocks, and get at least 3 players to ride through it without them being suspicious that it\u0027s a trap."
+  },
+  "67": {
+    "name": "67",
+    "completed": false,
+    "playerDescription": "Create a parkour course with at least 30 jumps, and get 4 players to play. If any one of them succeeds on their first attempt, the counter resets. You may re-build the course if you like but only if the counter is currently on 0.",
+    "receiver": "",
+    "excluded": false,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "Create a parkour course with at least 30 jumps, and get 4 players to play. If any one of them succeeds on their first attempt, the counter resets. You may re-build the course if you like but only if the counter is currently on 0."
+  },
+  "68": {
+    "name": "68",
+    "completed": false,
+    "playerDescription": "Before the end of the session, do a 100 block high water bucket clutch in front of everyone on the server. You may reveal this secret without failing. You must take off all armour before performing the clutch. You only get one attempt - no practice runs, and no totems allowed.",
+    "receiver": "",
+    "excluded": false,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "Before the end of the session, do a 100 block high water bucket clutch in front of everyone on the server. You may reveal this secret without failing. You must take off all armour before performing the clutch. You only get one attempt - no practice runs, and no totems allowed."
+  },
+  "69": {
+    "name": "69",
+    "completed": false,
+    "playerDescription": "Obtain 9 of the possible 12 item discs that are dropped by Creepers upon being killed by a Skeleton. You must obtain all disks yourself, you cannot get other players to give you any, though other players may help you in the process.",
+    "receiver": "",
+    "excluded": false,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "Obtain 9 of the possible 12 item discs that are dropped by Creepers upon being killed by a Skeleton. You must obtain all disks yourself, you cannot get other players to give you any, though other players may help you in the process."
+  },
+  "70": {
+    "name": "70",
+    "completed": false,
+    "playerDescription": "You must ask other players what you can do for them in exchange for diamonds, they set the amount and the task. You succeed when you have made a total of 10 diamonds from at least 3 other players. You must accept their first offer of diamonds and can not convince them to give you more.",
+    "receiver": "",
+    "excluded": false,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "You must ask other players what you can do for them in exchange for diamonds, they set the amount and the task. You succeed when you have made a total of 10 diamonds from at least 3 other players. You must accept their first offer of diamonds and can not convince them to give you more."
+  },
+  "71": {
+    "name": "71",
+    "completed": false,
+    "playerDescription": "Before the end of the session, do a 50 block high boat clutch in front of everyone on the server. You may reveal this secret without failing. You must take off all armour before performing the clutch. You only get one attempt - no practice runs, and no totems allowed.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "Before the end of the session, do a 50 block high boat clutch in front of everyone on the server. You may reveal this secret without failing. You must take off all armour before performing the clutch. You only get one attempt - no practice runs, and no totems allowed."
+  },
+  "72": {
+    "name": "72",
+    "completed": true,
+    "playerDescription": "[SL] You now have an imaginary friend for the next hour. Talk to them as if they\u0027re with you in-game and are part of conversations. You must still interact with players normally during this time.",
+    "receiver": "",
+    "excluded": false,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "[SL] You now have an imaginary friend for the next hour. Talk to them as if they\u0027re with you in-game and are part of conversations. You must still interact with players normally during this time."
+  },
+  "73": {
+    "name": "73",
+    "completed": true,
+    "playerDescription": "You are now scarwe\u0027s assassin. Brew or purchase an invisibility potion and kill them without them figuring out who you are. If you\u0027re figured out, or if they manage to escape for at least 5 minutes after the attack, you fail the task.",
+    "receiver": "",
+    "excluded": false,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "You are now {receiver}\u0027s assassin. Brew or purchase an invisibility potion and kill them without them figuring out who you are. If you\u0027re figured out, or if they manage to escape for at least 5 minutes after the attack, you fail the task."
+  },
+  "74": {
+    "name": "74",
+    "completed": false,
+    "playerDescription": "For the next hour, you now have an imaginary friend who is exactly like {receiver}. Talk to them as if they\u0027re with you in-game and are part of conversations. You must still interact with players normally during this time, even if {receiver} is part of the interaction, as if there\u0027s two of them.",
+    "receiver": "",
+    "excluded": false,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "For the next hour, you now have an imaginary friend who is exactly like {receiver}. Talk to them as if they\u0027re with you in-game and are part of conversations. You must still interact with players normally during this time, even if {receiver} is part of the interaction, as if there\u0027s two of them."
+  },
+  "75": {
+    "name": "75",
+    "completed": true,
+    "playerDescription": "[SL] Announce in the chat that you are a genie and will grant 3 wishes. Only one wish per player. You succeed if you grant 3 wishes, however, you must get some part of the wish wrong (how much wrong is up to you, but it can\u0027t be something completely different). If you\u0027re unable to grant all 3 wishes by the end of the session, you fail.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "[SL] Announce in the chat that you are a genie and will grant 3 wishes. Only one wish per player. You succeed if you grant 3 wishes, however, you must get some part of the wish wrong (how much wrong is up to you, but it can\u0027t be something completely different). If you\u0027re unable to grant all 3 wishes by the end of the session, you fail."
+  },
+  "76": {
+    "name": "76",
+    "completed": false,
+    "playerDescription": "Act as if you\u0027re in a TV show, and actively break the fourth wall as much as possible for the next hour. For example - applaud or boo when people arrive, turn to the side and talk to a non-existent audience, and then return to the conversation as if nothing happened. You fail if at least 2 people call you out within the hour.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "Act as if you\u0027re in a TV show, and actively break the fourth wall as much as possible for the next hour. For example - applaud or boo when people arrive, turn to the side and talk to a non-existent audience, and then return to the conversation as if nothing happened. You fail if at least 2 people call you out within the hour."
+  },
+  "77": {
+    "name": "77",
+    "completed": true,
+    "playerDescription": "Drink invisibility and punch a green name so that they fall a large distance, thereby damaging or killing them.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Drink invisibility and punch a green name so that they fall a large distance, thereby damaging or killing them."
+  },
+  "78": {
+    "name": "78",
+    "completed": true,
+    "playerDescription": "Trap another player. It can be placed in a base or elsewhere, the only condition is it must kill another player without that player\u0027s prior knowledge of said trap.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Trap another player. It can be placed in a base or elsewhere, the only condition is it must kill another player without that player\u0027s prior knowledge of said trap."
+  },
+  "79": {
+    "name": "79",
+    "completed": true,
+    "playerDescription": "Place lava on someone. If it doesn\u0027t kill them, you must then place lava on another player for a total of 2 players. You complete the task if you kill the first player or lava 2 players in total.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Place lava on someone. If it doesn\u0027t kill them, you must then place lava on another player for a total of 2 players. You complete the task if you kill the first player or lava 2 players in total."
+  },
+  "80": {
+    "name": "80",
+    "completed": true,
+    "playerDescription": "Repeatedly attack a player until they block you with a shield. If you kill them, you also succeed.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Repeatedly attack a player until they block you with a shield. If you kill them, you also succeed."
+  },
+  "81": {
+    "name": "81",
+    "completed": true,
+    "playerDescription": "Do any amount of damage to a non-red name with an anvil. If you kill them, you also succeed.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Do any amount of damage to a non-red name with an anvil. If you kill them, you also succeed."
+  },
+  "82": {
+    "name": "82",
+    "completed": true,
+    "playerDescription": "Get any yellow name to team with you (you may tell them about this task). They must then kill any player of choice with your help. They must either get the kill credit or deal a significant amount of damage for you to succeed.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Get any yellow name to team with you (you may tell them about this task). They must then kill any player of choice with your help. They must either get the kill credit or deal a significant amount of damage for you to succeed."
+  },
+  "83": {
+    "name": "83",
+    "completed": true,
+    "playerDescription": "You must convince anyone you encounter that scarwe is a deadly threat and is out to kill you. You must form an allyship with at least 2 other players and your only goal is to kill them together.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "You must convince people that a player of your choice is a deadly threat and is out to kill you. You must form an allyship with at least 2 other players in order to take them down together.",
+    "reward": 9
+  },
+  "84": {
+    "name": "84",
+    "completed": true,
+    "playerDescription": "Summon any number of mobs using an egg to deal damage to TerrariaTrees.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Summon any number of mobs using an egg to deal damage to {receiver}."
+  },
+  "85": {
+    "name": "85",
+    "completed": true,
+    "playerDescription": "you are now Pink_Jellyfish\u0027s assassin. brew or purchase an invisibility potion and kill them without them figuring out who you are. if you\u0027re figured out, you fail the task.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "You are now {receiver}\u0027s assassin. Brew or purchase an invisibility potion and kill them without them figuring out who you are. If you\u0027re figured out, you fail the task.",
+    "reward": 6
+  },
+  "86": {
+    "name": "86",
+    "completed": true,
+    "playerDescription": "use a redstone contraption to damage another player. you can\u0027t hit them with a redstone item, it must be some kind of trap or machine.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Use a redstone contraption to damage another player. You can\u0027t hit them with a redstone item, it must be some kind of trap or machine."
+  },
+  "87": {
+    "name": "87",
+    "completed": true,
+    "playerDescription": "Punch another player into a natural lava source.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Punch another player into a natural lava source."
+  },
+  "88": {
+    "name": "88",
+    "completed": true,
+    "playerDescription": "Mine a large hole underground and spleef a player into it, thereby damaging or killing them.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Mine a large hole underground and spleef a player into it, thereby damaging or killing them."
+  },
+  "89": {
+    "name": "89",
+    "completed": true,
+    "playerDescription": "Repeatedly fire arrows from an un-enchanted bow at someone until they start blocking. If you kill them, you also succeed.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Repeatedly fire arrows from an un-enchanted bow at someone until they start blocking. If you kill them, you also succeed."
+  },
+  "90": {
+    "name": "90",
+    "completed": true,
+    "playerDescription": "Get another player to look at an enderman.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Get another player to look at an enderman."
+  },
+  "91": {
+    "name": "91",
+    "completed": true,
+    "playerDescription": "Tame at least 2 wolves, and then punch a player so that the wolves begin attacking them, thereby damaging or killing them.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Tame at least 2 wolves, and then punch a player so that the wolves begin attacking them, thereby damaging or killing them."
+  },
+  "93": {
+    "name": "93",
+    "completed": true,
+    "playerDescription": "Enderpearl into a friendly conversation, and begin attacking players. If you\u0027re hit, or they run away, successfully hide from them for the next 5 minutes.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Enderpearl into a friendly conversation, and begin attacking players. If you\u0027re hit, or they run away, successfully hide from them for the next 5 minutes."
+  },
+  "94": {
+    "name": "94",
+    "completed": true,
+    "playerDescription": "Name a weapon \"Scarlett Slayer\" and kill TerrariaTrees with it. If you kill them with this weapon, the death message will show in chat and you succeed the task.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Name a weapon \"Scarlett Slayer\" and kill {receiver} with it. If you kill them with this weapon, the death message will show in chat and you succeed the task."
+  },
+  "95": {
+    "name": "95",
+    "completed": true,
+    "playerDescription": "Create an elaborate sky base (at least Y \u003d 200) and place this book inside a trapped chest. Once the chest is opened, the player reading this book should be trapped in a way that kills them.",
+    "receiver": "",
+    "excluded": true,
+    "available": true,
+    "difficulty": 2,
+    "description": "Create an elaborate sky base and place this book inside a trapped chest. Once the chest is opened, the player reading this book should be trapped in a way that kills them. You may also lead players to this base if you like.",
+    "reward": 4
+  },
+  "96": {
+    "name": "96",
+    "completed": true,
+    "playerDescription": "Rip someone off with the worst trade they could possibly do.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Rip someone off with the worst trade they could possibly do."
+  },
+  "97": {
+    "name": "97",
+    "completed": true,
+    "playerDescription": "Kill a player\u0027s pet (e.g. wolf, fish, horse) while they\u0027re near it. If they don\u0027t have a pet, convince them to get one, name it, and then kill it. Once you\u0027ve killed their pet, try to kill them as well shortly after.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Kill a player\u0027s pet (e.g. wolf, fish, horse) while they\u0027re near it. If they don\u0027t have a pet, convince them to get one, name it, and then kill it. Once you\u0027ve killed their pet, try to kill them as well shortly after.",
+    "reward": 5
+  },
+  "98": {
+    "name": "98",
+    "completed": true,
+    "playerDescription": "Become the villain of the server. Grief. Steal. Seek server wide domination. You pass if you are actively disliked by the majority of players.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Become the villain of the server. Grief. Steal. Seek srever wide domination. You pass if you are actively disliked by the majority of players. Your actions should not target other red players.",
+    "reward": 15
+  },
+  "99": {
+    "name": "99",
+    "completed": true,
+    "playerDescription": "Take over somebody\u0027s house and get them to pay rent in diamonds (price is your choice) lest they get evicted or killed. You complete the task once they give you the diamonds.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Take over somebody\u0027s house and get them to pay rent in diamonds (price is your choice) lest they get evicted or killed. You complete the task once they give you the diamonds."
+  },
+  "100": {
+    "name": "100",
+    "completed": true,
+    "playerDescription": "Build a diving board that leads to a small (maximum 3x3) pool of water. Convince players to jump off of it for a prize, but when they go to jump, punch them to throw off their balance. You complete this task once someone dies from the board.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 2,
+    "description": "Build a diving board that leads to a small (maximum 3x3) pool of water. Convince players to jump off of it for a prize, but when they go to jump, punch them to throw off their balance. You complete this task once someone dies from the board."
+  },
+  "ClockTower": {
+    "name": "ClockTower",
+    "completed": true,
+    "playerDescription": "Convince at least 5 other players to play a social deduction game with you. The moment someone dies in the game you will have to kill them for real and claim this task before people can stop you.",
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "Convince at least 5 other players to play a social deduction game with you. The moment someone dies in the game you will have to kill them for real and claim this task before people can stop you."
+  },
+  "Pokemon": {
+    "name": "Pokemon",
+    "completed": false,
+    "receiver": "",
+    "playerDescription": "Get another player to talk about the Exeter VGS Draft League for 1 minute.",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Get another player to talk about the Exeter VGS Draft League for 1 minute."
+  },
+  "blockplacer": {
+    "name": "blockplacer",
+    "completed": false,
+    "receiver": "",
+    "playerDescription": "Place as many excess blocks as you can around someone\u0027s base without them noticing. You succeed if you place a minimum of 20 random blocks around their base.",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Place as many excess blocks as you can around someone\u0027s base without them noticing while you\u0027re talking to them. You succeed if you place a minimum of 20 blocks. If you\u0027re caught, move on to a different player.",
+    "reward": 9
+  },
+  "competition": {
+    "name": "competition",
+    "completed": false,
+    "receiver": "",
+    "playerDescription": "Turn any collaborative effort into a competition. If you are called out at least twice, you fail this task, and you cannot compete with anyone who calls you out. You must win a minimum of 4 competitions to succeed this task.",
+    "excluded": false,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "Turn any collaborative effort into a competition. If you are called out at least twice, you fail this task, and you cannot compete with anyone who calls you out. You must win a minimum of 4 competitions to succeed this task."
+  },
+  "Wokeism": {
+    "name": "Wokeism",
+    "completed": true,
+    "receiver": "",
+    "playerDescription": "Have a 5 minute conversation with another player without using any pronouns. If you use a pronoun, restart the timer or go to another player.",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Have a 5 minute conversation with another player without using any pronouns. If you use a pronoun, restart the timer or go to another player."
+  },
+  "pyramid": {
+    "name": "pyramid",
+    "completed": true,
+    "receiver": "",
+    "playerDescription": "Start a pyramid scheme. You must get players to give you tokens and promise them an even greater return. To fund this, take tokens from other players while promising the same thing. You succeed when you have scammed at least 5 players.",
+    "excluded": true,
+    "difficulty": 1,
+    "reward": 17,
+    "description": "Start a pyramid scheme. You must get players to give you tokens and promise them an even greater return. To fund this, take tokens from other players while promising the same thing. You succeed when you have scammed at least 5 players."
+  },
+  "Praise": {
+    "name": "Praise",
+    "completed": true,
+    "receiver": "",
+    "playerDescription": "In 5 different conversations with 5 different people, praise the effort that has gone into making the secret life server",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "In 5 different conversations with 5 different people, praise the effort that has gone into making the secret life server"
+  },
+  "trivia": {
+    "name": "trivia",
+    "completed": true,
+    "receiver": "",
+    "excluded": true,
+    "difficulty": 3,
+    "description": "Build a place to host a trivia game and get at least 3 players to participate.",
+    "reward": 10
+  },
+  "Musk": {
+    "name": "Musk",
+    "completed": false,
+    "receiver": "",
+    "playerDescription": "Your entire personality is now how you are angry that Elon Musk ruined twitter.",
+    "excluded": true,
+    "difficulty": 0,
+    "description": "Your entire personality is now how you are angry that Elon Musk ruined twitter."
+  },
+  "president": {
+    "name": "president",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 17,
+    "excludedPlayers": [
+      "scarwe",
+      "Zylphys",
+      "OrcaHedral",
+      "TerrariaTrees",
+      "RavingRaven43453",
+      "Tal_Doesnt_Exist",
+      "Spicy_Trombone"
+    ],
+    "difficulty": 3,
+    "description": "Win against {player} in the presidential race, and become the president-elect of the server."
+  },
+  "votingbooth": {
+    "name": "votingbooth",
+    "priority": 0,
+    "completed": false,
+    "excluded": true,
+    "reward": 11,
+    "excludedPlayers": [
+      "scarwe",
+      "Zylphys"
+    ],
+    "difficulty": 3,
+    "description": "Two people will soon announce that they are running against each other for the position of president in the server. Your task is to build a voting booth and convince them to use it to count the votes. You fail if they refuse to use it for the election."
+  },
+  "comedy": {
+    "name": "comedy",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 10,
+    "excludedPlayers": [],
+    "difficulty": 3,
+    "description": "Meet {player} and build a place to perform a stand-up comedy event near spawn, in front of at least 3 players. {receiver} must write every joke without telling the performer what they are, and the performer must then perform them live, completely blind."
+  },
+  "helmet": {
+    "name": "helmet",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 5,
+    "excludedPlayers": [],
+    "difficulty": 0,
+    "description": "Have 3 different people call you out for wearing a helmet. You must take off your helmet when you complete the task."
+  },
+  "meow": {
+    "name": "meow",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 5,
+    "excludedPlayers": [],
+    "difficulty": 0,
+    "description": "Meow once during a conversation without being called out/someone esle meowing. If called out, try again in a different conversation (preferably with other players)."
+  },
+  "treasurer": {
+    "name": "treasurer",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "difficulty": 0,
+    "description": "Ask someone why Keanu is marked as Treasurer on the Discord when he\u0027s clearly President. You win when someone tells you the correct answer (stupid guild stuff)."
+  },
+  "fakestory": {
+    "name": "fakestory",
+    "priority": 0,
+    "completed": false,
+    "excluded": true,
+    "reward": 7,
+    "excludedPlayers": [],
+    "difficulty": 0,
+    "description": "Tell a completely fake story and convince someone that you\u0027ve told that story before, and that they were there when it happened."
+  },
+  "trouble": {
+    "name": "trouble",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "difficulty": 0,
+    "description": "Get someone to say something along the lines of \"is trouble brewing around here?\"."
+  },
+  "fakeyellowbait": {
+    "name": "fakeyellowbait",
+    "priority": 0,
+    "completed": false,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "difficulty": 0,
+    "description": "Bait a yellow player into thinking that your task is to bait a yellow player."
+  },
+  "presents": {
+    "name": "presents",
+    "priority": 3,
+    "completed": true,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "difficulty": 0,
+    "description": "Lead at least 4 players (one at a time) to spawn. You must then give them a gift/present of your choice, but it must be something that can be thrown and picked up (like an item)."
+  },
+  "grinch": {
+    "name": "grinch",
+    "priority": 1,
+    "completed": false,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "difficulty": 0,
+    "description": "You are the grinch. Someone on this server will be attempting to give 4 different players presents at spawn, and you must intercept them. You win even if you only steal 1 present, and must inform the present giver that they\u0027ve failed their task."
+  },
+  "buildbattle": {
+    "name": "buildbattle",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 9,
+    "excludedPlayers": [],
+    "difficulty": 0,
+    "description": "You must participate in a build battle against {player}, for any build of your choice. Get some players to judge the builds and the loser fails the task."
+  },
+  "fakejumpscare": {
+    "name": "fakejumpscare",
+    "priority": 0,
+    "completed": false,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "difficulty": 0,
+    "description": "Constistently make terrible (not scary) jumpscares, and afterwards ask \"did that scare you?\", until people start making a joke out of it.",
+    "playerDescription": ""
+  },
+  "revenge": {
+    "name": "revenge",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 8,
+    "excludedPlayers": [],
+    "difficulty": 0,
+    "description": "Say a line/lyric from Captain Sparklez\u0027s \"Revenge\" in at least 3 different conversations. Each line/lyric must be different for each conversation. If someone calls you out, that conversation doesn\u0027t count.",
+    "playerDescription": ""
+  },
+  "compliments": {
+    "name": "compliments",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [
+      "scarwe"
+    ],
+    "difficulty": 0,
+    "description": "Give 3 nonsense compliments to 3 separate players, and get them to thank you. For example, stare at them longingly and say \"has anyone ever told you that you have 2 eyes?\".",
+    "playerDescription": ""
+  },
+  "presidentassassin": {
+    "name": "presidentassassin",
+    "priority": 2,
+    "completed": true,
+    "excluded": true,
+    "reward": 9,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 3,
+    "description": "Assassinate the president."
+  },
+  "bodyguard": {
+    "name": "bodyguard",
+    "priority": 4,
+    "completed": false,
+    "excluded": true,
+    "reward": 14,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 3,
+    "description": "You are now the president\u0027s devout bodyguard. You must protect them at all costs, as there may be someone out to get them. You fail this task if the president dies."
+  },
+  "tag": {
+    "name": "tag",
+    "priority": 9,
+    "completed": true,
+    "excluded": true,
+    "reward": 11,
+    "excludedPlayers": [
+      "Zylphys",
+      "OrcaHedral"
+    ],
+    "playerDescription": "",
+    "difficulty": 3,
+    "description": "You are in a game of tag with {player}, {player} and {player}. Hit a player with your fist to tag them. If you are tagged at the end of the game (you\u0027ll get 5 minute warning), you will fail the task and be punished."
+  },
+  "parkour": {
+    "name": "parkour",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [
+      "Zylphys",
+      "OrcaHedral"
+    ],
+    "playerDescription": "",
+    "difficulty": 3,
+    "description": "Build a 25-block parkour course with {player}, and compete for the fastest time between the two of you. You should have a maximum of 3 attempts each."
+  },
+  "policy": {
+    "name": "policy",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 9,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 3,
+    "description": "You must enact one of the policies that you promised to deliver on during the previous session. Give at least half the members of the server a bed before the end of the session."
+  },
+  "prison": {
+    "name": "prison",
+    "priority": 0,
+    "completed": true,
+    "playerDescription": "",
+    "excluded": true,
+    "reward": 2,
+    "excludedPlayers": [],
+    "difficulty": 2,
+    "description": "Team up with another red/yellow player, and build a small prison with at least 2 holding cells. You should trap 2 other non-red players there and force them to fist fight to the death for their freedom."
+  },
+  "conspiracy": {
+    "name": "conspiracy",
+    "priority": 0,
+    "completed": true,
+    "playerDescription": "",
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "difficulty": 0,
+    "description": "Make up a completely nonsensical conspiracy theory and get someone to believe it."
+  },
+  "fishing": {
+    "name": "fishing",
+    "priority": 6,
+    "completed": true,
+    "playerDescription": "",
+    "excluded": true,
+    "reward": 13,
+    "excludedPlayers": [],
+    "difficulty": 3,
+    "description": "Craft a fishing rod and use it to steal the shop keeper villager at spawn, without getting caught. Hide it somewhere and start a token black market, successfully selling at least 3 items to 3 different players."
+  },
+  "basegift": {
+    "name": "basegift",
+    "priority": 0,
+    "completed": false,
+    "playerDescription": "",
+    "excluded": false,
+    "reward": 6,
+    "excludedPlayers": [],
+    "difficulty": 0,
+    "description": "Build someone a base as a gift, but build it completely out of dirt (and dirt variants). It can be as nice or as ugly as you like, but they must accept the gift for you to succeed. You fail if 3 people reject the gift."
+  },
+  "skibidi": {
+    "name": "skibidi",
+    "priority": 0,
+    "completed": false,
+    "playerDescription": "",
+    "excluded": false,
+    "reward": 6,
+    "excludedPlayers": [],
+    "difficulty": 0,
+    "description": "Naturally include as much Gen A slang as possible into a conversation (e.g. skibidi, rizz, fanum tax) without getting caught. You pass if you go an entire conversation with nobody calling you out."
+  },
+  "scarlettblock": {
+    "name": "scarlettblock",
+    "priority": 0,
+    "completed": false,
+    "excluded": true,
+    "reward": 9,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "You must prevent Scarlett (scarwe) from completing one of her red tasks, either by saving the targeted player so that she stops attacking them or by taking the targeted player\u0027s place. Scarlett knows that someone has this task, but not who."
+  },
+  "guessthebuild": {
+    "name": "guessthebuild",
+    "priority": 0,
+    "completed": false,
+    "excluded": false,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "Guess the build. Build a bell near spawn and gather some players to guess what you\u0027re building. You cannot give hints nor write signs that describe the build. You fail if nobody guesses the build within 3 minutes of starting, and you only have one attempt."
+  },
+  "bribe": {
+    "name": "bribe",
+    "priority": 0,
+    "completed": false,
+    "excluded": false,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "Bribe a red player into killing a green player of your choice. You may tell the player you choose about this task. You succeed when the green player has been killed."
+  },
+  "boogey": {
+    "name": "boogey",
+    "priority": 5,
+    "completed": true,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "You are the boogeyman. Kill a green player of your choice before the end of the session. If you fail, you will lose a life."
+  },
+  "restaurant": {
+    "name": "restaurant",
+    "priority": 0,
+    "completed": false,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "Build a restaurant and serve a player. However, when you give them their food, throw a potion of poison at them."
+  },
+  "newsociety": {
+    "name": "newsociety",
+    "priority": 7,
+    "completed": false,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [
+      "LightingLord854",
+      "DejiLikesFizz",
+      "OperationDusty",
+      "J0shuaW",
+      "jjorj"
+    ],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "You are quite unhappy that an election has taken place, and wish to start your own society (or join one) separate from the ruling of the server\u0027s president. Start your own nation and invite 2 other players to join you, or join an existing one."
+  },
+  "rapbattle": {
+    "name": "rapbattle",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 3,
+    "description": "Participate in a rap battle against {player} and have a crowd of players vote whose performance was better."
+  },
+  "megalovania": {
+    "name": "megalovania",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "For the next hour, you must hum the first 4 notes of megalovania every 5 minutes"
+  },
+  "theletterL": {
+    "name": "theletterL",
+    "priority": 0,
+    "completed": false,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "For the next hour, you are now terrified of the letter L. If anyone near you says a word beginning with it, you must scream in fear and not speak for the next 10 seconds."
+  },
+  "reference": {
+    "name": "reference",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "You must make at least 5 references to any movie in various conversations. If someone understands even one reference, you succeed, but you\u0027ll fail if nobody knows them."
+  },
+  "teacher": {
+    "name": "teacher",
+    "priority": 0,
+    "completed": false,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "Successfully teach someone a Minecraft technique that they didn\u0027t know. You succeed when they successfully pull it off."
+  },
+  "badteacher": {
+    "name": "badteacher",
+    "priority": 0,
+    "completed": false,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "You are now a very terrible teacher. Teach at least 3 people a made-up technique in Minecraft, and get them to attempt it. You succeed if they try and nothing happens/they get harmed from it."
+  },
+  "inconvenience": {
+    "name": "inconvenience",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "You must be a mild inconvenience to {receiver} for the next 30 minutes (e.g. punch them randomly, light flint and steal nearby, steal their mob kills). You fail if you are called out even once."
+  },
+  "piston": {
+    "name": "piston",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "You must install a piston door to another players base without their consent. If a person gives you consent, you must stop building and move on to another player."
+  },
+  "ugly": {
+    "name": "ugly",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "Make a build that is deeply uncomfortable to use and look at. To pass the task, another player has to insult you for building said build. For a yellow name to make you fail, they need to guess that your goal is to get insulted."
+  },
+  "bet": {
+    "name": "bet",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "Make a bet with {receiver} and win. It doesn\u0027t matter what the bet is."
+  },
+  "stare": {
+    "name": "stare",
+    "priority": 0,
+    "completed": false,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "Follow and stare at {receiver} from afar using a spyglass for as long as you can during this session. If anyone notices you, the timer stops. You pass the task if you manage to keep it up unnoticed for at least 10 minutes."
+  },
+  "danger": {
+    "name": "danger",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "Create a dangerous mini-game and convince as many players as possible to participate in it. You pass the task if at least 1 player takes any damage while playing your mini-game by the end of the session."
+  },
+  "microphone": {
+    "name": "microphone",
+    "priority": 0,
+    "completed": false,
+    "excluded": false,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "Fully convince someone their mic is off when it\u0027s not. You have to get them to log off in an attempt to fix the issue to pass the task."
+  },
+  "badMic": {
+    "name": "badMic",
+    "priority": 0,
+    "completed": false,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "You must convince somebody that you are currently having issues with your microphone. You succeed when you get three different solutions to your \"mic issues\"."
+  },
+  "annoyingblocks": {
+    "name": "annoyingblocks",
+    "priority": 0,
+    "completed": false,
+    "excluded": false,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "You must \u0027accidently\u0027 place a block directly in the way of at least 3 players while they are moving, at least 3 times for each player."
+  },
+  "fizzyhard": {
+    "name": "fizzyhard",
+    "priority": 0,
+    "completed": true,
+    "excluded": true,
+    "reward": 17,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 1,
+    "description": "Find any green name on the server, and become their complete servant for the next 2 hours. You may only do what they tell you to do, and if you\u0027re figoured out - you fail."
+  },
+  "narrator": {
+    "name": "narrator",
+    "priority": 0,
+    "completed": false,
+    "excluded": true,
+    "reward": 8,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 0,
+    "description": "Narrate {receiver}\u0027s game for the next 30 minutes."
+  },
+  "thanos": {
+    "name": "thanos",
+    "priority": 3,
+    "completed": false,
+    "playerDescription": "",
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "difficulty": 2,
+    "description": "Kill a total of 4 green players, bringing them down to yellow lives."
+  }
+}
