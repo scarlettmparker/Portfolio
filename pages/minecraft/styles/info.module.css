@@ -43,6 +43,17 @@
     display: flex;
 }
 
+.taskWrapper {
+    width: 700px;
+}
+
+.taskDescription {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 550px;
+}
+
 .extraNavBar, .pluginDescription, .taskDescription {
     font-family: "Reo Sans";
 }
@@ -96,6 +107,21 @@
 }
 
 .rightArrow {
+    right: 0;
+}
+
+.taskLeftWrapper, .taskRightWrapper {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.taskLeftWrapper {
+    padding-right: 2em;
+    left: 0;
+}
+
+.taskRightWrapper {
+    padding-left: 2em;
     right: 0;
 }
 

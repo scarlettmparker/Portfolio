@@ -41,3 +41,14 @@ export async function getGalleryCount() {
     const jsonResponse = await response.json();
     return jsonResponse.pngCount;
 }
+
+// GET TASK DATA BY SESSION
+export async function getTaskData(session: number) {
+    const response = await fetch(`../api/minecraft/gettaskdata`, {
+        method: 'POST',
+        body: JSON.stringify({ session })
+    });
+    
+    const jsonResponse = await response.json();
+    return jsonResponse;
+}

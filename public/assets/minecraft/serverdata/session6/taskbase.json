@@ -1219,7 +1219,7 @@
     ],
     "playerDescription": "",
     "difficulty": 3,
-    "description": "test tag"
+    "description": "Win in a game of tag against {player}, {player} and {player}."
   },
   "parkour": {
     "name": "parkour",
