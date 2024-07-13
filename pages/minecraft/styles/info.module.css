@@ -33,7 +33,10 @@
     cursor: default;
 }
 
-.galleryWrapper, .pluginWrapper, .taskWrapper {
+.galleryWrapper,
+.pluginWrapper,
+.taskWrapper,
+.playerDataWrapper {
     position: relative;
     width: 600px;
     height: 300px;
@@ -43,22 +46,40 @@
     display: flex;
 }
 
-.taskWrapper {
+.taskWrapper,
+.playerDataWrapper {
     width: 700px;
 }
 
-.taskDescription {
+.taskDescription,
+.playerDataDescription {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
     width: 550px;
 }
 
-.extraNavBar, .pluginDescription, .taskDescription {
+.playerTaskDescriptionWrapper {
+    left: 50%;
+    transform: translateX(-50%);
+    position: absolute;
+    min-height: '50px';
+    align-items: 'center';
+    margin-top: '10px';
+    width: 90%;
+    overflow: 'hidden';
+}
+
+.extraNavBar,
+.pluginDescription,
+.taskDescription,
+.playerDataDescription {
     font-family: "Reo Sans";
 }
 
-.pluginDescription, .taskDescription {
+.pluginDescription,
+.taskDescription,
+.playerDataDescription {
     font-size: 1.4rem;
     color: white;
 }
@@ -68,11 +89,25 @@
 }
 
 @keyframes colorSwitch {
-    0% { color: #FFFFFF; }
-    25% { color: #28C878; }
-    50% { color: #F4F19D; }
-    75% { color: #C82843; }
-    100% { color: #FFFFFF; }
+    0% {
+        color: #FFFFFF;
+    }
+
+    25% {
+        color: #28C878;
+    }
+
+    50% {
+        color: #F4F19D;
+    }
+
+    75% {
+        color: #C82843;
+    }
+
+    100% {
+        color: #FFFFFF;
+    }
 }
 
 .colorSwitch {
@@ -91,7 +126,7 @@
 }
 
 .gitLink:hover {
-    color: 	#762DD9;
+    color: #762DD9;
 }
 
 .galleryImageWrapper {
@@ -110,11 +145,13 @@
     right: 0;
 }
 
-.taskLeftWrapper, .taskRightWrapper {
+.taskLeftWrapper,
+.taskRightWrapper {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
 }
+
 .taskLeftWrapper {
     padding-right: 2em;
     left: 0;
@@ -123,6 +160,10 @@
 .taskRightWrapper {
     padding-left: 2em;
     right: 0;
+}
+
+.space {
+    white-space: pre;
 }
 
 .arrow {
@@ -139,8 +180,8 @@
     font-size: 16px;
     border-color: white;
     border-radius: 50px;
-    transition: width 0.2s ease-in-out, height 0.2s ease-in-out, opacity 0.2s ease-in-out, 
-            margin-bottom 0.2s ease-in-out, margin-top 0.2s ease-in-out;
+    transition: width 0.2s ease-in-out, height 0.2s ease-in-out, opacity 0.2s ease-in-out,
+        margin-bottom 0.2s ease-in-out, margin-top 0.2s ease-in-out;
     top: 50%;
     transform: translateY(-50%);
 }

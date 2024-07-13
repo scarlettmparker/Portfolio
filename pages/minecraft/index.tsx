@@ -3,17 +3,18 @@ import infostyles from './styles/info.module.css';
 import ReactDOM from 'react-dom';
 import { useState, useRef, useEffect, MutableRefObject } from 'react';
 import { renderScene } from './threescene';
-import { getUUID, checkUUIDExists, getSkin, getGalleryCount, getTaskData } from "./utils";
+import { getUUID, checkUUIDExists, getSkin, getGalleryCount, getTaskData, getPlayerData } from "./utils";
 import { playBackground } from './musicutils';
 import { drawSkin } from './skinutils';
-import { GalleryButton, TaskButton } from './arrowbutton';
+import { GalleryButton, TaskButton, PlayerButton } from './arrowbutton';
 import * as THREE from 'three';
 import './styles/global.css';
 import React from 'react';
 
 // GLOBAL VARIABLES
-let enchantmentGraphics: string[] = [];
 let renderer: THREE.WebGLRenderer;
+let fetchedTaskData: Task[] = [];
+let fetchedPlayerData: Player[] = [];
 
 // interface for player skin data
 interface PlayerSkin {
@@ -24,57 +25,6 @@ interface PlayerSkin {
 // splash screen interface
 interface SplashScreenProps {
     onEnter: (event: React.MouseEvent<HTMLButtonElement>) => void;
-}
-
-// load image for the enchantment graphics
-function splitEnchantmentImage() {
-    let img = new Image();
-    img.src = '/assets/minecraft/images/font-map.png';
-    img.onload = () => {
-        let canvas = document.createElement('canvas');
-
-        // get image width and height to iterate over
-        canvas.width = img.width;
-        canvas.height = img.height;
-        let ctx = canvas.getContext('2d');
-
-        if (ctx) {
-            // split image into smaller parts
-            ctx.drawImage(img, 0, 0);
-            let width = 110;
-            let height = 120;
-
-            // crop each part of the image
-            let croppedWidth = width - 20;
-            let croppedHeight = height - 20;
-            let i = 0;
-            for (let y = 0; y < img.height; y += height) {
-                for (let x = 0; x < img.width; x += width) {
-                    // only get first 27 entries
-                    if (i > 27) break;
-                    let startX = x + 10;
-                    let startY = y + 10;
-
-                    // ensure cropped area doesn't exceed boundaries
-                    startX = Math.max(0, Math.min(startX, img.width - croppedWidth));
-                    startY = Math.max(0, Math.min(startY, img.height - croppedHeight));
-                    let data = ctx.getImageData(startX, startY, croppedWidth, croppedHeight);
-
-                    // create canvas for each cropped image
-                    let canvas = document.createElement('canvas');
-                    canvas.width = croppedWidth;
-                    canvas.height = croppedHeight;
-                    let ctx2 = canvas.getContext('2d');
-
-                    if (ctx2 && data) {
-                        ctx2.putImageData(data, 0, 0);
-                        enchantmentGraphics.push(canvas.toDataURL());
-                        i++;
-                    }
-                }
-            }
-        }
-    };
 }
 
 // debounce function to limit the number of times a function is called
@@ -213,6 +163,7 @@ const ExtraPluginInfoSection = ({ selectedID, handleSelect, currentImage, setCur
             {selectedID == "1" && <PluginSection />}
             {selectedID == "2" && <GallerySection currentImage={currentImage} setCurrentImage={setCurrentImage} numberImages={numberImages} />}
             {selectedID == "3" && <TaskSection />}
+            {selectedID == "4" && <PlayerSection />}
         </div>
     );
 };
@@ -254,11 +205,6 @@ function manageLifeAnimation() {
         lifeTextElement.removeEventListener('mouseleave', handleMouseLeave);
         lifeTextElement.removeEventListener('animationiteration', handleAnimationIteration);
     };
-}
-
-function returnTaskData(session: number) {
-    const taskData = getTaskData(session);
-    return taskData;
 }
 
 // plugin information section
@@ -322,8 +268,20 @@ const GallerySection = ({ currentImage, setCurrentImage, numberImages }:
                 document.body // renders on top of everything else
             ) : (
                 <div className={infostyles.galleryWrapper}>
-                    <GalleryButton direction="left" rotation={90} currentImage={currentImage} setCurrentImage={setCurrentImage} numberImages={numberImages} />
-                    <GalleryButton direction="right" rotation={270} currentImage={currentImage} setCurrentImage={setCurrentImage} numberImages={numberImages} />
+                    <GalleryButton
+                        direction="left"
+                        rotation={90}
+                        current={currentImage}
+                        setCurrent={setCurrentImage}
+                        number={numberImages}
+                    />
+                    <GalleryButton
+                        direction="right"
+                        rotation={270}
+                        current={currentImage}
+                        setCurrent={setCurrentImage}
+                        number={numberImages}
+                    />
                     <div className={infostyles.galleryImageWrapper} onClick={toggleHDImage}>
                         <img
                             src={`/assets/minecraft/images/gallery/small/${currentImage}.png`}
@@ -351,40 +309,47 @@ interface Task {
     priority?: number;
 }
 
+const difficultyColorMapping: { [key: number]: string } = {
+    0: '#28c878',
+    1: '#e0a526',
+    2: '#c82843',
+    3: '#2861c9',
+};
+
+// task section in the plugin info
 const TaskSection = () => {
     const [taskData, setTaskData] = useState<Task[] | null>(null);
     const [currentTask, setCurrentTask] = useState(0);
 
-    const difficultyMap: {[key: number]: string} = {
+    // map difficulty number to string
+    const difficultyMap: { [key: number]: string } = {
         0: "Normal",
         1: "Hard",
         2: "Red",
         3: "Shiny"
     };
 
-    const rewardMap: {[key: number]: string} = {
+    const rewardMap: { [key: number]: string } = {
         0: "6",
         1: "17",
         2: "3",
         3: "9"
     };
 
-    const difficultyColorMapping: {[key: number]: string} = {
-        0: '#28C878',
-        1: '#e0a526',
-        2: '#C82843',
-        3: '#2861c9',
-    };
-
     // fetch task data from the API
     useEffect(() => {
         const fetchTaskData = async () => {
-            const data: { [key: string]: Task } = await returnTaskData(6);
+            const data: { [key: string]: Task } = await getTaskData(6);
             const taskArray: Task[] = Object.values(data);
+            fetchedTaskData = taskArray;
             setTaskData(taskArray);
             setCurrentTask(0);
         };
-        fetchTaskData();
+        if (fetchedTaskData.length == 0) {
+            fetchTaskData();
+        } else {
+            setTaskData(fetchedTaskData);
+        }
     }, []);
 
     return (
@@ -395,28 +360,28 @@ const TaskSection = () => {
                         <TaskButton
                             direction="left"
                             rotation={90}
-                            currentTask={currentTask}
-                            setCurrentTask={setCurrentTask}
-                            numberTasks={taskData.length}
+                            current={currentTask}
+                            setCurrent={setCurrentTask}
+                            number={taskData.length}
                         />
                     </div>
                     <div className={infostyles.taskRightWrapper}>
                         <TaskButton
                             direction="right"
                             rotation={270}
-                            currentTask={currentTask}
-                            setCurrentTask={setCurrentTask}
-                            numberTasks={taskData.length}
+                            current={currentTask}
+                            setCurrent={setCurrentTask}
+                            number={taskData.length}
                         />
                     </div>
                     <span className={infostyles.taskDescription}>
                         Task Name: {taskData[currentTask].name}<br />
-                        Task Difficulty: <span style={{color: difficultyColorMapping[taskData[currentTask].difficulty]}}>
+                        Task Difficulty: <span style={{ color: difficultyColorMapping[taskData[currentTask].difficulty] }}>
                             {difficultyMap[taskData[currentTask].difficulty]}</span><br /><br />
                         Task Description: {taskData[currentTask].description}<br /><br />
-                        Reward: <span style={{color: "#e0a526"}}>
-                            {taskData[currentTask].reward !== undefined 
-                                ? taskData[currentTask].reward + " tokens" 
+                        Reward: <span style={{ color: "#e0a526" }}>
+                            {taskData[currentTask].reward !== undefined
+                                ? taskData[currentTask].reward + " tokens"
                                 : rewardMap[taskData[currentTask].difficulty] + " tokens"}
                         </span><br />
                     </span>
@@ -427,6 +392,184 @@ const TaskSection = () => {
         </div>
     );
 };
+
+interface Death {
+    time: number;
+    deathMessage: string;
+}
+
+interface Player {
+    name: string;
+    lives: number[];
+    deaths: Death[];
+    tasks: Task[];
+    tokens: number[];
+};
+
+function unixToDate(unix: number) {
+    return new Date(unix * 1000).toLocaleString();
+}
+
+const PlayerSection = () => {
+    const [playerData, setPlayerData] = useState<Player[] | null>(null);
+    const [taskData, setTaskData] = useState<Task[] | null>(null);
+
+    const [currentPlayer, setCurrentPlayer] = useState(0);
+    const [currentDeathIndex, setCurrentDeathIndex] = useState(0);
+    const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
+
+    // get player data from the api
+    useEffect(() => {
+        const fetchPlayerData = async () => {
+            const data: { [key: string]: Player } = await getPlayerData();
+            const playerArray: Player[] = Object.values(data);
+            setPlayerData(playerArray);
+            setCurrentPlayer(0);
+        };
+
+        const fetchTaskData = async () => {
+            const data: { [key: string]: Task } = await getTaskData(6);
+            const taskArray: Task[] = Object.values(data);
+            setTaskData(taskArray);
+        };
+
+        // if task/player data is already locally stored, use that instead of fetching
+        fetchedTaskData.length === 0 ? fetchTaskData() : setTaskData(fetchedTaskData);
+        fetchedPlayerData.length === 0 ? fetchPlayerData() : setPlayerData(fetchedPlayerData);
+    }, []);
+
+    let deaths: string | any[] = [];
+    let tasks: string | any[] = [];
+
+    // set deaths and tasks from player data
+    if (playerData && playerData[currentPlayer]) {
+        deaths = playerData[currentPlayer].deaths || [];
+        tasks = playerData[currentPlayer].tasks || [];
+    }
+
+    // get current task and difficulty, use that to set colour
+    const currentTask = taskData?.find(task => task.name === tasks[currentTaskIndex]);
+    const taskText = currentTask ? tasks[currentTaskIndex] : "No task information available";
+    const difficulty = currentTask ? currentTask.difficulty : undefined;
+    const taskColor = difficulty !== undefined ? difficultyColorMapping[difficulty] : 'defaultColor';
+
+    // handle change in task or death with the buttons
+    const handleChange = (type: "death" | "task", direction: "prev" | "next") => {
+        const index = type === "death" ? currentDeathIndex : currentTaskIndex;
+        const length = type === "death" ? deaths.length : tasks.length;
+    
+        // change index based on direction
+        const newIndex = direction === "prev" ? index - 1 : index + 1;
+        if (newIndex >= 0 && newIndex < length) {
+            type === "death" ? setCurrentDeathIndex(newIndex) : setCurrentTaskIndex(newIndex);
+        }
+    };
+    
+    return (
+        <div className={infostyles.playerDataWrapper}>
+            {playerData ? (
+                <>
+                    <div className={infostyles.taskLeftWrapper}>
+                        <PlayerButton
+                            direction="left"
+                            rotation={90}
+                            current={currentPlayer}
+                            setCurrent={setCurrentPlayer}
+                            number={playerData.length}
+                            onClick={() => {
+                                setCurrentDeathIndex(0);
+                                setCurrentTaskIndex(0);
+                            }}
+                        />
+                    </div>
+                    <div className={infostyles.taskRightWrapper}>
+                        <PlayerButton
+                            direction="right"
+                            rotation={270}
+                            current={currentPlayer}
+                            setCurrent={setCurrentPlayer}
+                            number={playerData.length}
+                            onClick={() => {
+                                setCurrentDeathIndex(0);
+                                setCurrentTaskIndex(0);
+                            }}
+                        />
+                    </div>
+                    <span className={infostyles.playerDataDescription}>
+                        <div style={{ display: 'flex', alignItems: 'center', width: "100%" }}>
+                            <div style={{ flex: 1, textAlign: 'center' }}>
+                                <strong>{playerData[currentPlayer].name}</strong>
+                            </div>
+                        </div>
+                        {deaths.length > 0 ? (
+                            <>
+                                <div style={{ display: 'flex', alignItems: 'flex-start', width: "100%", marginTop: '10px' }}>
+                                    <button onClick={() => handleChange("death", "prev")} disabled={currentDeathIndex === 0} style={{ marginRight: '10px' }}>
+                                        {"<"}
+                                    </button>
+                                    <div style={{ flex: 1, textAlign: 'center', whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }}>
+                                        <div style={{ minHeight: '1.2em', textAlign: 'center' }}>
+                                            {deaths[currentDeathIndex].deathMessage || "No death information available"}
+                                        </div>
+                                    </div>
+                                    <button onClick={() => handleChange("death", "next")} disabled={currentDeathIndex === deaths.length - 1} style={{ marginLeft: '10px' }}>
+                                        {">"}
+                                    </button>
+                                </div>
+                                <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                                    {unixToDate(deaths[currentDeathIndex].time)}
+                                </div>
+                            </>
+                        ) : (
+                            <div style={{ display: 'flex', alignItems: 'center', width: "100%", marginTop: '10px' }}>
+                                <div style={{ flex: 1, textAlign: 'center' }}>
+                                    No deaths recorded
+                                </div>
+                            </div>
+                        )}
+                        <br />
+                        Life History: {playerData[currentPlayer].lives.join("  -  ")}<br />
+                        Token History: {playerData[currentPlayer].tokens.join("  -  ")}<br /><br />
+    
+                        {/* Tasks Section */}
+                        {tasks.length > 0 ? (
+                            <>
+                                <div style={{ display: 'flex', alignItems: 'flex-start', width: "100%" }}>
+                                    <button onClick={() => handleChange("task", "prev")} disabled={currentTaskIndex === 0} style={{ marginRight: '10px' }}>
+                                        {"<"}
+                                    </button>
+                                    <div style={{ flex: 1, textAlign: 'center' }}>
+                                        <strong>Task: </strong>
+                                        <span style={{ color: taskColor }}>
+                                            {taskText}
+                                        </span>
+                                        <div className={infostyles.playerTaskDescriptionWrapper} style={{
+                                            overflow: 'hidden',
+                                            lineClamp: 3,
+                                            WebkitLineClamp: 3,
+                                            WebkitBoxOrient: 'vertical',
+                                            display: '-webkit-box'
+                                        }}>
+                                            {currentTask?.description || "No description available"}
+                                        </div>
+                                    </div>
+                                    <button onClick={() => handleChange("task", "next")} disabled={currentTaskIndex === tasks.length - 1} style={{ marginLeft: '10px' }}>
+                                        {">"}
+                                    </button>
+                                </div>
+                            </>
+                        ) : (
+                            <div>No tasks recorded</div>
+                        )}
+                    </span>
+                </>
+            ) : (
+                <span className={infostyles.playerDataDescription}>Loading...</span>
+            )}
+        </div>
+    );
+};
+
 
 // show more information when divs are expanded
 function showExpandedInformation(setCurrentButtonText: { (value: React.SetStateAction<string>): void; (arg0: string): void; },
@@ -557,7 +700,6 @@ function setupAfterSplash(steve: string, canvasRef: MutableRefObject<null>, scen
     drawSkin(steve, canvasRef.current);
     renderScene(renderer, scene);
     playBackground();
-    splitEnchantmentImage();
 
     // fake resize event dispatch because spaghetti code
     let resizeEvent = new Event('resize');

@@ -16,6 +16,57 @@ let tanFOV: number, windowHeight: number;
 let bookX = 0.25, bookY = 0;
 
 
+// load image for the enchantment graphics
+function splitEnchantmentImage() {
+    let img = new Image();
+    img.src = '/assets/minecraft/images/font-map.png';
+    img.onload = () => {
+        let canvas = document.createElement('canvas');
+
+        // get image width and height to iterate over
+        canvas.width = img.width;
+        canvas.height = img.height;
+        let ctx = canvas.getContext('2d');
+
+        if (ctx) {
+            // split image into smaller parts
+            ctx.drawImage(img, 0, 0);
+            let width = 110;
+            let height = 120;
+
+            // crop each part of the image
+            let croppedWidth = width - 20;
+            let croppedHeight = height - 20;
+            let i = 0;
+            for (let y = 0; y < img.height; y += height) {
+                for (let x = 0; x < img.width; x += width) {
+                    // only get first 27 entries
+                    if (i > 27) break;
+                    let startX = x + 10;
+                    let startY = y + 10;
+
+                    // ensure cropped area doesn't exceed boundaries
+                    startX = Math.max(0, Math.min(startX, img.width - croppedWidth));
+                    startY = Math.max(0, Math.min(startY, img.height - croppedHeight));
+                    let data = ctx.getImageData(startX, startY, croppedWidth, croppedHeight);
+
+                    // create canvas for each cropped image
+                    let canvas = document.createElement('canvas');
+                    canvas.width = croppedWidth;
+                    canvas.height = croppedHeight;
+                    let ctx2 = canvas.getContext('2d');
+
+                    if (ctx2 && data) {
+                        ctx2.putImageData(data, 0, 0);
+                        enchantmentGraphics.push(canvas.toDataURL());
+                        i++;
+                    }
+                }
+            }
+        }
+    };
+}
+
 // resizing debounce function
 function resizeDebounce(func: (...args: any[]) => void, wait: number | undefined) {
     let timeout: string | number | NodeJS.Timeout | undefined;
@@ -39,6 +90,7 @@ export function renderScene(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
 
     // RENDERER
     renderer = createRenderer(sizes, "#000000", 0);
+    splitEnchantmentImage();
 
     // TEXTURE LOADER
     const loader = new THREE.TextureLoader();

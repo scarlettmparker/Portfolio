@@ -8,7 +8,6 @@
         "time": 1717518732,
         "deathMessage": "TerrariaTrees was blown up by Creeper"
       },
-      null,
       {
         "time": 1718725435,
         "deathMessage": "TerrariaTrees fell from a high place"
@@ -451,7 +450,6 @@
       "78",
       "trouble",
       "14",
-      null,
       "presidentassassin",
       "65"
     ],
@@ -644,18 +642,18 @@
     "shop": false,
     "tagged": false
   },
-  "SanguisAureus": {
-    "name": "SanguisAureus",
+  "SigmaPilled": {
+    "name": "SigmaPilled",
     "sessionTasks": 1,
     "lives": 1,
     "deaths": [
       {
         "time": 1718122395,
-        "deathMessage": "SanguisAureus was slain by scarwe using §f[§oScarlett Slayer§f]"
+        "deathMessage": "SigmaPilled was slain by scarwe using §f[§oScarlett Slayer§f]"
       },
       {
         "time": 1718727200,
-        "deathMessage": "SanguisAureus was slain by scarwe using §b[§oscarwe§b]"
+        "deathMessage": "SigmaPilled was slain by scarwe using §b[§oscarwe§b]"
       }
     ],
     "currentTask": "teacher",

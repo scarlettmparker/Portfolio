@@ -52,3 +52,10 @@ export async function getTaskData(session: number) {
     const jsonResponse = await response.json();
     return jsonResponse;
 }
+
+// GET EVERY PLAYER DATA FILE
+export async function getPlayerData() {
+    const response = await fetch(`../api/minecraft/getplayerdata`);
+    const jsonResponse = await response.json();
+    return jsonResponse;
+}

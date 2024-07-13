@@ -8,7 +8,6 @@
         "time": 1717518732,
         "deathMessage": "TerrariaTrees was blown up by Creeper"
       },
-      null,
       {
         "time": 1718725435,
         "deathMessage": "TerrariaTrees fell from a high place"
@@ -54,7 +53,7 @@
       {
         "time": 1718727453,
         "deathMessage": "scarwe was slain by __waffle"
-      },
+      }
     ],
     "currentTask": "-1",
     "shopping": false,
@@ -74,7 +73,7 @@
       "86",
       "rapbattle",
       "danger",
-      "87",
+      "87"
     ],
     "tokens": 20,
     "zombie": false,
@@ -492,7 +491,6 @@
       "78",
       "trouble",
       "14",
-      null,
       "presidentassassin",
       "65",
       "56",
@@ -700,8 +698,8 @@
     "shop": false,
     "tagged": false
   },
-  "SanguisAureus": {
-    "name": "SanguisAureus",
+  "SigmaPilled": {
+    "name": "SigmaPilled",
     "sessionTasks": 1,
     "lives": 1,
     "deaths": [

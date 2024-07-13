@@ -7,7 +7,7 @@
       {
         "time": 1717518732,
         "deathMessage": "TerrariaTrees was blown up by Creeper"
-      },
+      }
     ],
     "currentTask": "-1",
     "shopping": false,
@@ -345,7 +345,7 @@
       "62",
       "78",
       "trouble",
-      "14",
+      "14"
     ],
     "tokens": 20,
     "zombie": false,
@@ -506,14 +506,14 @@
     "taskDescription": "[SL] Call people anything other than their name/username for the next hour.",
     "shop": false
   },
-  "SanguisAureus": {
-    "name": "SanguisAureus",
+  "SigmaPilled": {
+    "name": "SigmaPilled",
     "sessionTasks": 0,
     "lives": 2,
     "deaths": [
       {
         "time": 1718122395,
-        "deathMessage": "SanguisAureus was slain by scarwe using §f[§oScarlett Slayer§f]"
+        "deathMessage": "SigmaPilled was slain by scarwe using §f[§oScarlett Slayer§f]"
       }
     ],
     "currentTask": "-1",

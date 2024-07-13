@@ -1958,6 +1958,17 @@
     "difficulty": 0,
     "description": "Convince another player that your task has an exception that allows you to tell them what it is, and that they\u0027re a part of it. Make them do a silly made-up task with you."
   },
+  "thanos": {
+    "name": "thanos",
+    "priority": 90,
+    "completed": false,
+    "excluded": true,
+    "reward": 6,
+    "excludedPlayers": [],
+    "playerDescription": "",
+    "difficulty": 2,
+    "description": "Kill 4 green players, bringing them down to yellow lives."
+  },
   "buttonpress": {
     "name": "buttonpress",
     "priority": 0,

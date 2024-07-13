@@ -8,7 +8,6 @@
         "time": 1717518732,
         "deathMessage": "TerrariaTrees was blown up by Creeper"
       },
-      null,
       {
         "time": 1718725435,
         "deathMessage": "TerrariaTrees fell from a high place"
@@ -59,8 +58,7 @@
       {
         "time": 1718727453,
         "deathMessage": "scarwe was slain by __waffle"
-      },
-      null
+      }
     ],
     "currentTask": "-1",
     "shopping": false,
@@ -80,8 +78,7 @@
       "86",
       "rapbattle",
       "danger",
-      "87",
-      null
+      "87"
     ],
     "tokens": 20,
     "zombie": false,
@@ -757,22 +754,22 @@
     "shop": false,
     "tagged": false
   },
-  "SanguisAureus": {
-    "name": "SanguisAureus",
+  "SigmaPilled": {
+    "name": "SigmaPilled",
     "sessionTasks": 0,
     "lives": 0,
     "deaths": [
       {
         "time": 1718122395,
-        "deathMessage": "SanguisAureus was slain by scarwe using §f[§oScarlett Slayer§f]"
+        "deathMessage": "SigmaPilled was slain by scarwe using §f[§oScarlett Slayer§f]"
       },
       {
         "time": 1718727200,
-        "deathMessage": "SanguisAureus was slain by scarwe using §b[§oscarwe§b]"
+        "deathMessage": "SigmaPilled was slain by scarwe using §b[§oscarwe§b]"
       },
       {
         "time": 1719928177,
-        "deathMessage": "SanguisAureus was shot by LightingLord854 using §b[§oOrion MKII§b]"
+        "deathMessage": "SigmaPilled was shot by LightingLord854 using §b[§oOrion MKII§b]"
       }
     ],
     "currentTask": "tnt",
