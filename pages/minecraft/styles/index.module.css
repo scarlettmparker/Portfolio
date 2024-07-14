@@ -137,6 +137,10 @@
     font-family: "Reo Sans";
 }
 
+.readMoreText {
+    color: white;
+    font-size: 1.5rem;
+}
 .readMoreText, .splashText {
     white-space: nowrap;
 }
@@ -230,32 +234,40 @@
     transform: translateX(-50%);
     display: flex;
     flex-direction: column;
-    width: 780px;
-}
-
-.infoWrapper {
-    position: relative;
-    width: 780px;
-    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 780px;
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
 .pluginInfoWrapper,
 .dataInfoWrapper {
     display: flex;
     flex-direction: column;
-    margin-bottom: 5.625em;
+    margin-bottom: 2em;
+}
+
+.infoWrapper {
+    position: relative;
+    width: 780px;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding-left: 1.5rem;
+    padding-right: 2rem;
+    padding-top: 0.5rem;
+    box-sizing: border-box;
+    margin-bottom: 2em;
 }
 
 .infoTextWrapper {
     position: relative;
-    height: 320px;
-    width: 95%;
-    margin-left: 1.5rem;
+    width: 100%;
+    height: auto;
     margin-top: 1.2rem;
+    padding-bottom: 50px;
 }
 
 .moreTextWrapper {
-    height: 760px;
+    height: auto;
 }
 
 .readMoreButton {
@@ -265,7 +277,6 @@
     transform: translateX(-50%);
     background: linear-gradient(0deg, rgba(12, 18, 37, 1) 0%, rgba(15, 23, 47, 1) 100%);
     padding: 0.625em 3em;
-    width: fit-content;
     border-radius: 15px;
     border-width: 3px;
     border-style: solid;
@@ -273,6 +284,7 @@
     overflow: hidden;
     cursor: pointer;
     z-index: 1;
+    transition: background-color 0.3s ease;
 }
 
 .readMoreButton:before {
@@ -295,26 +307,17 @@
 
 .infoText {
     position: relative;
-    height: 100%;
-    width: 780px;
-}
-
-.infoText,
-.readMoreText {
+    width: 100%;
     color: white;
     font-size: 1.55rem;
     letter-spacing: 0.05em;
 }
 
-.readMoreText {
-    user-select: none;
-}
-
 @media screen and (max-width: 1300px) {
     .expandedInfoWrapper {
-        position: absolute;
         left: 50%;
         transform: translateX(-50%);
+        width: 100%;
     }
     .playerWrapper {
         visibility: hidden;
@@ -326,76 +329,67 @@
 
 @media screen and (max-width: 800px) {
     .infoWrapper {
+        width: 100%;
+        padding: 0;
+    }
+    .pageContainer {
+        width: 100vw;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .expandedInfoWrapper {
+        padding: 0;
+    }
+    .infoTextWrapper {
         position: relative;
         left: 50%;
         transform: translateX(-50%);
-        width: 90vw;
-        padding-bottom: 70px;
+        width: 95%;
     }
 }
 
-@media screen and (max-width: 590px) {
-    .infoWrapper {
-        padding-bottom: 120px;
-    }
-}
-
-@media screen and (max-width: 565px) {
-    .infoWrapper {
-        padding-bottom: 210px;
-    }
-}
-
-@media screen and (max-width: 525px) {
-    .infoWrapper {
-        padding-bottom: 180px;
+@media screen and (max-width: 515px) {
+    .titleWrapper {
+        top: 80px;
     }
     .title {
-        font-size: 5.75rem;
+        font-size: 4.5rem;
     }
-    .titleWrapper {
-        top: 60px;
-    }
-}
-
-@media screen and (max-width: 470px) {
     .infoText {
-        font-size: 1.4rem;
+        font-size: 1.25rem;
     }
-    .title {
-        font-size: 5.25rem;
-    }
-    .titleWrapper {
-        top: 70px;
+    .readMoreText {
+        font-size: 1.25rem;
     }
 }
 
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 400px) {
     .infoText {
-        font-size: 1.35rem;
-    }
-    .infoWrapper {
-        padding-bottom: 150px;
+        font-size: 1.1rem;
     }
 }
 
-@media screen and (max-width: 410px) {
-    .infoWrapper {
-        display: none;
-    }
+@media screen and (max-width: 380px) {
     .titleWrapper {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        top: 90px;
     }
-    .title {
-        font-size: 4.75rem;
-    }
-}
-
-@media screen and (max-width: 370px) {
     .title {
         font-size: 3.5rem;
+    }
+    .date {
+        font-size: 1.75rem;
+    }
+}
+
+@media screen and (max-width: 275px) {
+    .titleWrapper {
+        top: 100px;
+    }
+    .title {
+        font-size: 2.5rem;
+    }
+    .date {
+        font-size: 1.5rem;
     }
 }

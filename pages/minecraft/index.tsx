@@ -263,7 +263,7 @@ const GallerySection = ({ currentImage, setCurrentImage, numberImages }:
                             onLoad={handleImageLoaded} // ensure div is shown only when image has loaded
                         />
                     </div>
-                    <div className={infostyles.backgroundCover}>h</div>
+                    <div className={infostyles.backgroundCover}></div>
                 </>,
                 document.body // renders on top of everything else
             ) : (
@@ -470,6 +470,7 @@ const PlayerSection = () => {
         <div className={infostyles.playerDataWrapper}>
             {playerData ? (
                 <>
+                <div className={infostyles.taskButtonWrapper}>
                     <div className={infostyles.taskLeftWrapper}>
                         <PlayerButton
                             direction="left"
@@ -496,6 +497,7 @@ const PlayerSection = () => {
                             }}
                         />
                     </div>
+                </div>
                     <span className={infostyles.playerDataDescription}>
                         <div style={{ display: 'flex', alignItems: 'center', width: "100%" }}>
                             <div style={{ flex: 1, textAlign: 'center' }}>
