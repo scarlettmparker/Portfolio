@@ -219,11 +219,11 @@ const PluginSection: React.FC = () => {
     return (
         <div className={infostyles.pluginWrapper}>
             <span className={infostyles.pluginDescription}>
-                Secret Life was made possible through a custom<br />Minecraft plugin that was developed for the event.<br /><br />
+                Secret Life was made possible through a custom Minecraft plugin that was developed for the event.<br /><br />
                 The Secret Life plugin was used to manage <span id="lifeText" className={infostyles.lifeText}>lives</span>, distribute tasks,
                 gather player data and house a variety of other custom features that can be found on the <a href={gitLink} target="_blank"><span className={infostyles.gitLink}>GitHub repository</span></a>.<br /><br />
                 Developed in Java over the course of a few weeks, this plugin can be used on any 1.20+ Minecraft server that supports Spigot plugins.<br /><br />
-                Support will <span className={infostyles.redText}>not be provided</span> for other Minecraft versions.
+                <span className={infostyles.supportText}>Support will <span className={infostyles.redText}>not be provided</span> for other Minecraft versions.</span>
             </span>
         </div>
     );
@@ -263,7 +263,7 @@ const GallerySection = ({ currentImage, setCurrentImage, numberImages }:
                             onLoad={handleImageLoaded} // ensure div is shown only when image has loaded
                         />
                     </div>
-                    <div className={infostyles.backgroundCover}></div>
+                    <div className={infostyles.backgroundCover}>h</div>
                 </>,
                 document.body // renders on top of everything else
             ) : (
@@ -288,6 +288,7 @@ const GallerySection = ({ currentImage, setCurrentImage, numberImages }:
                             alt="Gallery Image"
                             width={540}
                             height={300}
+                            className={infostyles.galleryImage}
                         />
                     </div>
                 </div>
@@ -544,11 +545,6 @@ const PlayerSection = () => {
                                             {taskText}
                                         </span>
                                         <div className={infostyles.playerTaskDescriptionWrapper} style={{
-                                            overflow: 'hidden',
-                                            lineClamp: 3,
-                                            WebkitLineClamp: 3,
-                                            WebkitBoxOrient: 'vertical',
-                                            display: '-webkit-box'
                                         }}>
                                             {currentTask?.description || "No description available"}
                                         </div>

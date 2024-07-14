@@ -19,14 +19,14 @@
       "weak1"
     ],
     "tasks": [
-      "24",
-      "75",
-      "51",
-      "55",
       "tag",
+      "thanos",
+      "55",
+      "51",
       "inconvenience",
       "76",
-      "thanos"
+      "75",
+      "24"
     ],
     "tokens": 0,
     "zombie": false,
@@ -57,31 +57,28 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "Wokeism",
-      "59",
-      "buildbattle",
-      "71",
-      "84",
-      "94",
-      "88",
-      "93",
-      "84",
       "90",
+      "79",
       "94",
-      "86",
-      "rapbattle",
-      "danger",
-      "87",
+      "93",
       "82",
+      "59",
+      "84",
+      "86",
+      "71",
+      "87",
       "97",
-      "97",
-      "79"
+      "buildbattle",
+      "danger",
+      "88",
+      "Wokeism",
+      "rapbattle"
     ],
     "tokens": 18,
     "zombie": false,
     "shop": false,
     "nextTask": "-1",
-    "taskDescription": "Place lava on someone. If it doesn\u0027t kill them, you must then place lava on another player for a total of 2 players. You complete the task if you kill the first player or lava 2 players in total."
+    "taskDescription": "Place lava on someone. If it doesn't kill them, you must then place lava on another player for a total of 2 players. You complete the task if you kill the first player or lava 2 players in total."
   },
   "Pink_Jellyfish": {
     "name": "Pink_Jellyfish",
@@ -92,10 +89,10 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "3",
-      "5",
       "grinch",
-      "piston"
+      "3",
+      "piston",
+      "5"
     ],
     "tokens": 10,
     "zombie": false,
@@ -114,7 +111,7 @@
       },
       {
         "time": 1718114021,
-        "deathMessage": "RavingRaven43453 was slain by scarwe using §f[§oScarlett Slayer§f]"
+        "deathMessage": "RavingRaven43453 was slain by scarwe using \u00c2\u00a7f[\u00c2\u00a7oScarlett Slayer\u00c2\u00a7f]"
       },
       {
         "time": 1718725965,
@@ -125,16 +122,16 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "raven",
       "2",
-      "96",
-      "99",
       "78",
-      "100",
-      "85",
       "95",
+      "83",
+      "raven",
       "89",
-      "83"
+      "96",
+      "85",
+      "100",
+      "99"
     ],
     "tokens": 16,
     "zombie": true,
@@ -153,27 +150,23 @@
       },
       {
         "time": 1718725119,
-        "deathMessage": "OrcaHedral was slain by DejiLikesFizz using §b[§oSOUL SNATCHER§b]"
+        "deathMessage": "OrcaHedral was slain by DejiLikesFizz using \u00c2\u00a7b[\u00c2\u00a7oSOUL SNATCHER\u00c2\u00a7b]"
       }
     ],
     "currentTask": "-1",
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "40",
-      "18",
-      "meow",
-      "15",
       "boogey",
+      "40",
       "prison",
+      "18",
       "77",
+      "meow",
       "89",
-      "89",
+      "87",
+      "15",
       "85",
-      "87",
-      "87",
-      "81",
-      "81",
       "81"
     ],
     "tokens": 26,
@@ -191,15 +184,15 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "43",
+      "reference",
       "13",
-      "reference"
+      "43"
     ],
     "tokens": 28,
     "zombie": false,
     "shop": false,
     "nextTask": "-1",
-    "taskDescription": "You must make at least 5 references to any movie in various conversations. If someone understands even one reference, you succeed, but you\u0027ll fail if nobody knows them."
+    "taskDescription": "You must make at least 5 references to any movie in various conversations. If someone understands even one reference, you succeed, but you'll fail if nobody knows them."
   },
   "LightingLord854": {
     "name": "LightingLord854",
@@ -211,8 +204,8 @@
     "punishments": [],
     "tasks": [
       "41",
-      "53",
-      "megalovania"
+      "megalovania",
+      "53"
     ],
     "tokens": 6,
     "zombie": false,
@@ -229,11 +222,11 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
+      "badMic",
       "0",
-      "25",
-      "placeholder",
       "presents",
-      "badMic"
+      "placeholder",
+      "25"
     ],
     "tokens": 8,
     "zombie": false,
@@ -258,8 +251,8 @@
       "9",
       "6",
       "47",
-      "policy",
-      "ugly"
+      "ugly",
+      "policy"
     ],
     "tokens": 0,
     "zombie": false,
@@ -281,18 +274,18 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "1",
-      "49",
-      "28",
-      "20",
       "boogey",
-      "bet"
+      "bet",
+      "20",
+      "1",
+      "28",
+      "49"
     ],
     "tokens": 24,
     "zombie": false,
     "shop": false,
     "nextTask": "-1",
-    "taskDescription": "Make a bet with RavingRaven43453 and win. It doesn\u0027t matter what the bet is."
+    "taskDescription": "Make a bet with RavingRaven43453 and win. It doesn't matter what the bet is."
   },
   "Daisyrebelle": {
     "name": "Daisyrebelle",
@@ -309,8 +302,8 @@
     "punishments": [],
     "tasks": [
       "48",
-      "39",
-      "stare"
+      "stare",
+      "39"
     ],
     "tokens": 4,
     "zombie": false,
@@ -333,9 +326,9 @@
     "punishments": [],
     "tasks": [
       "31",
-      "buildbattle",
       "newsociety",
       "bodyguard",
+      "buildbattle",
       "parkour"
     ],
     "tokens": 8,
@@ -355,23 +348,23 @@
       },
       {
         "time": 1718725822,
-        "deathMessage": "koopafan69 was slain by scarwe using §b[§oScarlett Slayer§b]"
+        "deathMessage": "koopafan69 was slain by scarwe using \u00c2\u00a7b[\u00c2\u00a7oScarlett Slayer\u00c2\u00a7b]"
       }
     ],
     "currentTask": "prison",
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "42",
-      "46",
-      "19",
-      "grinch",
-      "compliments",
       "tag",
-      "scarlettblock",
-      "conspiracy",
       "narrator",
-      "prison"
+      "prison",
+      "grinch",
+      "19",
+      "conspiracy",
+      "46",
+      "compliments",
+      "42",
+      "scarlettblock"
     ],
     "tokens": 24,
     "zombie": false,
@@ -410,23 +403,22 @@
       },
       {
         "time": 1718726898,
-        "deathMessage": "Nitura was slain by scarwe using §b[§oscarwe§b]"
+        "deathMessage": "Nitura was slain by scarwe using \u00c2\u00a7b[\u00c2\u00a7oscarwe\u00c2\u00a7b]"
       }
     ],
     "currentTask": "82",
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "30",
-      "33",
-      "10",
       "17",
+      "82",
       "revenge",
       "pyramid",
-      "parkour",
       "89",
-      "89",
-      "82"
+      "10",
+      "30",
+      "33",
+      "parkour"
     ],
     "tokens": 8,
     "zombie": false,
@@ -445,18 +437,18 @@
       "knockback"
     ],
     "tasks": [
-      "Praise",
-      "62",
-      "78",
-      "trouble",
-      "14",
       "presidentassassin",
-      "65"
+      "78",
+      "65",
+      "62",
+      "trouble",
+      "Praise",
+      "14"
     ],
     "tokens": 11,
     "zombie": false,
     "shop": false,
-    "taskDescription": "Your life is now tied to scarwe. If they die in this session, you must kill yourself immediately after. You fail if they die, or if someone suspects there\u0027s a link between the two of you. Telling scarwe this task won\u0027t cause you to fail. You\u0027re not allowed to manually choose to fail this task.",
+    "taskDescription": "Your life is now tied to scarwe. If they die in this session, you must kill yourself immediately after. You fail if they die, or if someone suspects there's a link between the two of you. Telling scarwe this task won't cause you to fail. You're not allowed to manually choose to fail this task.",
     "nextTask": "-1"
   },
   "FizzyKinkajou49": {
@@ -468,12 +460,12 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "8",
-      "45",
-      "53",
       "17",
+      "theletterL",
+      "8",
       "fizzyhard",
-      "theletterL"
+      "53",
+      "45"
     ],
     "tokens": 0,
     "zombie": false,
@@ -499,11 +491,11 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "Musk",
-      "23",
       "helmet",
+      "Musk",
       "32",
-      "restaurant"
+      "restaurant",
+      "23"
     ],
     "tokens": 1,
     "zombie": false,
@@ -525,10 +517,10 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "38",
-      "4",
+      "50",
       "22",
-      "50"
+      "4",
+      "38"
     ],
     "tokens": 10,
     "zombie": false,
@@ -550,15 +542,15 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "52",
-      "36",
+      "20",
       "fakejumpscare",
-      "20"
+      "36",
+      "52"
     ],
     "tokens": 6,
     "zombie": false,
     "shop": false,
-    "taskDescription": "Move 5 people\u0027s chests at least once. If someone calls you out, that person doesn\u0027t count.",
+    "taskDescription": "Move 5 people's chests at least once. If someone calls you out, that person doesn't count.",
     "nextTask": "-1"
   },
   "flywiththenight": {
@@ -575,12 +567,12 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "35",
-      "29",
       "44",
-      "7",
+      "29",
       "fishing",
-      "rapbattle"
+      "7",
+      "rapbattle",
+      "35"
     ],
     "tokens": 0,
     "zombie": false,
@@ -597,9 +589,9 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "26",
       "12",
-      "34"
+      "34",
+      "26"
     ],
     "tokens": 12,
     "zombie": false,
@@ -622,7 +614,7 @@
       },
       {
         "time": 1718717937,
-        "deathMessage": "MrKoolBuckzz was slain by scarwe using §b[§oScarlett Slayer§b]"
+        "deathMessage": "MrKoolBuckzz was slain by scarwe using \u00c2\u00a7b[\u00c2\u00a7oScarlett Slayer\u00c2\u00a7b]"
       }
     ],
     "currentTask": "80",
@@ -632,11 +624,11 @@
     "zombie": false,
     "nextTask": "-1",
     "tasks": [
-      "27",
-      "15",
       "tag",
       "11",
-      "80"
+      "80",
+      "27",
+      "15"
     ],
     "taskDescription": "Repeatedly attack a player until they block you with a shield. If you kill them, you also succeed.",
     "shop": false,
@@ -649,11 +641,11 @@
     "deaths": [
       {
         "time": 1718122395,
-        "deathMessage": "SigmaPilled was slain by scarwe using §f[§oScarlett Slayer§f]"
+        "deathMessage": "SigmaPilled was slain by scarwe using \u00c2\u00a7f[\u00c2\u00a7oScarlett Slayer\u00c2\u00a7f]"
       },
       {
         "time": 1718727200,
-        "deathMessage": "SigmaPilled was slain by scarwe using §b[§oscarwe§b]"
+        "deathMessage": "SigmaPilled was slain by scarwe using \u00c2\u00a7b[\u00c2\u00a7oscarwe\u00c2\u00a7b]"
       }
     ],
     "currentTask": "teacher",
@@ -663,12 +655,12 @@
     "zombie": false,
     "nextTask": "-1",
     "tasks": [
-      "treasurer",
       "tag",
       "trivia",
-      "teacher"
+      "teacher",
+      "treasurer"
     ],
-    "taskDescription": "Successfully teach someone a Minecraft technique that they didn\u0027t know. You succeed when they successfully pull it off.",
+    "taskDescription": "Successfully teach someone a Minecraft technique that they didn't know. You succeed when they successfully pull it off.",
     "shop": false,
     "tagged": false
   },
@@ -744,11 +736,11 @@
     "zombie": false,
     "nextTask": "-1",
     "tasks": [
-      "blockplacer",
       "badteacher",
-      "17"
+      "17",
+      "blockplacer"
     ],
-    "taskDescription": "[SL] Be TerrariaTrees\u0027s hype person for the next 30 minutes and don\u0027t get called out. If you get called out, switch to any other player and reset the timer, or fail the task (your choice).",
+    "taskDescription": "[SL] Be TerrariaTrees's hype person for the next 30 minutes and don't get called out. If you get called out, switch to any other player and reset the timer, or fail the task (your choice).",
     "shop": false
   },
   "Spore__": {
@@ -764,8 +756,8 @@
     "nextTask": "-1",
     "tasks": [
       "37",
-      "fakestory",
-      "9"
+      "9",
+      "fakestory"
     ],
     "taskDescription": "Jumpscare another player.",
     "shop": false

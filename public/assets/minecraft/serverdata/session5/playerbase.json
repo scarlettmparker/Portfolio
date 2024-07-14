@@ -21,24 +21,24 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "24",
       "75",
       "51",
-      "55",
+      "fishingrod",
       "inconvenience",
-      "76",
+      "communalbuild",
+      "24",
+      "campfire",
+      "unexpectedroommate",
       "thanos",
       "tag",
-      "unexpectedroommate",
-      "fishingrod",
-      "communalbuild",
-      "campfire",
-      "badassassin"
+      "55",
+      "badassassin",
+      "76"
     ],
     "tokens": 19,
     "zombie": false,
     "shop": false,
-    "taskDescription": "Find a player to hire you to assassinate a player of their choice for a price. However, once you find them to attack them, fumble around and don\u0027t actually damage them (hit them with snowballs for example), but act as menancing as possible throughout.",
+    "taskDescription": "Find a player to hire you to assassinate a player of their choice for a price. However, once you find them to attack them, fumble around and don't actually damage them (hit them with snowballs for example), but act as menancing as possible throughout.",
     "nextTask": "-1",
     "tagged": false
   },
@@ -64,21 +64,19 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "Wokeism",
       "59",
       "buildbattle",
-      "71",
       "84",
+      "danger",
+      "Wokeism",
       "94",
       "88",
-      "93",
-      "84",
-      "90",
-      "94",
       "86",
       "rapbattle",
-      "danger",
-      "87"
+      "90",
+      "93",
+      "87",
+      "71"
     ],
     "tokens": 20,
     "zombie": false,
@@ -96,13 +94,13 @@
     "punishments": [],
     "tasks": [
       "3",
-      "5",
-      "grinch",
-      "piston",
       "basegift",
-      "annoyingblocks",
+      "adlibber",
+      "5",
+      "piston",
       "masterbuilder",
-      "adlibber"
+      "annoyingblocks",
+      "grinch"
     ],
     "tokens": 0,
     "zombie": false,
@@ -121,7 +119,7 @@
       },
       {
         "time": 1718114021,
-        "deathMessage": "RavingRaven43453 was slain by scarwe using §f[§oScarlett Slayer§f]"
+        "deathMessage": "RavingRaven43453 was slain by scarwe using \u00a7f[\u00a7oScarlett Slayer\u00a7f]"
       },
       {
         "time": 1718725965,
@@ -140,18 +138,18 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "raven",
-      "2",
-      "96",
       "99",
-      "78",
-      "100",
-      "85",
-      "95",
-      "89",
-      "83",
       "tag",
-      "gaslightfriendship"
+      "89",
+      "78",
+      "raven",
+      "gaslightfriendship",
+      "85",
+      "96",
+      "95",
+      "83",
+      "2",
+      "100"
     ],
     "tokens": 9,
     "zombie": false,
@@ -171,38 +169,33 @@
       },
       {
         "time": 1718725119,
-        "deathMessage": "OrcaHedral was slain by DejiLikesFizz using §b[§oSOUL SNATCHER§b]"
+        "deathMessage": "OrcaHedral was slain by DejiLikesFizz using \u00a7b[\u00a7oSOUL SNATCHER\u00a7b]"
       }
     ],
     "currentTask": "-1",
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "40",
-      "18",
-      "meow",
-      "15",
       "boogey",
       "prison",
-      "77",
-      "89",
-      "89",
-      "85",
-      "87",
-      "87",
-      "81",
-      "81",
-      "81",
       "socialdeduction",
+      "89",
       "mimic",
+      "15",
       "18",
-      "puzzled"
+      "40",
+      "85",
+      "77",
+      "87",
+      "81",
+      "puzzled",
+      "meow"
     ],
     "tokens": 0,
     "zombie": false,
     "shop": false,
     "nextTask": "-1",
-    "taskDescription": "For the next hour, you are perpetually confused. Act like you have no idea what\u0027s happening, why are things going the way they are, what goes around you - like a clueless child."
+    "taskDescription": "For the next hour, you are perpetually confused. Act like you have no idea what's happening, why are things going the way they are, what goes around you - like a clueless child."
   },
   "Spectral_Blue": {
     "name": "Spectral_Blue",
@@ -218,11 +211,11 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "43",
-      "13",
-      "reference",
       "renovation",
-      "cleanup"
+      "43",
+      "cleanup",
+      "reference",
+      "13"
     ],
     "tokens": 40,
     "zombie": false,
@@ -241,25 +234,25 @@
       },
       {
         "time": 1719933522,
-        "deathMessage": "LightingLord854 was slain by Zylphys using §b[§o𝔗𝔥𝔢 𝔅𝔯𝔞𝔰𝔰 𝔒𝔯𝔡𝔞𝔫𝔞𝔫𝔠𝔢§b]"
+        "deathMessage": "LightingLord854 was slain by Zylphys using \u00a7b[\u00a7o\ud835\udd17\ud835\udd25\ud835\udd22 \ud835\udd05\ud835\udd2f\ud835\udd1e\ud835\udd30\ud835\udd30 \ud835\udd12\ud835\udd2f\ud835\udd21\ud835\udd1e\ud835\udd2b\ud835\udd1e\ud835\udd2b\ud835\udd20\ud835\udd22\u00a7b]"
       }
     ],
     "currentTask": "suspiciousbutton",
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "41",
-      "53",
       "megalovania",
+      "suspiciousbutton",
       "book",
       "cleanup",
-      "suspiciousbutton"
+      "41",
+      "53"
     ],
     "tokens": 13,
     "zombie": false,
     "shop": false,
     "nextTask": "-1",
-    "taskDescription": "Super suspiciously press a button mid-conversation and trick players into believing it\u0027s a trap. You succeed if nobody presses the button."
+    "taskDescription": "Super suspiciously press a button mid-conversation and trick players into believing it's a trap. You succeed if nobody presses the button."
   },
   "DejiLikesFizz": {
     "name": "DejiLikesFizz",
@@ -279,14 +272,14 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "0",
       "25",
-      "placeholder",
-      "presents",
-      "badMic",
       "socialdeduction",
-      "wwjd",
-      "infection"
+      "badMic",
+      "0",
+      "presents",
+      "placeholder",
+      "infection",
+      "wwjd"
     ],
     "tokens": 9,
     "zombie": false,
@@ -305,22 +298,22 @@
       },
       {
         "time": 1719321036,
-        "deathMessage": "Aryid was slain by DejiLikesFizz using §b[§oSOUL SNATCHER§b]"
+        "deathMessage": "Aryid was slain by DejiLikesFizz using \u00a7b[\u00a7oSOUL SNATCHER\u00a7b]"
       }
     ],
     "currentTask": "-1",
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "9",
-      "6",
       "47",
-      "policy",
-      "ugly",
       "socialdeduction",
-      "friendship",
       "basecopy",
-      "interview"
+      "6",
+      "friendship",
+      "ugly",
+      "policy",
+      "interview",
+      "9"
     ],
     "tokens": 12,
     "zombie": false,
@@ -342,20 +335,20 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "1",
-      "49",
-      "28",
-      "20",
       "boogey",
-      "bet",
       "socialdeduction",
-      "stick"
+      "1",
+      "bet",
+      "28",
+      "stick",
+      "49",
+      "20"
     ],
     "tokens": 34,
     "zombie": false,
     "shop": false,
     "nextTask": "-1",
-    "taskDescription": "Have a stick in your offhand during every conversation you participate in for the next hour. You can not talk to other players without it - you\u0027re physically mute without it. If you forget this, and talk to players without the stick, you fail."
+    "taskDescription": "Have a stick in your offhand during every conversation you participate in for the next hour. You can not talk to other players without it - you're physically mute without it. If you forget this, and talk to players without the stick, you fail."
   },
   "Daisyrebelle": {
     "name": "Daisyrebelle",
@@ -372,24 +365,24 @@
       },
       {
         "time": 1719932148,
-        "deathMessage": "Daisyrebelle was shot by LightingLord854 using §b[§oOrion MKII§b]"
+        "deathMessage": "Daisyrebelle was shot by LightingLord854 using \u00a7b[\u00a7oOrion MKII\u00a7b]"
       }
     ],
     "currentTask": "-1",
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "48",
-      "39",
-      "stare",
       "socialdeduction",
+      "stare",
+      "39",
       "structuregaslight",
+      "48",
       "piratespeak"
     ],
     "tokens": 2,
     "zombie": false,
     "shop": false,
-    "taskDescription": "Change your game language to \u0027Pirate Speak\u0027 for the next 2 hours. In conversation, you must only refer to items by their pirate names.",
+    "taskDescription": "Change your game language to 'Pirate Speak' for the next 2 hours. In conversation, you must only refer to items by their pirate names.",
     "nextTask": "-1"
   },
   "Invictus_Delta": {
@@ -406,18 +399,18 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "31",
-      "buildbattle",
-      "newsociety",
-      "bodyguard",
       "parkour",
+      "buildbattle",
+      "bodyguard",
       "fakeyellowbait",
+      "newsociety",
+      "31",
       "items"
     ],
     "tokens": 4,
     "zombie": false,
     "shop": false,
-    "taskDescription": "Get 5 players you aren\u0027t allied with to give you an item of your choice (must be a different item per player). Place all of the items you obtained on a wall in your base. If you have no base, build one.",
+    "taskDescription": "Get 5 players you aren't allied with to give you an item of your choice (must be a different item per player). Place all of the items you obtained on a wall in your base. If you have no base, build one.",
     "nextTask": "-1"
   },
   "koopafan69": {
@@ -431,7 +424,7 @@
       },
       {
         "time": 1718725822,
-        "deathMessage": "koopafan69 was slain by scarwe using §b[§oScarlett Slayer§b]"
+        "deathMessage": "koopafan69 was slain by scarwe using \u00a7b[\u00a7oScarlett Slayer\u00a7b]"
       },
       {
         "time": 1719323679,
@@ -442,23 +435,23 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "42",
+      "prison",
+      "tag",
+      "conspiracy",
+      "narrator",
+      "compliments",
+      "rumour",
       "46",
       "19",
       "grinch",
-      "compliments",
       "scarlettblock",
-      "conspiracy",
-      "narrator",
-      "prison",
-      "tag",
-      "rumour"
+      "42"
     ],
     "tokens": 7,
     "zombie": false,
     "shop": false,
     "nextTask": "-1",
-    "taskDescription": "Start a rumour. To pass this task, you must hear the rumour from another player (one you haven\u0027t told the rumour to).",
+    "taskDescription": "Start a rumour. To pass this task, you must hear the rumour from another player (one you haven't told the rumour to).",
     "tagged": false
   },
   "qeewifruit": {
@@ -491,28 +484,27 @@
       },
       {
         "time": 1718726898,
-        "deathMessage": "Nitura was slain by scarwe using §b[§oscarwe§b]"
+        "deathMessage": "Nitura was slain by scarwe using \u00a7b[\u00a7oscarwe\u00a7b]"
       }
     ],
     "currentTask": "-1",
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "30",
-      "33",
-      "10",
-      "17",
-      "revenge",
-      "pyramid",
+      "82",
       "parkour",
       "89",
-      "89",
-      "82",
-      "fakeproduct",
-      "explosive",
-      "sandtrap",
+      "17",
       "gaslightfriendship",
-      "villager"
+      "revenge",
+      "33",
+      "villager",
+      "30",
+      "sandtrap",
+      "fakeproduct",
+      "pyramid",
+      "10",
+      "explosive"
     ],
     "tokens": 1,
     "zombie": false,
@@ -529,17 +521,17 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
+      "presidentassassin",
+      "trouble",
+      "65",
+      "78",
       "Praise",
       "62",
-      "78",
-      "trouble",
-      "14",
-      "presidentassassin",
-      "65",
+      "specific",
       "56",
       "guessthebuild",
       "39",
-      "specific"
+      "14"
     ],
     "tokens": 0,
     "zombie": false,
@@ -557,21 +549,21 @@
     "punishments": [],
     "tasks": [
       "8",
-      "45",
-      "53",
-      "17",
       "fizzyhard",
-      "theletterL",
-      "skibidi",
-      "microphone",
+      "17",
+      "secretroom",
       "duolingo",
-      "secretroom"
+      "skibidi",
+      "theletterL",
+      "microphone",
+      "45",
+      "53"
     ],
     "tokens": 0,
     "zombie": false,
     "shop": false,
     "nextTask": "-1",
-    "taskDescription": "Add a secret room in the base of someone you\u0027re not teamed with and move your stuff there. You pass if you move at least half of your stuff and aren\u0027t caught in the process."
+    "taskDescription": "Add a secret room in the base of someone you're not teamed with and move your stuff there. You pass if you move at least half of your stuff and aren't caught in the process."
   },
   "Tal_Doesnt_Exist": {
     "name": "Tal_Doesnt_Exist",
@@ -597,13 +589,13 @@
       "weak2"
     ],
     "tasks": [
-      "Musk",
-      "23",
       "helmet",
+      "23",
       "32",
-      "restaurant",
+      "16",
+      "Musk",
       "thirdperson",
-      "16"
+      "restaurant"
     ],
     "tokens": 1,
     "zombie": false,
@@ -634,11 +626,11 @@
     "punishments": [],
     "tasks": [
       "38",
-      "4",
-      "22",
+      "68",
       "50",
+      "22",
       "tag",
-      "68"
+      "4"
     ],
     "tokens": 0,
     "zombie": false,
@@ -661,15 +653,15 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
+      "20",
       "52",
-      "36",
       "fakejumpscare",
-      "20"
+      "36"
     ],
     "tokens": 6,
     "zombie": false,
     "shop": false,
-    "taskDescription": "Move 5 people\u0027s chests at least once. If someone calls you out, that person doesn\u0027t count.",
+    "taskDescription": "Move 5 people's chests at least once. If someone calls you out, that person doesn't count.",
     "nextTask": "-1"
   },
   "flywiththenight": {
@@ -686,14 +678,13 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
+      "44",
+      "ghost",
       "35",
       "29",
-      "44",
-      "7",
       "fishing",
       "rapbattle",
-      "ghost",
-      "ghost"
+      "7"
     ],
     "tokens": 0,
     "zombie": false,
@@ -711,8 +702,8 @@
     "punishments": [],
     "tasks": [
       "26",
-      "12",
-      "34"
+      "34",
+      "12"
     ],
     "tokens": 12,
     "zombie": false,
@@ -735,7 +726,7 @@
       },
       {
         "time": 1718717937,
-        "deathMessage": "MrKoolBuckzz was slain by scarwe using §b[§oScarlett Slayer§b]"
+        "deathMessage": "MrKoolBuckzz was slain by scarwe using \u00a7b[\u00a7oScarlett Slayer\u00a7b]"
       }
     ],
     "currentTask": "-1",
@@ -745,10 +736,10 @@
     "zombie": false,
     "nextTask": "-1",
     "tasks": [
-      "27",
-      "15",
       "11",
-      "80"
+      "80",
+      "15",
+      "27"
     ],
     "taskDescription": "Repeatedly attack a player until they block you with a shield. If you kill them, you also succeed.",
     "shop": false,
@@ -761,15 +752,15 @@
     "deaths": [
       {
         "time": 1718122395,
-        "deathMessage": "SigmaPilled was slain by scarwe using §f[§oScarlett Slayer§f]"
+        "deathMessage": "SigmaPilled was slain by scarwe using \u00a7f[\u00a7oScarlett Slayer\u00a7f]"
       },
       {
         "time": 1718727200,
-        "deathMessage": "SigmaPilled was slain by scarwe using §b[§oscarwe§b]"
+        "deathMessage": "SigmaPilled was slain by scarwe using \u00a7b[\u00a7oscarwe\u00a7b]"
       },
       {
         "time": 1719928177,
-        "deathMessage": "SigmaPilled was shot by LightingLord854 using §b[§oOrion MKII§b]"
+        "deathMessage": "SigmaPilled was shot by LightingLord854 using \u00a7b[\u00a7oOrion MKII\u00a7b]"
       }
     ],
     "currentTask": "tnt",
@@ -779,12 +770,12 @@
     "zombie": false,
     "nextTask": "-1",
     "tasks": [
-      "treasurer",
-      "tag",
+      "elements",
       "trivia",
       "teacher",
-      "elements",
-      "tnt"
+      "treasurer",
+      "tnt",
+      "tag"
     ],
     "taskDescription": "Deal damage to a player using the explosion damage from a TNT.",
     "shop": false,
@@ -849,7 +840,7 @@
     "tasks": [
       "32"
     ],
-    "taskDescription": "Tell 3 jokes where the punchline is complete nonsense, tricking players into laughing at something they don\u0027t understand, and don\u0027t get called out. If you get called out, that joke doesn\u0027t count.",
+    "taskDescription": "Tell 3 jokes where the punchline is complete nonsense, tricking players into laughing at something they don't understand, and don't get called out. If you get called out, that joke doesn't count.",
     "shop": false
   },
   "__waffle": {
@@ -869,11 +860,11 @@
     "zombie": false,
     "nextTask": "-1",
     "tasks": [
+      "17",
       "blockplacer",
-      "badteacher",
-      "17"
+      "badteacher"
     ],
-    "taskDescription": "[SL] Be TerrariaTrees\u0027s hype person for the next 30 minutes and don\u0027t get called out. If you get called out, switch to any other player and reset the timer, or fail the task (your choice).",
+    "taskDescription": "[SL] Be TerrariaTrees's hype person for the next 30 minutes and don't get called out. If you get called out, switch to any other player and reset the timer, or fail the task (your choice).",
     "shop": false
   },
   "Spore__": {
@@ -916,7 +907,7 @@
       "mourner",
       "holiday"
     ],
-    "taskDescription": "Make up a holiday, then convince another player it is an actual holiday and get them to celebrate it with you. If they don\u0027t believe you, you can try with another player.",
+    "taskDescription": "Make up a holiday, then convince another player it is an actual holiday and get them to celebrate it with you. If they don't believe you, you can try with another player.",
     "shop": false
   }
 }

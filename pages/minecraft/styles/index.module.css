@@ -85,7 +85,6 @@
 }
 
 @keyframes fadeInBounce {
-
     0%,
     20%,
     50%,
@@ -93,11 +92,9 @@
     100% {
         transform: translateY(0);
     }
-
     40% {
         transform: translateY(-20px);
     }
-
     60% {
         transform: translateY(-5px);
     }
@@ -120,7 +117,7 @@
 
 .titleWrapper {
     position: absolute;
-    top: 6%;
+    top: 50px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -128,6 +125,7 @@
     align-items: center;
     width: fit-content;
     height: fit-content;
+    white-space: nowrap;
 }
 
 .title,
@@ -137,6 +135,10 @@
 .searchBox,
 .splashText{
     font-family: "Reo Sans";
+}
+
+.readMoreText, .splashText {
+    white-space: nowrap;
 }
 
 .title,
@@ -223,7 +225,7 @@
 
 .expandedInfoWrapper {
     position: absolute;
-    top: 25%;
+    top: 240px;
     left: 30%;
     transform: translateX(-50%);
     display: flex;
@@ -306,4 +308,94 @@
 
 .readMoreText {
     user-select: none;
+}
+
+@media screen and (max-width: 1300px) {
+    .expandedInfoWrapper {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .playerWrapper {
+        visibility: hidden;
+    }
+    .threeJsWrapper {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .infoWrapper {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90vw;
+        padding-bottom: 70px;
+    }
+}
+
+@media screen and (max-width: 590px) {
+    .infoWrapper {
+        padding-bottom: 120px;
+    }
+}
+
+@media screen and (max-width: 565px) {
+    .infoWrapper {
+        padding-bottom: 210px;
+    }
+}
+
+@media screen and (max-width: 525px) {
+    .infoWrapper {
+        padding-bottom: 180px;
+    }
+    .title {
+        font-size: 5.75rem;
+    }
+    .titleWrapper {
+        top: 60px;
+    }
+}
+
+@media screen and (max-width: 470px) {
+    .infoText {
+        font-size: 1.4rem;
+    }
+    .title {
+        font-size: 5.25rem;
+    }
+    .titleWrapper {
+        top: 70px;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .infoText {
+        font-size: 1.35rem;
+    }
+    .infoWrapper {
+        padding-bottom: 150px;
+    }
+}
+
+@media screen and (max-width: 410px) {
+    .infoWrapper {
+        display: none;
+    }
+    .titleWrapper {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .title {
+        font-size: 4.75rem;
+    }
+}
+
+@media screen and (max-width: 370px) {
+    .title {
+        font-size: 3.5rem;
+    }
 }

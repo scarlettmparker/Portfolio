@@ -17,23 +17,22 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "24",
-      "75",
+      "fishingrod",
+      "thanos",
       "51",
-      "55",
       "tag",
       "inconvenience",
+      "communalbuild",
+      "55",
+      "75",
       "76",
-      "thanos",
-      "tag",
-      "unexpectedroommate",
-      "fishingrod",
-      "communalbuild"
+      "24",
+      "unexpectedroommate"
     ],
     "tokens": 16,
     "zombie": false,
     "shop": false,
-    "taskDescription": "Convince 2 different players to \u0027help\u0027 you build a monument or communal building, then never place or destroy a single block yourself.",
+    "taskDescription": "Convince 2 different players to 'help' you build a monument or communal building, then never place or destroy a single block yourself.",
     "nextTask": "-1",
     "tagged": false
   },
@@ -59,21 +58,19 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "Wokeism",
       "59",
-      "buildbattle",
-      "71",
-      "84",
-      "94",
+      "Wokeism",
       "88",
-      "93",
-      "84",
-      "90",
-      "94",
-      "86",
       "rapbattle",
       "danger",
-      "87"
+      "87",
+      "84",
+      "94",
+      "86",
+      "93",
+      "90",
+      "71",
+      "buildbattle"
     ],
     "tokens": 20,
     "zombie": false,
@@ -90,18 +87,18 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
+      "piston",
+      "basegift",
       "3",
       "5",
       "grinch",
-      "piston",
-      "basegift",
       "annoyingblocks"
     ],
     "tokens": 0,
     "zombie": false,
     "shop": false,
     "nextTask": "-1",
-    "taskDescription": "You must \u0027accidently\u0027 place a block directly in the way of at least 3 players while they are moving, at least 3 times for each player."
+    "taskDescription": "You must 'accidently' place a block directly in the way of at least 3 players while they are moving, at least 3 times for each player."
   },
   "RavingRaven43453": {
     "name": "RavingRaven43453",
@@ -114,7 +111,7 @@
       },
       {
         "time": 1718114021,
-        "deathMessage": "RavingRaven43453 was slain by scarwe using §f[§oScarlett Slayer§f]"
+        "deathMessage": "RavingRaven43453 was slain by scarwe using \u00c2\u00a7f[\u00c2\u00a7oScarlett Slayer\u00c2\u00a7f]"
       },
       {
         "time": 1718725965,
@@ -133,18 +130,18 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "raven",
       "2",
-      "96",
-      "99",
-      "78",
-      "100",
+      "gaslightfriendship",
       "85",
-      "95",
-      "89",
       "83",
+      "95",
+      "96",
+      "raven",
       "tag",
-      "gaslightfriendship"
+      "89",
+      "100",
+      "78",
+      "99"
     ],
     "tokens": 9,
     "zombie": false,
@@ -164,36 +161,32 @@
       },
       {
         "time": 1718725119,
-        "deathMessage": "OrcaHedral was slain by DejiLikesFizz using §b[§oSOUL SNATCHER§b]"
+        "deathMessage": "OrcaHedral was slain by DejiLikesFizz using \u00c2\u00a7b[\u00c2\u00a7oSOUL SNATCHER\u00c2\u00a7b]"
       }
     ],
     "currentTask": "-1",
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "40",
-      "18",
-      "meow",
       "15",
-      "boogey",
+      "meow",
+      "socialdeduction",
+      "87",
+      "18",
+      "85",
+      "81",
+      "mimic",
+      "40",
+      "89",
       "prison",
       "77",
-      "89",
-      "89",
-      "85",
-      "87",
-      "87",
-      "81",
-      "81",
-      "81",
-      "socialdeduction",
-      "mimic"
+      "boogey"
     ],
     "tokens": 0,
     "zombie": false,
     "shop": false,
     "nextTask": "-1",
-    "taskDescription": "You are a mimic for the next hour. You must join in on any bit or joke that\u0027s going on, even if you aren\u0027t a part of it and don\u0027t understand it."
+    "taskDescription": "You are a mimic for the next hour. You must join in on any bit or joke that's going on, even if you aren't a part of it and don't understand it."
   },
   "Spectral_Blue": {
     "name": "Spectral_Blue",
@@ -204,10 +197,10 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "43",
-      "13",
+      "renovation",
       "reference",
-      "renovation"
+      "13",
+      "43"
     ],
     "tokens": 34,
     "zombie": false,
@@ -224,16 +217,16 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "41",
       "53",
-      "megalovania",
-      "book"
+      "41",
+      "book",
+      "megalovania"
     ],
     "tokens": 12,
     "zombie": false,
     "shop": false,
     "nextTask": "-1",
-    "taskDescription": "You must get rid of this book if it\u0027s in your inventory, by giving it to another player. If you throw it and nobody else picks it up, you must pick the book back up - as it must always remain in someone\u0027s inventory. If you have this book in your inventory by the end of the session, you will receive a hard task next session. If you\u0027re LightingLord854, you must keep one inventory slot open, and get rid of this book!"
+    "taskDescription": "You must get rid of this book if it's in your inventory, by giving it to another player. If you throw it and nobody else picks it up, you must pick the book back up - as it must always remain in someone's inventory. If you have this book in your inventory by the end of the session, you will receive a hard task next session. If you're LightingLord854, you must keep one inventory slot open, and get rid of this book!"
   },
   "DejiLikesFizz": {
     "name": "DejiLikesFizz",
@@ -244,12 +237,12 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "0",
-      "25",
       "placeholder",
-      "presents",
-      "badMic",
+      "25",
       "socialdeduction",
+      "presents",
+      "0",
+      "badMic",
       "wwjd"
     ],
     "tokens": 9,
@@ -269,26 +262,26 @@
       },
       {
         "time": 1719321036,
-        "deathMessage": "Aryid was slain by DejiLikesFizz using §b[§oSOUL SNATCHER§b]"
+        "deathMessage": "Aryid was slain by DejiLikesFizz using \u00c2\u00a7b[\u00c2\u00a7oSOUL SNATCHER\u00c2\u00a7b]"
       }
     ],
     "currentTask": "-1",
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "9",
-      "6",
-      "47",
-      "policy",
-      "ugly",
       "socialdeduction",
-      "friendship"
+      "policy",
+      "47",
+      "9",
+      "friendship",
+      "ugly",
+      "6"
     ],
     "tokens": 3,
     "zombie": false,
     "shop": false,
     "nextTask": "-1",
-    "taskDescription": "Find a red life, or someone who is currently your enemy on their server, and make any kind of build with them (must be of some significance, the build can\u0027t just be a few blocks)."
+    "taskDescription": "Find a red life, or someone who is currently your enemy on their server, and make any kind of build with them (must be of some significance, the build can't just be a few blocks)."
   },
   "OperationDusty": {
     "name": "OperationDusty",
@@ -304,20 +297,20 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "1",
-      "49",
-      "28",
-      "20",
-      "boogey",
       "bet",
       "socialdeduction",
-      "stick"
+      "1",
+      "49",
+      "stick",
+      "20",
+      "28",
+      "boogey"
     ],
     "tokens": 34,
     "zombie": false,
     "shop": false,
     "nextTask": "-1",
-    "taskDescription": "Have a stick in your offhand during every conversation you participate in for the next hour. You can not talk to other players without it - you\u0027re physically mute without it. If you forget this, and talk to players without the stick, you fail."
+    "taskDescription": "Have a stick in your offhand during every conversation you participate in for the next hour. You can not talk to other players without it - you're physically mute without it. If you forget this, and talk to players without the stick, you fail."
   },
   "Daisyrebelle": {
     "name": "Daisyrebelle",
@@ -337,11 +330,11 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "48",
-      "39",
       "stare",
       "socialdeduction",
-      "structuregaslight"
+      "39",
+      "structuregaslight",
+      "48"
     ],
     "tokens": 4,
     "zombie": false,
@@ -363,12 +356,12 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "31",
-      "buildbattle",
-      "newsociety",
-      "bodyguard",
       "parkour",
-      "fakeyellowbait"
+      "newsociety",
+      "fakeyellowbait",
+      "31",
+      "bodyguard",
+      "buildbattle"
     ],
     "tokens": 14,
     "zombie": false,
@@ -387,7 +380,7 @@
       },
       {
         "time": 1718725822,
-        "deathMessage": "koopafan69 was slain by scarwe using §b[§oScarlett Slayer§b]"
+        "deathMessage": "koopafan69 was slain by scarwe using \u00c2\u00a7b[\u00c2\u00a7oScarlett Slayer\u00c2\u00a7b]"
       },
       {
         "time": 1719323679,
@@ -398,24 +391,23 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "42",
-      "46",
-      "19",
-      "grinch",
-      "compliments",
-      "tag",
-      "scarlettblock",
       "conspiracy",
-      "narrator",
-      "prison",
+      "compliments",
+      "46",
+      "scarlettblock",
+      "42",
       "tag",
-      "rumour"
+      "narrator",
+      "grinch",
+      "rumour",
+      "prison",
+      "19"
     ],
     "tokens": 7,
     "zombie": false,
     "shop": false,
     "nextTask": "-1",
-    "taskDescription": "Start a rumour. To pass this task, you must hear the rumour from another player (one you haven\u0027t told the rumour to).",
+    "taskDescription": "Start a rumour. To pass this task, you must hear the rumour from another player (one you haven't told the rumour to).",
     "tagged": false
   },
   "qeewifruit": {
@@ -448,27 +440,26 @@
       },
       {
         "time": 1718726898,
-        "deathMessage": "Nitura was slain by scarwe using §b[§oscarwe§b]"
+        "deathMessage": "Nitura was slain by scarwe using \u00c2\u00a7b[\u00c2\u00a7oscarwe\u00c2\u00a7b]"
       }
     ],
     "currentTask": "-1",
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "30",
-      "33",
-      "10",
+      "sandtrap",
       "17",
-      "revenge",
+      "33",
       "pyramid",
+      "10",
+      "gaslightfriendship",
+      "fakeproduct",
       "parkour",
-      "89",
+      "explosive",
+      "revenge",
+      "30",
       "89",
       "82",
-      "fakeproduct",
-      "explosive",
-      "sandtrap",
-      "gaslightfriendship",
       "villager"
     ],
     "tokens": 1,
@@ -486,20 +477,20 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "Praise",
       "62",
-      "78",
-      "trouble",
-      "14",
-      "presidentassassin",
       "65",
+      "14",
       "56",
-      "guessthebuild"
+      "trouble",
+      "guessthebuild",
+      "Praise",
+      "78",
+      "presidentassassin"
     ],
     "tokens": 0,
     "zombie": false,
     "shop": false,
-    "taskDescription": "Guess the build. Build a bell near spawn and gather some players to guess what you\u0027re building. You cannot give hints nor write signs that describe the build. You fail if nobody guesses the build within 3 minutes of starting, and you only have one attempt.",
+    "taskDescription": "Guess the build. Build a bell near spawn and gather some players to guess what you're building. You cannot give hints nor write signs that describe the build. You fail if nobody guesses the build within 3 minutes of starting, and you only have one attempt.",
     "nextTask": "-1"
   },
   "FizzyKinkajou49": {
@@ -511,20 +502,20 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "8",
-      "45",
-      "53",
-      "17",
-      "fizzyhard",
       "theletterL",
+      "17",
+      "53",
+      "fizzyhard",
       "skibidi",
-      "microphone"
+      "microphone",
+      "8",
+      "45"
     ],
     "tokens": 0,
     "zombie": false,
     "shop": false,
     "nextTask": "-1",
-    "taskDescription": "Fully convince someone their mic is off when it\u0027s not. You have to get them to log off in an attempt to fix the issue to pass the task."
+    "taskDescription": "Fully convince someone their mic is off when it's not. You have to get them to log off in an attempt to fix the issue to pass the task."
   },
   "Tal_Doesnt_Exist": {
     "name": "Tal_Doesnt_Exist",
@@ -544,11 +535,11 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "Musk",
-      "23",
-      "helmet",
       "32",
-      "restaurant"
+      "helmet",
+      "23",
+      "restaurant",
+      "Musk"
     ],
     "tokens": 1,
     "zombie": false,
@@ -578,11 +569,11 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "38",
-      "4",
       "22",
-      "50",
       "tag",
+      "4",
+      "50",
+      "38",
       "villager"
     ],
     "tokens": 0,
@@ -606,15 +597,15 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
-      "52",
-      "36",
       "fakejumpscare",
-      "20"
+      "20",
+      "52",
+      "36"
     ],
     "tokens": 6,
     "zombie": false,
     "shop": false,
-    "taskDescription": "Move 5 people\u0027s chests at least once. If someone calls you out, that person doesn\u0027t count.",
+    "taskDescription": "Move 5 people's chests at least once. If someone calls you out, that person doesn't count.",
     "nextTask": "-1"
   },
   "flywiththenight": {
@@ -631,12 +622,12 @@
     "shopping": false,
     "punishments": [],
     "tasks": [
+      "44",
       "35",
       "29",
-      "44",
+      "rapbattle",
       "7",
-      "fishing",
-      "rapbattle"
+      "fishing"
     ],
     "tokens": 0,
     "zombie": false,
@@ -654,8 +645,8 @@
     "punishments": [],
     "tasks": [
       "26",
-      "12",
-      "34"
+      "34",
+      "12"
     ],
     "tokens": 12,
     "zombie": false,
@@ -678,7 +669,7 @@
       },
       {
         "time": 1718717937,
-        "deathMessage": "MrKoolBuckzz was slain by scarwe using §b[§oScarlett Slayer§b]"
+        "deathMessage": "MrKoolBuckzz was slain by scarwe using \u00c2\u00a7b[\u00c2\u00a7oScarlett Slayer\u00c2\u00a7b]"
       }
     ],
     "currentTask": "-1",
@@ -688,9 +679,9 @@
     "zombie": false,
     "nextTask": "-1",
     "tasks": [
-      "27",
       "15",
       "tag",
+      "27",
       "11",
       "80"
     ],
@@ -705,11 +696,11 @@
     "deaths": [
       {
         "time": 1718122395,
-        "deathMessage": "SanguisAureus was slain by scarwe using §f[§oScarlett Slayer§f]"
+        "deathMessage": "SanguisAureus was slain by scarwe using \u00c2\u00a7f[\u00c2\u00a7oScarlett Slayer\u00c2\u00a7f]"
       },
       {
         "time": 1718727200,
-        "deathMessage": "SanguisAureus was slain by scarwe using §b[§oscarwe§b]"
+        "deathMessage": "SanguisAureus was slain by scarwe using \u00c2\u00a7b[\u00c2\u00a7oscarwe\u00c2\u00a7b]"
       }
     ],
     "currentTask": "tnt",
@@ -719,12 +710,12 @@
     "zombie": false,
     "nextTask": "-1",
     "tasks": [
-      "treasurer",
-      "tag",
       "trivia",
-      "teacher",
+      "tag",
+      "tnt",
+      "treasurer",
       "elements",
-      "tnt"
+      "teacher"
     ],
     "taskDescription": "Deal damage to a player using the explosion damage from a TNT.",
     "shop": false,
@@ -802,11 +793,11 @@
     "zombie": false,
     "nextTask": "-1",
     "tasks": [
-      "blockplacer",
       "badteacher",
+      "blockplacer",
       "17"
     ],
-    "taskDescription": "[SL] Be TerrariaTrees\u0027s hype person for the next 30 minutes and don\u0027t get called out. If you get called out, switch to any other player and reset the timer, or fail the task (your choice).",
+    "taskDescription": "[SL] Be TerrariaTrees's hype person for the next 30 minutes and don't get called out. If you get called out, switch to any other player and reset the timer, or fail the task (your choice).",
     "shop": false
   },
   "Spore__": {
@@ -846,10 +837,10 @@
     "zombie": false,
     "nextTask": "-1",
     "tasks": [
-      "mourner",
-      "holiday"
+      "holiday",
+      "mourner"
     ],
-    "taskDescription": "Make up a holiday, then convince another player it is an actual holiday and get them to celebrate it with you. If they don\u0027t believe you, you can try with another player.",
+    "taskDescription": "Make up a holiday, then convince another player it is an actual holiday and get them to celebrate it with you. If they don't believe you, you can try with another player.",
     "shop": false
   }
 }
