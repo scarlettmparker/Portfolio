@@ -117,7 +117,7 @@
 
 .titleWrapper {
     position: absolute;
-    top: 50px;
+    top: 5.625rem;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -229,7 +229,7 @@
 
 .expandedInfoWrapper {
     position: absolute;
-    top: 240px;
+    top: 19rem;
     left: 30%;
     transform: translateX(-50%);
     display: flex;
@@ -262,7 +262,7 @@
     position: relative;
     width: 100%;
     height: auto;
-    margin-top: 1.2rem;
+    margin-top: 0.8rem;
     padding-bottom: 50px;
 }
 
