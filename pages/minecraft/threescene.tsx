@@ -15,6 +15,11 @@ let bookPosition: THREE.Vector3 = new THREE.Vector3();
 let tanFOV: number, windowHeight: number;
 let bookX = 0.25, bookY = 0;
 
+const helper: React.FC = () => {
+    return null;
+};
+  
+export default helper;
 
 // load image for the enchantment graphics
 function splitEnchantmentImage() {
