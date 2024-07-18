@@ -1,5 +1,5 @@
 // FIND ONLINE PLAYERS REQUEST
-const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
+const baseUrl = 'http://localhost:3000';
 
 export async function findOnlinePlayer(gameId: string, player: string) {
     const response = await fetch(`${baseUrl}/api/chess/findplayer`, {
