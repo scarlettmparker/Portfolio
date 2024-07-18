@@ -230,7 +230,7 @@
 .expandedInfoWrapper {
     position: absolute;
     top: 19rem;
-    left: 30%;
+    left: 28.5%;
     transform: translateX(-50%);
     display: flex;
     flex-direction: column;
@@ -351,7 +351,7 @@
 
 @media screen and (max-width: 515px) {
     .titleWrapper {
-        top: 80px;
+        top: 110px;
     }
     .title {
         font-size: 4.5rem;
@@ -372,7 +372,7 @@
 
 @media screen and (max-width: 380px) {
     .titleWrapper {
-        top: 90px;
+        top: 125px;
     }
     .title {
         font-size: 3.5rem;
@@ -384,7 +384,7 @@
 
 @media screen and (max-width: 275px) {
     .titleWrapper {
-        top: 100px;
+        top: 135px;
     }
     .title {
         font-size: 2.5rem;
