@@ -21,7 +21,7 @@ export default async function handler(
 const runWebhook = async () => {
   return new Promise((resolve, reject) => {
     exec(
-      'sh /var/www/deploy.sh',
+      'sudo sh /var/www/deploy.sh',
       { cwd: '/var/www/html' },
       (error, stdout, stderr) => {
         if (error) {
