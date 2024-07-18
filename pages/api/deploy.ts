@@ -21,15 +21,15 @@ export default async function handler(
 const runWebhook = async () => {
   return new Promise((resolve, reject) => {
     exec(
-      "/var/www/deploy.sh",
-      { cwd: "/var/www/html" },
+      'sh /var/www/deploy.sh',
+      { cwd: '/var/www/html' },
       (error, stdout, stderr) => {
         if (error) {
           console.error(`Error executing shell script: ${error}`);
-          reject("Internal Server Error");
+          reject('Internal Server Error');
         } else {
           console.log(`Shell script output: ${stdout}`);
-          resolve("Shell script executed successfully");
+          resolve('Shell script executed successfully');
         }
       }
     );
