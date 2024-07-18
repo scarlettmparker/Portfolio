@@ -896,10 +896,7 @@
     "tokens": 0,
     "zombie": false,
     "nextTask": "-1",
-    "tasks": [
-      "close",
-      "32"
-    ],
+    "tasks": [],
     "taskDescription": "Stay close enough to hear another player for a full minute without them noticing you're there.",
     "shop": false
   },
@@ -947,6 +944,21 @@
       "9"
     ],
     "taskDescription": "Jumpscare another player.",
+    "shop": false
+  },
+  "LARGEHEDRON": {
+    "name": "LARGEHEDRON",
+    "sessionTasks": 0,
+    "lives": 0,
+    "deaths": [],
+    "currentTask": "-1",
+    "punishments": [],
+    "tagged": false,
+    "tokens": 0,
+    "zombie": false,
+    "nextTask": "-1",
+    "tasks": [],
+    "taskDescription": "",
     "shop": false
   },
   "BandSH": {

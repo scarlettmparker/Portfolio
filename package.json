@@ -11,6 +11,8 @@
   "dependencies": {
     "@prisma/client": "^5.15.1",
     "@tweenjs/tween.js": "^23.1.2",
+    "axios": "^1.7.2",
+    "cheerio": "^1.0.0-rc.12",
     "d3-color": "^3.1.0",
     "d3-interpolate": "^3.0.1",
     "dat-gui": "^0.5.0",

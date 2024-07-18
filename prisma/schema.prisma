@@ -55,3 +55,30 @@ model PieceMoveSet {
 
   @@id([pieceId, moveSetId])
 }
+
+model TextObject {
+  id Int @id @default(autoincrement())
+  title String
+  level String
+  text Text[]
+}
+
+model Text {
+  id Int @id @default(autoincrement())
+  text String
+  language String
+  textObjectId Int
+  textObject TextObject @relation(fields: [textObjectId], references: [id])
+  annotations Annotation[]
+}
+
+model Annotation {
+  id Int @id @default(autoincrement())
+  start Int
+  end Int
+  description String
+  likes Int @default(0)
+  dislikes Int @default(0)
+  textId Int
+  text Text @relation(fields: [textId], references: [id])
+}
