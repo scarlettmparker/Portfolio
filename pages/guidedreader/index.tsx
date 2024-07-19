@@ -195,7 +195,10 @@ function Home() {
 												{levelSeparators.find(separator => separator.index === index)?.level}
 											</div>
 											: null}
-										<div key={"textModule" + index} onClick={() => setCurrentText(index)}>
+										<div key={"textModule" + index} onClick={() => {
+											setCurrentLanguage(0);
+											setCurrentText(index)}
+										}>
 											{textModule(title, level, currentText === index)}
 										</div>
 									</>
@@ -214,13 +217,28 @@ function Home() {
 								<span className={`${styles.navItem} ${currentLevel === 'Γ2' ? styles.activeNavItemC2 : ''}`}>C2</span>
 							</div>
 						</div>
-						<div className={styles.toolbarWrapper}></div>
+						<div className={styles.toolbarWrapper}>
+							<div className={styles.languageChangeWrapper}>
+								<select className={styles.languageChangeBox} onChange={(e) => {
+									const selectedIndex = parseInt(e.target.value, 10);
+									setCurrentLanguage(selectedIndex);
+								}}>
+									{textData[currentText] && textData[currentText].text.map((text, index) => (
+										<option key={"languageChange" + index} value={index}>
+											{text.language}
+										</option>
+									))}
+								</select>
+							</div>
+						</div>
 						<div className={styles.textContentWrapper} ref={textContentRef}>
 							<div className={styles.textContent}>
 								{currentText < textData.length && textData[currentText].text.length > 0 ? (
 									<div key={"textContent0"} className={styles.textContentItem}>
-										<p dangerouslySetInnerHTML={{ __html: renderAnnotatedText(textData[currentText].text[currentLanguage].text,
-											textData[currentText].text[currentLanguage].annotations) }} />
+										<p dangerouslySetInnerHTML={{
+											__html: renderAnnotatedText(textData[currentText].text[currentLanguage].text,
+												textData[currentText].text[currentLanguage].annotations)
+										}} />
 									</div>
 								) : null}
 							</div>
