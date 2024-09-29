@@ -1,0 +1,10 @@
+[
+    { "name": "Non Learner", "id": "352001527780474881", "hex": "#fcdf68" },
+    { "name": "GR - Native", "id": "350483752490631181", "hex": "#2535e6" },
+    { "name": "A1 - Beginner", "id": "351117824300679169", "hex": "#54de8e" },
+    { "name": "A2 - Elementary", "id": "351117954974482435", "hex": "#29ccb6" },
+    { "name": "B1 - Intermediate", "id": "350485376109903882", "hex": "#f5a640" },
+    { "name": "B2 - Upper Intermediate", "id": "351118486426091521", "hex": "#e85548" },
+    { "name": "C1 - Advanced", "id": "350485279238258689", "hex": "#f25289" },
+    { "name": "C2 - Fluent", "id": "350483489461895168", "hex": "#7ea5d6" }
+  ]

@@ -1,4 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { setCookie } from 'nookies';
+import roles from '../../../data/roles.json';
 
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
@@ -12,21 +14,12 @@ const GREEK_LEARNING_ROLES = `https://discord.com/api/users/@me/guilds/${GREEK_L
 // role type
 type Role = {
   name: string;
-  id: number;
+  id: string;
   hex: string;
 };
 
 // list of roles in greek learning
-const ROLES: Role[] = [
-  { name: 'GR | Native', id: 350483752490631181, hex: '#2535e6' },
-  { name: 'Non Learner', id: 352001527780474881, hex: '#fcdf68' },
-  { name: 'A1 | Beginner', id: 351117824300679169, hex: '#54de8e' },
-  { name: 'A2 | Elementary', id: 351117954974482435, hex: '#29ccb6' },
-  { name: 'B1 | Intermediate', id: 350485376109903882, hex: '#f5a640' },
-  { name: 'B2 | Upper Intermediate', id: 351118486426091521, hex: '#ff776b' },
-  { name: 'C1 | Advanced', id: 350485279238258689, hex: '#f25289' },
-  { name: 'C2 | Fluent', id: 350483489461895168, hex: '#7ea5d6' },
-];
+const ROLES: Role[] = roles;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { code } = req.query;
@@ -85,15 +78,49 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!rolesResponse.ok) {
         return res.status(500).json({ error: 'Failed to fetch user roles' });
       } else {
+        let userRoles: Role[] = [];
         roles.roles.forEach((role: any) => {
           // check if the user has any of the required roles to contribute to texts
           const roleData = ROLES.find(r => r.id == role);
           if (roleData) {
-            return res.status(200).json({ message: `Role: ${roleData.name}, ID: ${roleData.id}, Hex: ${roleData.hex}` });
-          } else {
-            return res.status(403).json({ error: 'You have none of the required roles to contribute to texts.' });
+            userRoles.push(roleData);
           }
         });
+        if (userRoles.length > 0) {
+          const createUser = await fetch('http://localhost:3000/api/guidedreader/auth/adduser', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${access_token}`, // include the access token in the request
+            },
+            body: JSON.stringify({
+              username: roles.user.username,
+              auth: access_token,
+              levels: userRoles.map(role => role.id.toString()),
+              discordId: roles.user.id,
+            }),
+          });
+
+          // if the user creation fails, return an error
+          if (!createUser.ok) {
+            return res.status(500).json({ error: 'Failed to create user' });
+          }
+
+
+          // if the user is created successfully, set the session token and redirect to /guidedreader
+          const userData = await createUser.json();
+          const sessionToken = userData.user.auth;
+
+          setCookie({ res }, 'token', sessionToken, {
+            maxAge: 3 * 24 * 60 * 60, // 3 days
+            path: '/',
+          });
+
+          // redirect to /guidedreader after successful login
+          return res.redirect(302, '/guidedreader');
+        } else {
+          return res.status(403).json({ error: 'You do not have the required roles to contribute to texts' });
+        }
       }
     } else {
       return res.status(403).json({ error: 'You are not a member of the Greek Learning Guild' });

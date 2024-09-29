@@ -56,6 +56,16 @@ model PieceMoveSet {
   @@id([pieceId, moveSetId])
 }
 
+model User {
+  id Int @id @default(autoincrement())
+  username String
+  auth String
+  levels String[]
+  discordId String @unique
+
+  @@unique([username, auth])
+}
+
 model TextObject {
   id Int @id @default(autoincrement())
   title String

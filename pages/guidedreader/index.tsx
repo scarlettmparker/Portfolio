@@ -1,6 +1,8 @@
 import Head from 'next/head';
 import styles from './styles/index.module.css';
+import roles from '../data/roles.json';
 import { useEffect, useState, useRef } from 'react';
+import { parseCookies } from 'nookies';
 import './styles/global.css';
 
 // annotation interface for text data
@@ -24,6 +26,12 @@ interface TextObject {
 	text: Text[];
 }
 
+// role object
+interface Role {
+	name: string;
+	id: number;
+	hex: string;
+};
 // fetch text titles from the api
 async function fetchTextTitles() {
 	const response = await fetch('./api/guidedreader/fetchtitles', {
@@ -52,30 +60,30 @@ async function fetchTextData(texts: Text[]) {
 // add texts to the database
 async function addTextsToDB(texts: TextObject[]) {
 	// type check the texts
-    if (!Array.isArray(texts)) {
-        throw new Error("Expected texts to be an array");
-    }
+	if (!Array.isArray(texts)) {
+		throw new Error("Expected texts to be an array");
+	}
 
-    const responses = [];
+	const responses = [];
 
 	// go through each text and add it to the database
-    for (const textObject of texts) {
-        const response = await fetch('./api/guidedreader/addtext', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                title: textObject.title,
-                level: textObject.level,
-                text: textObject.text,
-                language: 'GR',
-            }),
-        });
-        responses.push(await response.json());
-    }
+	for (const textObject of texts) {
+		const response = await fetch('./api/guidedreader/addtext', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				title: textObject.title,
+				level: textObject.level,
+				text: textObject.text,
+				language: 'GR',
+			}),
+		});
+		responses.push(await response.json());
+	}
 
-    return responses;
+	return responses;
 }
 
 // get text data from the database
@@ -167,6 +175,54 @@ const renderAnnotatedText = (text: string, annotations: Annotation[]) => {
 	return annotatedText;
 };
 
+// get database data for the default texts
+const fetchData = async () => {
+	let data = await getTextDataFromDB();
+	// if the database is empty, fetch the text data from the api
+	if (data.length == 0) {
+		let fetchedTexts = await fetchTextTitles();
+		fetchedTexts = await fetchTextData(fetchedTexts);
+
+		// add the fetched texts to the database
+		const responses = await addTextsToDB(fetchedTexts.results);
+		const allSuccess = responses.every(response => response.message === 'Text object created/updated successfully');
+
+		if (!allSuccess) {
+			console.error("Some texts could not be added to the database", responses);
+		}
+	}
+	return data;
+};
+
+// get user details using auth token
+async function getUserDetails(auth: string) {
+	return fetch('./api/guidedreader/auth/getuser', {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': auth,
+		},
+	});
+}
+
+const getRoleByLevel = (level: string) => {
+	return roles.find(role => role.id === level);
+};
+
+// level display component
+const LevelDisplay = ({ level }: { level: string }) => {
+	const role = getRoleByLevel(level);
+	const color = role ? role.hex : '#000';
+
+	return (
+		<div className={styles.levelDisplay}>
+			<span className={styles.levelDisplayTitle}>Level: </span>
+			<span className={styles.levelDisplayText} style={{ color: color }}>{role?.name}</span>
+		</div>
+	);
+};
+
+// home page component
 function Home() {
 	// react states yahoooo
 	const [textData, setTextData] = useState<TextObject[]>([]);
@@ -175,34 +231,36 @@ function Home() {
 	const [currentLevel, setCurrentLevel] = useState<string>('');
 	const [currentAnnotation, setCurrentAnnotation] = useState<string>('');
 	const [currentLanguage, setCurrentLanguage] = useState<number>(0);
+	const [userDetails, setUserDetails] = useState<any>(null);
 
 	const textListRef = useRef<HTMLDivElement>(null);
 	const textContentRef = useRef<HTMLDivElement>(null);
 
-	// get database data for the default texts
-	const fetchData = async () => {
-		let data = await getTextDataFromDB();
-		if (data.length == 0) {
-			let fetchedTexts = await fetchTextTitles();
-			fetchedTexts = await fetchTextData(fetchedTexts);
+	useEffect(() => {
+		const cookies = parseCookies();
+		const userToken = cookies.token;
 
-			const responses = await addTextsToDB(fetchedTexts.results);
-			const allSuccess = responses.every(response => response.message === 'Text object created/updated successfully');
-	
-			if (allSuccess) {
-				setTextData(fetchedTexts);
-				setLevelSeparators(findLevelSeparators(fetchedTexts));
-			} else {
-				console.error("Some texts could not be added to the database", responses);
-			}
-		} else {
-			setTextData(data);
-			setLevelSeparators(findLevelSeparators(data));
+		// get the user details if the token exists
+		if (userToken) {
+			getUserDetails(userToken).then(response => response.json()).then(data => {
+				// if the user doesn't exist, clear the cookies
+				if (!data.user) {
+					clearCookies();
+				} else {
+					setUserDetails(data);
+				}
+			});
 		}
-	};
+	}, []);
 
 	useEffect(() => {
-		fetchData();
+		const fetchDataAsync = async () => {
+			const data = await fetchData();
+			// set the text data and level separators
+			setTextData(data);
+			setLevelSeparators(findLevelSeparators(data));
+		};
+		fetchDataAsync();
 	}, []);
 
 	useEffect(() => {
@@ -235,6 +293,14 @@ function Home() {
 		};
 	}, [currentAnnotation, textContentRef]);
 
+	// helper function to clear cookies
+	const clearCookies = () => {
+		const userCookies = ['token'];
+		userCookies.forEach(cookieName => {
+			document.cookie = `${cookieName}=;expires=${new Date().toUTCString()};path=/`;
+		});
+	};
+
 	return (
 		<>
 			<Head>
@@ -242,6 +308,9 @@ function Home() {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<div className={styles.pageWrapper}>
+				{userDetails && (
+					<p>Good Morning, {userDetails.user.username} <LevelDisplay level={userDetails.user.levels[0]} /></p>
+				)}
 				{currentAnnotation && (
 					<div id="annotationModal" className={styles.annotationModal}>
 						<span className={styles.annotationModalTitle}><strong>Annotation</strong></span>
