@@ -24,6 +24,61 @@ interface TextObject {
 	text: Text[];
 }
 
+// fetch text titles from the api
+async function fetchTextTitles() {
+	const response = await fetch('./api/guidedreader/fetchtitles', {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	});
+	const data = await response.json();
+	return data;
+}
+
+// fetch text data from the api using each title
+async function fetchTextData(texts: Text[]) {
+	const response = await fetch('./api/guidedreader/fetchdata', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(texts)
+	});
+	const data = await response.json();
+	return data;
+}
+
+// add texts to the database
+async function addTextsToDB(texts: TextObject[]) {
+	// type check the texts
+    if (!Array.isArray(texts)) {
+        throw new Error("Expected texts to be an array");
+    }
+
+    const responses = [];
+
+	// go through each text and add it to the database
+    for (const textObject of texts) {
+        const response = await fetch('./api/guidedreader/addtext', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title: textObject.title,
+                level: textObject.level,
+                text: textObject.text,
+                language: 'GR',
+            }),
+        });
+        responses.push(await response.json());
+    }
+
+    return responses;
+}
+
+// get text data from the database
 async function getTextDataFromDB() {
 	const response = await fetch('./api/guidedreader/fetchdbdata');
 	return response.json();
@@ -126,9 +181,24 @@ function Home() {
 
 	// get database data for the default texts
 	const fetchData = async () => {
-		const data = await getTextDataFromDB();
-		setTextData(data);
-		setLevelSeparators(findLevelSeparators(data));
+		let data = await getTextDataFromDB();
+		if (data.length == 0) {
+			let fetchedTexts = await fetchTextTitles();
+			fetchedTexts = await fetchTextData(fetchedTexts);
+
+			const responses = await addTextsToDB(fetchedTexts.results);
+			const allSuccess = responses.every(response => response.message === 'Text object created/updated successfully');
+	
+			if (allSuccess) {
+				setTextData(fetchedTexts);
+				setLevelSeparators(findLevelSeparators(fetchedTexts));
+			} else {
+				console.error("Some texts could not be added to the database", responses);
+			}
+		} else {
+			setTextData(data);
+			setLevelSeparators(findLevelSeparators(data));
+		}
 	};
 
 	useEffect(() => {
@@ -197,7 +267,8 @@ function Home() {
 											: null}
 										<div key={"textModule" + index} onClick={() => {
 											setCurrentLanguage(0);
-											setCurrentText(index)}
+											setCurrentText(index)
+										}
 										}>
 											{textModule(title, level, currentText === index)}
 										</div>
