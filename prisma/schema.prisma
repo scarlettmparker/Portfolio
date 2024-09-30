@@ -14,81 +14,86 @@ datasource db {
 }
 
 model MinecraftPlayer {
-  id Int @id @default(autoincrement())
+  id        Int                 @id @default(autoincrement())
   usernames MinecraftUsername[]
-  uuid String
+  uuid      String
 }
 
 model MinecraftUsername {
-  id Int @id @default(autoincrement())
-  username String @unique
+  id                Int              @id @default(autoincrement())
+  username          String           @unique
   minecraftPlayerId Int?
-  MinecraftPlayer MinecraftPlayer? @relation(fields: [minecraftPlayerId], references: [id])
+  MinecraftPlayer   MinecraftPlayer? @relation(fields: [minecraftPlayerId], references: [id])
 }
 
 model Game {
-  id String @id
+  id      String  @id
   player0 Boolean @default(false)
   player1 Boolean @default(false)
-  player Int @default(0)
-  state Json[] @default([])
+  player  Int     @default(0)
+  state   Json[]  @default([])
 }
 
 model Piece {
-  id String @id
-  skin Int[]
+  id       String         @id
+  skin     Int[]
   moveSets PieceMoveSet[]
 }
 
 model MoveSet {
-  id Int @id @default(autoincrement())
-  moves Int[]
+  id     Int            @id @default(autoincrement())
+  moves  Int[]
   pieces PieceMoveSet[]
 }
 
 model PieceMoveSet {
-  pieceId String
+  pieceId   String
   moveSetId Int
 
-  piece Piece @relation(fields: [pieceId], references: [id])
+  piece   Piece   @relation(fields: [pieceId], references: [id])
   moveSet MoveSet @relation(fields: [moveSetId], references: [id])
 
   @@id([pieceId, moveSetId])
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  username String
-  auth String
-  levels String[]
-  discordId String @unique
+  id                  Int          @id @default(autoincrement())
+  username            String
+  auth                String
+  levels              String[]
+  discordId           String       @unique
+  accountCreationDate Int
+  Annotation          Annotation[]
 
   @@unique([username, auth])
 }
 
 model TextObject {
-  id Int @id @default(autoincrement())
+  id    Int    @id @default(autoincrement())
   title String
   level String
-  text Text[]
+  text  Text[]
 }
 
 model Text {
-  id Int @id @default(autoincrement())
-  text String
-  language String
+  id           Int          @id @default(autoincrement())
+  text         String
+  language     String
   textObjectId Int
-  textObject TextObject @relation(fields: [textObjectId], references: [id])
-  annotations Annotation[]
+  textObject   TextObject   @relation(fields: [textObjectId], references: [id])
+  annotations  Annotation[]
 }
 
 model Annotation {
-  id Int @id @default(autoincrement())
-  start Int
-  end Int
-  description String
-  likes Int @default(0)
-  dislikes Int @default(0)
-  textId Int
-  text Text @relation(fields: [textId], references: [id])
+  id           Int    @id @default(autoincrement())
+  start        Int
+  end          Int
+  description  String
+  likes        Int    @default(0)
+  dislikes     Int    @default(0)
+  textId       Int
+  text         Text   @relation(fields: [textId], references: [id])
+  creationDate Int
+  userId       Int
+  user         User?  @relation(fields: [userId], references: [id])
 }

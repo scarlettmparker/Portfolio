@@ -26,14 +26,15 @@
     color: #494b50;
     cursor: pointer;
     font-family: 'Open Sans', sans-serif;
-    transition: transform 1s; /* Smooth transition for the rotation */
+    transition: transform 1s;
+    /* Smooth transition for the rotation */
 }
 
-.annotationModalClose:hover{
+.annotationModalClose:hover {
     animation: spin 0.6s;
 }
-  
-.annotationModalClose:not(:hover){
+
+.annotationModalClose:not(:hover) {
     animation: spinReverse 0.6s;
 }
 
@@ -41,15 +42,17 @@
     from {
         transform: rotate(0deg);
     }
+
     to {
         transform: rotate(-360deg);
     }
 }
-  
+
 @keyframes spinReverse {
     from {
         transform: rotate(0deg);
     }
+
     to {
         transform: rotate(360deg);
     }
@@ -84,12 +87,28 @@
     right: -30rem;
 }
 
-.annotationModalText {
+.annotationWrapper {
     position: absolute;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1.2rem;
+    display: flex;
+    flex-direction: column;
     margin: 20px;
     margin-top: 65px;
+    height: 88%;
+}
+
+.annotationModalText {
+    position: relative;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.2rem;
+}
+
+.annotationModalAuthor {
+    position: relative;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #494b50;
+    margin-top: auto;
 }
 
 .navWrapper {
@@ -97,7 +116,7 @@
     width: 750px;
     height: 50px;
     content: '';
-    background-color: #494b50;
+    background-color: #0A2342;
     border-radius: 10px 10px 0 0;
 }
 
@@ -108,7 +127,8 @@
     left: 2.5%;
 }
 
-.navItem, .sideTitle {
+.navItem,
+.sideTitle {
     position: relative;
     margin-left: 1rem;
     margin-right: 1rem;
@@ -120,18 +140,23 @@
 .activeNavItemA1 {
     color: #54de8e;
 }
+
 .activeNavItemA2 {
     color: #29ccb6;
 }
-.activeNavItemB1 { 
+
+.activeNavItemB1 {
     color: #f5a640;
 }
+
 .activeNavItemB2 {
     color: #ff776b;
 }
+
 .activeNavItemC1 {
     color: #f25289;
 }
+
 .activeNavItemC2 {
     color: #7ea5d6;
 }
@@ -173,7 +198,7 @@
     position: absolute;
     width: 100%;
     height: 50px;
-    background-color: #494b50;
+    background-color: #0A2342;
     border-radius: 10px 0px 0 0;
 }
 
@@ -191,6 +216,37 @@
     font-family: 'Open Sans', sans-serif;
     font-size: 1.2rem;
     margin-left: 20px;
+}
+
+.annotationPopup {
+    position: absolute;
+    z-index: 3;
+    top: 50%;
+    left: 50%;
+    margin: 0;
+    transform: translate(-50%, -50%);
+}
+
+.annotateButton,
+.submitButton {
+    background-color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1rem;
+    padding: 2px 10px 2px 10px;
+    border-width: 1px;
+    border-color: #0A2342;
+}
+
+.submitButton:hover,
+.annotateButton:hover {
+    background-color: #0A2342;
+    color: white;
+}
+
+.annotationTextarea {
+    font-family: 'Open Sans', sans-serif;
+    width: 95%;
+    margin-top: 10px;
 }
 
 .textItemWrapper {
@@ -296,11 +352,11 @@
 @media screen and (max-width: 1560px) {
     .mainWrapper {
         margin-right: 100px;
-    }   
+    }
 }
 
 @media screen and (max-width: 1360px) {
     .mainWrapper {
         margin-right: 0px;
-    }   
+    }
 }

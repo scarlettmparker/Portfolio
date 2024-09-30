@@ -7,6 +7,7 @@ const SALT_ROUNDS = 10;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { username, auth, levels, discordId } = req.body;
+    const currentTime = Math.floor(Date.now() / 1000);
 
     console.log('Received body:', req.body);
     console.log('Auth token:', auth);
@@ -34,10 +35,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 levels: levels,
                 auth: hashedAuth,
                 discordId: discordId,
+                accountCreationDate: currentTime
             }
         });
         if (!user) {
             return res.status(500).json({ error: 'Failed to create user' });
+        }
+    } else {
+        // user exists, update the user
+        user = await prisma.user.update({
+            where: {
+                discordId: discordId,
+            },
+            data: {
+                username: username,
+                levels: levels,
+                auth: hashedAuth,
+            }
+        });
+        if (!user) {
+            return res.status(500).json({ error: 'Failed to update user' });
         }
     }
 
