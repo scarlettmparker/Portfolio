@@ -4,6 +4,7 @@ import roles from '../../../data/roles.json';
 
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
+const REDIRECT_URL = process.env.DISCORD_REDIRECT_URL;
 const GREEK_LEARNING_GUILD_ID = '350234668680871946';
 
 // discord oauth endpoints
@@ -39,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         client_secret: CLIENT_SECRET!,
         code: code.toString(),
         grant_type: 'authorization_code',
-        redirect_uri: 'http://localhost:3000/api/guidedreader/auth/discord',
+        redirect_uri: REDIRECT_URL!,
       }),
     });
 

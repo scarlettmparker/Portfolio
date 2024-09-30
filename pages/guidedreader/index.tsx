@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import { parseCookies } from 'nookies';
 import './styles/global.css';
 
-const BOT_LINK = 'https://discord.com/oauth2/authorize?client_id=1269003796223098932&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fguidedreader%2Fauth%2Fdiscord&scope=guilds+guilds.members.read';
+const BOT_LINK = process.env.NEXT_PUBLIC_BOT_LINK;
 
 // annotation interface for text data
 interface Annotation {
@@ -175,14 +175,20 @@ const renderAnnotatedText = (text: string, annotations: Annotation[]) => {
 	let annotatedText = "";
 	let lastIndex = 0;
 
+	// sort annotations by start index to ensure correct order
+	annotations.sort((a, b) => a.start - b.start);
+
 	// iterate through the annotations and create a span from it
 	annotations.forEach(({ description, start, end }) => {
-		annotatedText += text.slice(lastIndex, start);
-		// encode and used as an attribute, set class and data-description for click events
-		annotatedText += `<span class="${styles.annotatedText}" id="annotation" data-description="${encodeURIComponent(description)}">${text.slice(start, end)}</span>`;
-		lastIndex = end;
+		if (start >= 0 && end <= text.length && start < end) {
+			annotatedText += text.slice(lastIndex, start);
+			// encode and use as an attribute, decode when displaying
+			annotatedText += `<span class="${styles.annotatedText}" id="annotation" data-description="${encodeURIComponent(description)}">${text.slice(start, end)}</span>`;
+			lastIndex = end;
+		}
 	});
 
+	// append the rest of the text
 	annotatedText += text.slice(lastIndex);
 	return annotatedText;
 };
@@ -276,95 +282,95 @@ function hideAnnotationButton(setCreatingAnnotation: (value: boolean) => void) {
 
 // submit annotation to the database
 async function submitAnnotation(selectedText: string, annotationText: string, userDetails: any, currentTextID: number, charIndex: number) {
-    // get the current unix time
-    const currentTime = Math.floor(Date.now() / 1000);
+	// get the current unix time
+	const currentTime = Math.floor(Date.now() / 1000);
 
-    // send request to get raw text
-    let response = await fetch('./api/guidedreader/getrawtext', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            textID: currentTextID
-        })
-    });
+	// send request to get raw text
+	let response = await fetch('./api/guidedreader/getrawtext', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			textID: currentTextID
+		})
+	});
 
-    let rawText = await response.json();
-    const { start, end } = findAnnotationIndexes(selectedText, rawText.text, charIndex);
+	let rawText = await response.json();
+	const { start, end } = findAnnotationIndexes(selectedText, rawText.text, charIndex);
 
-    // structure the annotation
-    const annotation = {
-        start: start,
-        end: end,
-        description: annotationText,
-        userId: userDetails.user.id,
-        textId: currentTextID,
-        creationDate: currentTime
-    };
+	// structure the annotation
+	const annotation = {
+		start: start,
+		end: end,
+		description: annotationText,
+		userId: userDetails.user.id,
+		textId: currentTextID,
+		creationDate: currentTime
+	};
 
-    // send the annotation to the database
-    response = await fetch('./api/guidedreader/addannotation', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(annotation)
-    });
+	// send the annotation to the database
+	response = await fetch('./api/guidedreader/addannotation', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(annotation)
+	});
 
 	// get the response from the server
-    const data = await response.json();
-    if (data.error) {
-        console.error("Failed to add annotation", data);
-    } else {
-        console.log("Annotation added successfully", data);
-        window.location.reload();
-    }
+	const data = await response.json();
+	if (data.error) {
+		console.error("Failed to add annotation", data);
+	} else {
+		console.log("Annotation added successfully", data);
+		window.location.reload();
+	}
 }
 
 // helper function to strip html tags
 function stripHtmlTagsWithMapping(text: string): { strippedText: string, mapping: number[] } {
-    let strippedText = '';
-    let mapping = [];
-    let isTag = false;
+	let strippedText = '';
+	let mapping = [];
+	let isTag = false;
 
-    // iterate through the text and strip the tags
-    for (let i = 0; i < text.length; i++) {
-        // check if the tag has started
-        if (text[i] === '<') {
-            isTag = true;
-        }
+	// iterate through the text and strip the tags
+	for (let i = 0; i < text.length; i++) {
+		// check if the tag has started
+		if (text[i] === '<') {
+			isTag = true;
+		}
 
-        // add the character to the stripped text if it isn't a tag
-        if (!isTag) {
-            strippedText += text[i];
-            mapping.push(i);
-        }
+		// add the character to the stripped text if it isn't a tag
+		if (!isTag) {
+			strippedText += text[i];
+			mapping.push(i);
+		}
 
-        // check if the tag has ended
-        if (text[i] === '>') {
-            isTag = false;
-        }
-    }
+		// check if the tag has ended
+		if (text[i] === '>') {
+			isTag = false;
+		}
+	}
 
-    return { strippedText, mapping };
+	return { strippedText, mapping };
 }
 
 function findAnnotationIndexes(selectedText: string, rawText: string, charIndex: number) {
-    // strip tags and create the mapping
-    const { strippedText, mapping } = stripHtmlTagsWithMapping(rawText);
-    const start = strippedText.indexOf(selectedText, charIndex);
-    const end = start + selectedText.length;
+	// strip tags and create the mapping
+	const { strippedText, mapping } = stripHtmlTagsWithMapping(rawText);
+	const start = strippedText.indexOf(selectedText, charIndex);
+	const end = start + selectedText.length;
 
-    if (start === -1) {
-        throw new Error("Selected text not found in raw text.");
-    }
+	if (start === -1) {
+		throw new Error("Selected text not found in raw text.");
+	}
 
-    // map the indexes back to the original text
-    const originalStart = mapping[start];
-    const originalEnd = mapping[end - 1] + 1;
+	// map the indexes back to the original text
+	const originalStart = mapping[start];
+	const originalEnd = mapping[end - 1] + 1;
 
-    return { start: originalStart, end: originalEnd };
+	return { start: originalStart, end: originalEnd };
 }
 
 // create annotation button
@@ -380,7 +386,7 @@ const CreateAnnotationButton = ({ buttonPosition, isLoggedIn, setCreatingAnnotat
 				<button onClick={() => { hideAnnotationButton(setCreatingAnnotation) }}
 					className={styles.annotateButton}>Annotate</button>
 			) : (
-				<button onClick={() => { window.location.href = BOT_LINK; }}
+				<button onClick={() => { window.location.href = BOT_LINK!; }}
 					className={styles.annotateButton}>Sign in to Annotate</button>
 			)}
 		</div>
@@ -544,7 +550,7 @@ function Home() {
 		}
 	}, []);
 
-	const handleTextSelectionRef = () => handleTextSelection({textContentRef, selectedText, setSelectedText, setButtonPosition, creatingAnnotation, setCharIndex});
+	const handleTextSelectionRef = () => handleTextSelection({ textContentRef, selectedText, setSelectedText, setButtonPosition, creatingAnnotation, setCharIndex });
 
 	useEffect(() => {
 		const fetchDataAsync = async () => {
