@@ -275,95 +275,96 @@ function hideAnnotationButton(setCreatingAnnotation: (value: boolean) => void) {
 };
 
 // submit annotation to the database
-async function submitAnnotation(selectedText: string, annotationText: string, userDetails: any, currentTextID: number) {
-	// get the current unix time
-	const currentTime = Math.floor(Date.now() / 1000);
+async function submitAnnotation(selectedText: string, annotationText: string, userDetails: any, currentTextID: number, charIndex: number) {
+    // get the current unix time
+    const currentTime = Math.floor(Date.now() / 1000);
 
-	// send request to get raw text
-	let response = await fetch('./api/guidedreader/getrawtext', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			textID: currentTextID
-		})
-	})
+    // send request to get raw text
+    let response = await fetch('./api/guidedreader/getrawtext', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            textID: currentTextID
+        })
+    });
 
-	let rawText = await response.json();
-	const { start, end } = findAnnotationIndexes(selectedText, rawText.text);
+    let rawText = await response.json();
+    const { start, end } = findAnnotationIndexes(selectedText, rawText.text, charIndex);
 
-	// structure the annotation
-	const annotation = {
-		start: start,
-		end: end,
-		description: annotationText,
-		userId: userDetails.user.id,
-		textId: currentTextID,
-		creationDate: currentTime
-	};
+    // structure the annotation
+    const annotation = {
+        start: start,
+        end: end,
+        description: annotationText,
+        userId: userDetails.user.id,
+        textId: currentTextID,
+        creationDate: currentTime
+    };
 
-	// send the annotation to the database
-	response = await fetch('./api/guidedreader/addannotation', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(annotation)
-	});
+    // send the annotation to the database
+    response = await fetch('./api/guidedreader/addannotation', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(annotation)
+    });
 
-	const data = await response.json();
-	if (data.error) {
-		console.error("Failed to add annotation", data);
-	} else {
-		console.log("Annotation added successfully", data);
-		window.location.reload();
-	}
+	// get the response from the server
+    const data = await response.json();
+    if (data.error) {
+        console.error("Failed to add annotation", data);
+    } else {
+        console.log("Annotation added successfully", data);
+        window.location.reload();
+    }
 }
 
 // helper function to strip html tags
 function stripHtmlTagsWithMapping(text: string): { strippedText: string, mapping: number[] } {
-	let strippedText = '';
-	let mapping = [];
-	let isTag = false;
+    let strippedText = '';
+    let mapping = [];
+    let isTag = false;
 
-	// iterate through the text and strip the tags
-	for (let i = 0; i < text.length; i++) {
-		// check if the tag has started
-		if (text[i] === '<') {
-			isTag = true;
-		}
+    // iterate through the text and strip the tags
+    for (let i = 0; i < text.length; i++) {
+        // check if the tag has started
+        if (text[i] === '<') {
+            isTag = true;
+        }
 
-		// add the character to the stripped text if it isn't a tag
-		if (!isTag) {
-			strippedText += text[i];
-			mapping.push(i);
-		}
+        // add the character to the stripped text if it isn't a tag
+        if (!isTag) {
+            strippedText += text[i];
+            mapping.push(i);
+        }
 
-		// check if the tag has ended
-		if (text[i] === '>') {
-			isTag = false;
-		}
-	}
+        // check if the tag has ended
+        if (text[i] === '>') {
+            isTag = false;
+        }
+    }
 
-	return { strippedText, mapping };
+    return { strippedText, mapping };
 }
 
-function findAnnotationIndexes(selectedText: string, rawText: string) {
-	// strip tags and create the mapping
-	const { strippedText, mapping } = stripHtmlTagsWithMapping(rawText);
-	const start = strippedText.indexOf(selectedText);
-	const end = start + selectedText.length;
+function findAnnotationIndexes(selectedText: string, rawText: string, charIndex: number) {
+    // strip tags and create the mapping
+    const { strippedText, mapping } = stripHtmlTagsWithMapping(rawText);
+    const start = strippedText.indexOf(selectedText, charIndex);
+    const end = start + selectedText.length;
 
-	if (start === -1) {
-		throw new Error("Selected text not found in raw text.");
-	}
+    if (start === -1) {
+        throw new Error("Selected text not found in raw text.");
+    }
 
-	// map the indexes back to the original text
-	const originalStart = mapping[start];
-	const originalEnd = mapping[end - 1] + 1;
+    // map the indexes back to the original text
+    const originalStart = mapping[start];
+    const originalEnd = mapping[end - 1] + 1;
 
-	return { start: originalStart, end: originalEnd };
+    return { start: originalStart, end: originalEnd };
 }
 
 // create annotation button
@@ -387,8 +388,8 @@ const CreateAnnotationButton = ({ buttonPosition, isLoggedIn, setCreatingAnnotat
 }
 
 // modal for in-creation of annotations
-const CreatingAnnotationModal = ({ setSelectedText, selectedText, setCreatingAnnotation, userDetails, currentTextID }:
-	{ setSelectedText: (value: string) => void, selectedText: string, setCreatingAnnotation: (value: boolean) => void, userDetails: any, currentTextID: number }) => {
+const CreatingAnnotationModal = ({ setSelectedText, selectedText, setCreatingAnnotation, userDetails, currentTextID, charIndex }:
+	{ setSelectedText: (value: string) => void, selectedText: string, setCreatingAnnotation: (value: boolean) => void, userDetails: any, currentTextID: number, charIndex: number }) => {
 	const [annotationText, setAnnotationText] = useState("");
 	return (
 		<div id="createAnnotationModal" className={styles.annotationModal}>
@@ -410,7 +411,7 @@ const CreatingAnnotationModal = ({ setSelectedText, selectedText, setCreatingAnn
 					<button
 						className={styles.submitButton}
 						onClick={() => {
-							submitAnnotation(selectedText, annotationText, userDetails, currentTextID);
+							submitAnnotation(selectedText, annotationText, userDetails, currentTextID, charIndex);
 							//hideAnnotationAnimation(setSelectedText, "createAnnotationModal", setCreatingAnnotation);
 						}}
 					>
@@ -422,8 +423,11 @@ const CreatingAnnotationModal = ({ setSelectedText, selectedText, setCreatingAnn
 	);
 };
 
-const handleTextSelection = ({ textContentRef, selectedText, setSelectedText, setButtonPosition, creatingAnnotation }:
-	{ textContentRef: any, selectedText: string, setSelectedText: (value: string) => void, setButtonPosition: (value: { x: number, y: number }) => void, creatingAnnotation: boolean }) => {
+const handleTextSelection = ({ textContentRef, selectedText, setSelectedText, setButtonPosition, setCharIndex, creatingAnnotation }:
+	{
+		textContentRef: any, selectedText: string, setSelectedText: (value: string) => void, setButtonPosition: (value: { x: number, y: number }) => void,
+		setCharIndex: (value: number) => void, creatingAnnotation: boolean
+	}) => {
 	const selection = window.getSelection();
 	const textContentElement = textContentRef.current;
 
@@ -452,14 +456,18 @@ const handleTextSelection = ({ textContentRef, selectedText, setSelectedText, se
 				setSelectedText('');
 			} else {
 				setSelectedText(selection.toString());
+				if (startContainer) {
+					const charIndex = getCharacterIndex(startContainer, range.startContainer, range.startOffset);
+					setCharIndex(charIndex);
 
-				// get bounding box of the text selection
-				const rect = range.getBoundingClientRect();
+					// get bounding box of the text selection
+					const rect = range.getBoundingClientRect();
 
-				// calculate the senter and set button position
-				const middleX = rect.left + (rect.width / 2);
-				const middleY = rect.top + (rect.height / 2);
-				setButtonPosition({ x: middleX, y: middleY - 20 });
+					// calculate the center and set button position
+					const middleX = rect.left + (rect.width / 2);
+					const middleY = rect.top + (rect.height / 2);
+					setButtonPosition({ x: middleX, y: middleY - 20 });
+				}
 			}
 		} else {
 			// clear the selection if it spans multiple elements
@@ -469,6 +477,30 @@ const handleTextSelection = ({ textContentRef, selectedText, setSelectedText, se
 	} else {
 		setSelectedText('');
 	}
+};
+
+// get character index helper for annotation selection
+const getCharacterIndex = (parentNode: Node, startNode: Node, startOffset: number): number => {
+	let index = 0;
+	let node: Node | null = parentNode.firstChild;
+
+	while (node) {
+		if (node === startNode) {
+			index += startOffset;
+			break;
+		}
+
+		if (node.nodeType === Node.TEXT_NODE && node.textContent) {
+			index += node.textContent.length;
+		} else if (node.nodeType === Node.ELEMENT_NODE && (node as Element).id === 'annotation') {
+			// skip annotation elements
+			index += (node as HTMLElement).innerText.length;
+		}
+
+		node = node.nextSibling;
+	}
+
+	return index;
 };
 
 // home page component
@@ -487,6 +519,8 @@ function Home() {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [userDetails, setUserDetails] = useState<any>(null);
 	const [selectedText, setSelectedText] = useState('')
+	const [charIndex, setCharIndex] = useState(-1);
+
 	const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
 
 	const textListRef = useRef<HTMLDivElement>(null);
@@ -510,13 +544,7 @@ function Home() {
 		}
 	}, []);
 
-	const handleTextSelectionRef = () => handleTextSelection({
-		textContentRef,
-		selectedText,
-		setSelectedText,
-		setButtonPosition,
-		creatingAnnotation
-	});
+	const handleTextSelectionRef = () => handleTextSelection({textContentRef, selectedText, setSelectedText, setButtonPosition, creatingAnnotation, setCharIndex});
 
 	useEffect(() => {
 		const fetchDataAsync = async () => {
@@ -600,7 +628,7 @@ function Home() {
 				)}
 				{creatingAnnotation && (
 					<CreatingAnnotationModal setSelectedText={setSelectedText} selectedText={selectedText}
-						setCreatingAnnotation={setCreatingAnnotation} currentTextID={currentTextID} userDetails={userDetails} />
+						setCreatingAnnotation={setCreatingAnnotation} currentTextID={currentTextID} userDetails={userDetails} charIndex={charIndex} />
 				)}
 				<div className={styles.mainWrapper}>
 					<div className={styles.sideWrapper}>
