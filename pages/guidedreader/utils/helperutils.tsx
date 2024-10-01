@@ -1,4 +1,4 @@
-import roles from '../../data/roles.json';
+import roles from '../data/roles.json';
 import { TextObject } from '../types/types';
 
 const helper: React.FC = () => {

@@ -1,6 +1,6 @@
 import styles from '../styles/index.module.css';
 import React, { useState, useEffect } from "react";
-import { hideAnnotationButton, hideAnnotationAnimation, submitAnnotation } from "../utils/annotationutils";
+import { hideAnnotationButton, hideAnnotationAnimation, submitAnnotation, voteAnnotation } from "../utils/annotationutils";
 import { Author } from '../types/types';
 import Image from 'next/image';
 
@@ -17,9 +17,8 @@ interface AnnotationModalProps {
     setCurrentAnnotation: (value: string) => void;
     currentAnnotation: string;
     currentLanguage: number;
-    currentText: number;
+    currentText: any;
     userDetails: any;
-    textData: any;
 }
 
 // get author data from the user id
@@ -29,27 +28,50 @@ const fetchAuthorData = async (userId: string, setAuthor: (author: Author | null
     setAuthor(userData);
 };
 
+const checkLikeStatus = async (currentAnnotationData: any, userId: string, setHasLiked: (value: boolean) => void, setHasDisliked: (value: boolean) => void) => {
+    // get the interaction data from the database
+    const response = await fetch('./api/guidedreader/getannotationvotes', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            annotationId: currentAnnotationData.id,
+            userId: userId
+        })
+    });
+
+    // get the response data to check for interaction type
+    const responseData = await response.json();
+    if (responseData.interactionType === 'LIKE') {
+        setHasLiked(true);
+    } else if (responseData.interactionType === 'DISLIKE') {
+        setHasDisliked(true);
+    }
+}
+
 // annotation modal component
-export const AnnotationModal: React.FC<AnnotationModalProps> = ({ setCurrentAnnotation, currentAnnotation, currentLanguage, currentText, textData, userDetails }) => {
+export const AnnotationModal: React.FC<AnnotationModalProps> = ({ setCurrentAnnotation, currentAnnotation, currentLanguage, currentText, userDetails }) => {
     const [author, setAuthor] = useState<Author | null>(null);
-    const [likes, setLikes] = useState<number>(0);
-    const [dislikes, setDislikes] = useState<number>(0);
     const [currentAnnotationId, setCurrentAnnotationId] = useState<number>(-1);
     const [hasLiked, setHasLiked] = useState<boolean>(false);
     const [hasDisliked, setHasDisliked] = useState<boolean>(false);
+    const [votes, setVotes] = useState<number>(0);
 
     useEffect(() => {
         // get the current annotation data and set it
-        const currentAnnotationId = textData[currentText].text[currentLanguage].annotations.findIndex((annotation: { description: string; }) => annotation.description === currentAnnotation);
-        const currentAnnotationData = textData[currentText].text[currentLanguage].annotations[currentAnnotationId];
+        const currentAnnotationId = currentText.text[currentLanguage].annotations.findIndex((annotation: { description: string; }) => annotation.description === currentAnnotation);
+        const currentAnnotationData = currentText.text[currentLanguage].annotations[currentAnnotationId];
         const currentUserId = currentAnnotationData.userId;
+        const likes = currentAnnotationData.likes;
+        const dislikes = currentAnnotationData.dislikes;
 
-        setLikes(currentAnnotationData.likes);
-        setDislikes(currentAnnotationData.dislikes);
+        checkLikeStatus(currentAnnotationData, userDetails.user.id, setHasLiked, setHasDisliked);
         setCurrentAnnotationId(currentAnnotationData.id);
+        setVotes(likes - dislikes);
 
         fetchAuthorData(currentUserId, setAuthor);
-    }, [currentAnnotation, currentText, currentLanguage, textData]);
+    }, [currentAnnotation, currentText, currentLanguage]);
 
     return (
         <div id="annotationModal" className={styles.annotationModal}>
@@ -62,11 +84,18 @@ export const AnnotationModal: React.FC<AnnotationModalProps> = ({ setCurrentAnno
                 <span className={styles.annotationModalAuthorWrapper}>
                     <span className={styles.annotationModalAuthor}>Annotation by: <b>{author ? author.username : 'Loading...'} </b>
                         <span className={styles.annotationModalVotesWrapper}>
-                            <Image src="/assets/guidedreader/images/upvote.png" alt="Upvote"
-                            width={22} height={22} onClick={() => voteAnnotation(currentAnnotationId, userDetails, true)}></Image>
-                            <span className={styles.annotationModalVotes}>{likes - dislikes}</span>
-                            <Image src="/assets/guidedreader/images/upvote.png" alt="Upvote" width={22} height={22}
-                                style={{ transform: 'rotate(180deg)' }} onClick={() => voteAnnotation(currentAnnotationId, userDetails, false)}></Image>
+                            <Image 
+                                src={hasLiked ? "/assets/guidedreader/images/upvote.png" : "/assets/guidedreader/images/unvote.png"} 
+                                alt="Upvote" width={22} height={22} onClick={() => voteAnnotation(currentAnnotationId,
+                                    userDetails, true, hasLiked, setHasLiked, hasDisliked, setHasDisliked, votes, setVotes)} 
+                            />
+                            <span className={styles.annotationVoteBackground}></span>
+                            <span className={styles.annotationModalVotes}>{votes}</span>
+                            <Image 
+                                src={hasDisliked ? "/assets/guidedreader/images/upvote.png" : "/assets/guidedreader/images/unvote.png"} 
+                                alt="Downvote" width={22} height={22} style={{ transform: 'rotate(180deg)' }} onClick={() =>
+                                    voteAnnotation(currentAnnotationId, userDetails, false, hasLiked, setHasLiked, hasDisliked, setHasDisliked, votes, setVotes)} 
+                            />
                             <span className={styles.annotationModalCorrection}>Submit Correction?</span>
                         </span>
                     </span>
@@ -75,33 +104,6 @@ export const AnnotationModal: React.FC<AnnotationModalProps> = ({ setCurrentAnno
         </div>
     );
 };
-
-// submit vote for the annotation to database
-async function voteAnnotation(currentAnnotationId: number, userDetails: any, like: boolean) {
-    // vote data
-    const data = {
-        annotationId: currentAnnotationId,
-        userId: userDetails.user.id,
-        isLike: like
-    }
-
-    // send the vote to the database with api endpoint
-    const response = await fetch('./api/guidedreader/voteannotation', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    });
-
-    // get the response data to check for errors
-    const responseData = await response.json();
-    if (responseData.error) {
-        console.error(responseData.error);
-    }
-
-    
-}
 
 // create annotation button
 export const CreateAnnotationButton = ({ buttonPosition, isLoggedIn, setCreatingAnnotation }:

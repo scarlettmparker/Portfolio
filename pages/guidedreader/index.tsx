@@ -118,7 +118,7 @@ function Home() {
 				)}
 				{currentAnnotation && (
 					<AnnotationModal setCurrentAnnotation={setCurrentAnnotation} currentAnnotation={currentAnnotation}
-						currentLanguage={currentLanguage} currentText={currentText} textData={textData} userDetails={userDetails} />
+						currentLanguage={currentLanguage} currentText={textData[currentText]} userDetails={userDetails} />
 				)}
 				{selectedText && !creatingAnnotation && (
 					<CreateAnnotationButton buttonPosition={{

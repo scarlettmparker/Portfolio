@@ -1,3 +1,4 @@
+import { SetStateAction } from 'react';
 import styles from '../styles/index.module.css';
 
 const helper: React.FC = () => {
@@ -9,6 +10,57 @@ export default helper;
 export function hideAnnotationButton(setCreatingAnnotation: (value: boolean) => void) {
     setCreatingAnnotation(true);
 };
+
+// submit vote for the annotation to database
+export async function voteAnnotation(currentAnnotationId: number, userDetails: any, like: boolean, hasLiked: boolean,
+    setHasLiked: (value: boolean) => void, hasDisliked: boolean, setHasDisliked: (value: boolean) => void, votes: number, setVotes: (value: number) => void) {
+
+    // vote data
+    const data = {
+        annotationId: currentAnnotationId,
+        userId: userDetails.user.id,
+        isLike: like
+    }
+
+    // send the vote to the database with api endpoint
+    const response = await fetch('./api/guidedreader/voteannotation', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userDetails.user.auth}`
+        },
+        body: JSON.stringify(data)
+    });
+
+    // get the response data to check for errors
+    const responseData = await response.json();
+    if (responseData.error) {
+        console.error(responseData.error);
+        return;
+    }
+
+    // update the like/dislike state visually
+    setHasLiked(like ? !hasLiked : hasLiked && false);
+    setHasDisliked(!like ? !hasDisliked : hasDisliked && false);
+
+    // adjust the vote count based on the response message
+    let newVotes = votes;
+    const voteChanges: { [key: string]: number } = {
+        liked: hasDisliked ? 2 : 1,
+        disliked: hasLiked ? -2 : -1,
+        unliked: -1,
+        undisliked: 1
+    };
+    
+    // get the message from the response data
+    const message: keyof typeof voteChanges = responseData.message;
+    if (voteChanges[message] !== undefined) {
+        newVotes += voteChanges[message];
+    }
+
+    // update the votes state
+    setVotes(newVotes);
+}
 
 // submit annotation to the database
 export async function submitAnnotation(selectedText: string, annotationText: string, userDetails: any, currentTextID: number, charIndex: number) {
@@ -43,7 +95,8 @@ export async function submitAnnotation(selectedText: string, annotationText: str
     response = await fetch('./api/guidedreader/addannotation', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userDetails.user.auth}`
         },
         body: JSON.stringify(annotation)
     });

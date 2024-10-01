@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { setCookie } from 'nookies';
-import roles from '../../../data/roles.json';
+import roles from '../../../guidedreader/data/roles.json';
 
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
