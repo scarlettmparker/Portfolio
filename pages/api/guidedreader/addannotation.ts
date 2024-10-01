@@ -1,9 +1,17 @@
 import prisma from '../prismaclient';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { getToken } from 'next-auth/jwt';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     // get annotation info from request link
     const { start, end, description, userId, textId, creationDate } = req.body;
+
+    // get token from request
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET, raw: true });
+
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
 
     // create annotation
     let annotation = await prisma.annotation.create({
