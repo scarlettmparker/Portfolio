@@ -66,7 +66,9 @@ export const AnnotationModal: React.FC<AnnotationModalProps> = ({ setCurrentAnno
         const likes = currentAnnotationData.likes;
         const dislikes = currentAnnotationData.dislikes;
 
-        checkLikeStatus(currentAnnotationData, userDetails.user.id, setHasLiked, setHasDisliked);
+        if (userDetails?.user) {
+            checkLikeStatus(currentAnnotationData, userDetails.user.id, setHasLiked, setHasDisliked);
+        }
         setCurrentAnnotationId(currentAnnotationData.id);
         setVotes(likes - dislikes);
 
