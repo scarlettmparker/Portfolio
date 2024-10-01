@@ -1,5 +1,6 @@
-import { SetStateAction } from 'react';
 import styles from '../styles/index.module.css';
+
+const BOT_LINK = process.env.NEXT_PUBLIC_BOT_LINK;
 
 const helper: React.FC = () => {
     return null;
@@ -15,13 +16,18 @@ export function hideAnnotationButton(setCreatingAnnotation: (value: boolean) => 
 export async function voteAnnotation(currentAnnotationId: number, userDetails: any, like: boolean, hasLiked: boolean,
     setHasLiked: (value: boolean) => void, hasDisliked: boolean, setHasDisliked: (value: boolean) => void, votes: number, setVotes: (value: number) => void) {
 
+    if (!userDetails) {
+        window.location.href = BOT_LINK!
+        return;
+    }
+
     // vote data
     const data = {
         annotationId: currentAnnotationId,
         userId: userDetails.user.id,
         isLike: like
     }
-
+    
     // send the vote to the database with api endpoint
     const response = await fetch('./api/guidedreader/voteannotation', {
         method: 'POST',
@@ -38,28 +44,21 @@ export async function voteAnnotation(currentAnnotationId: number, userDetails: a
         console.error(responseData.error);
         return;
     }
-
-    // update the like/dislike state visually
-    setHasLiked(like ? !hasLiked : hasLiked && false);
-    setHasDisliked(!like ? !hasDisliked : hasDisliked && false);
-
-    // adjust the vote count based on the response message
-    let newVotes = votes;
-    const voteChanges: { [key: string]: number } = {
-        liked: hasDisliked ? 2 : 1,
-        disliked: hasLiked ? -2 : -1,
-        unliked: -1,
-        undisliked: 1
-    };
     
-    // get the message from the response data
-    const message: keyof typeof voteChanges = responseData.message;
-    if (voteChanges[message] !== undefined) {
-        newVotes += voteChanges[message];
+    // calculate the new votes based on the current state
+    let voteChange = 0;
+    if (hasLiked) {
+        voteChange -= like ? 1 : 2;
+    } else if (hasDisliked) {
+        voteChange += like ? 2 : 1;
+    } else {
+        voteChange += like ? 1 : -1;
     }
 
-    // update the votes state
-    setVotes(newVotes);
+    // update the like/dislike state visually
+    setVotes(votes + voteChange);
+    setHasLiked(like ? !hasLiked : hasLiked && false);
+    setHasDisliked(!like ? !hasDisliked : hasDisliked && false);
 }
 
 // submit annotation to the database

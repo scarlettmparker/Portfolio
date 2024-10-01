@@ -41,7 +41,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     where: { id: annotationId },
                     data: { likes: { decrement: 1 } },
                 });
-                return res.status(200).json({ message: 'unliked' });
             } else {
                 // change dislike to like
                 await prisma.userAnnotationInteraction.update({
@@ -56,7 +55,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         dislikes: { decrement: 1 },
                     },
                 });
-                return res.status(200).json({ message: 'liked' });
             }
         } else {
             // create new like interaction
@@ -72,7 +70,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 where: { id: annotationId },
                 data: { likes: { increment: 1 } },
             });
-            return res.status(200).json({ message: 'liked' });
         }
     } else {
         if (interaction) {
@@ -85,7 +82,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     where: { id: annotationId },
                     data: { dislikes: { decrement: 1 } },
                 });
-                return res.status(200).json({ message: 'undisliked' });
             } else {
                 // change like to dislike
                 await prisma.userAnnotationInteraction.update({
@@ -100,7 +96,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         dislikes: { increment: 1 },
                     },
                 });
-                return res.status(200).json({ message: 'disliked' });
             }
         } else {
             // create new dislike interaction
@@ -116,7 +111,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 where: { id: annotationId },
                 data: { dislikes: { increment: 1 } },
             });
-            return res.status(200).json({ message: 'disliked' });
         }
     }
+
+    return res.status(200).json({ message: 'Success' });
 }
