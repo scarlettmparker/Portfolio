@@ -330,6 +330,7 @@
 }
 
 .annotatedText {
+    z-index: 5;
     display: inline;
     background-color: #a7ced6;
     width: fit-content;

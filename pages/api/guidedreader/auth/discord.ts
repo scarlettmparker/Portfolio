@@ -4,7 +4,7 @@ import roles from '../../../data/roles.json';
 
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
-const REDIRECT_URL = process.env.DISCORD_REDIRECT_URL;
+const REDIRECT_URL = process.env.NEXT_DISCORD_REDIRECT_URL;
 const GREEK_LEARNING_GUILD_ID = '350234668680871946';
 
 // discord oauth endpoints
@@ -30,6 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     // exchange the code for an access token
+    console.log(REDIRECT_URL);
     const tokenResponse = await fetch(DISCORD_TOKEN_URL, {
       method: 'POST',
       headers: {

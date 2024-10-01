@@ -34,13 +34,6 @@ interface TextObject {
 	text: Text[];
 }
 
-// role object
-interface Role {
-	name: string;
-	id: number;
-	hex: string;
-};
-
 // fetch text titles from the api
 async function fetchTextTitles() {
 	const response = await fetch('./api/guidedreader/fetchtitles', {
@@ -170,28 +163,92 @@ const handleAnnotationClick = (event: Event, currentAnnotation: string, setCurre
 	}
 };
 
-// annotated text rendering
 const renderAnnotatedText = (text: string, annotations: Annotation[]) => {
-	let annotatedText = "";
+	const parts: string[] = [];
 	let lastIndex = 0;
 
-	// sort annotations by start index to ensure correct order
+	// Sort annotations by start index
 	annotations.sort((a, b) => a.start - b.start);
 
-	// iterate through the annotations and create a span from it
-	annotations.forEach(({ description, start, end }) => {
-		if (start >= 0 && end <= text.length && start < end) {
-			annotatedText += text.slice(lastIndex, start);
-			// encode and use as an attribute, decode when displaying
-			annotatedText += `<span class="${styles.annotatedText}" id="annotation" data-description="${encodeURIComponent(description)}">${text.slice(start, end)}</span>`;
-			lastIndex = end;
-		}
-	});
+	// Create a temporary DOM element to parse HTML
+	const tempDiv = document.createElement('div');
+	tempDiv.innerHTML = text;
 
-	// append the rest of the text
-	annotatedText += text.slice(lastIndex);
-	return annotatedText;
+	// Function to sanitize text
+	const sanitizeText = (rawText: string): string => {
+		return rawText
+			.replace(/<[^>]*>/g, '') // Remove HTML tags
+			.replace(/\u00A0/g, ' ') // Replace non-breaking spaces with regular spaces
+			.replace(/\s+/g, ' ')
+			.trim(); // Replace all whitespace characters with a single space
+	};
+
+	// Recursively process child nodes
+	const processNode = (node: Node, startOffset: number) => {
+		if (node.nodeType === Node.TEXT_NODE) {
+			const textContent = node.textContent || '';
+			const sanitizedText = sanitizeText(textContent); // Sanitize the text node
+			const textLength = sanitizedText.length;
+
+			// Handle annotation overlaps
+			let currentOffset = startOffset;
+			let lastAnnotatedIndex = 0;
+
+			// Check against annotations for this text node
+			annotations.forEach(({ description, start, end }) => {
+				if (currentOffset < end && currentOffset + textLength > start) {
+					const overlapStart = Math.max(start, currentOffset);
+					const overlapEnd = Math.min(end, currentOffset + textLength);
+
+					// Push unannotated text before the overlap, ensuring no empty strings
+					const unannotatedText = sanitizedText.slice(lastAnnotatedIndex, overlapStart - currentOffset);
+					if (unannotatedText.trim()) {
+						parts.push(unannotatedText);
+					}
+
+					// Create the annotated span for the overlapping text
+					const annotatedText = sanitizedText.slice(overlapStart - currentOffset, overlapEnd - currentOffset);
+					if (annotatedText.trim()) {
+						const annotatedHTML = `<span class="${styles.annotatedText}" data-description="${encodeURIComponent(description)}">${annotatedText}</span>`;
+						parts.push(annotatedHTML);
+					}
+					lastAnnotatedIndex = overlapEnd - currentOffset;
+				}
+			});
+
+			// Push remaining text after the last annotation, ensuring no empty strings
+			if (lastAnnotatedIndex < textLength) {
+				const remainingText = sanitizedText.slice(lastAnnotatedIndex);
+				if (remainingText.trim()) {
+					parts.push(remainingText);
+				}
+			}
+
+			lastIndex = currentOffset + textLength;
+		} else if (node.nodeType === Node.ELEMENT_NODE) {
+			// For element nodes, add the opening tag
+			const element = node as HTMLElement;
+			parts.push(`<${element.tagName.toLowerCase()}${getAttributes(element)}>`);
+
+			node.childNodes.forEach((child) => processNode(child, lastIndex));
+			parts.push(`</${element.tagName.toLowerCase()}>`);
+		}
+	};
+
+	// Get attributes from an element as a string
+	const getAttributes = (element: HTMLElement): string => {
+		return Array.from(element.attributes)
+			.map(attr => ` ${attr.name}="${attr.value}"`)
+			.join('');
+	};
+
+	processNode(tempDiv, 0);
+
+	// Join all parts into a single string and remove <br> tags
+	return parts.join('').replace(/<br\s*\/?>/g, '');
 };
+
+
 
 // get database data for the default texts
 const fetchData = async () => {
@@ -324,53 +381,21 @@ async function submitAnnotation(selectedText: string, annotationText: string, us
 		console.error("Failed to add annotation", data);
 	} else {
 		console.log("Annotation added successfully", data);
-		window.location.reload();
+		//window.location.reload();
 	}
-}
-
-// helper function to strip html tags
-function stripHtmlTagsWithMapping(text: string): { strippedText: string, mapping: number[] } {
-	let strippedText = '';
-	let mapping = [];
-	let isTag = false;
-
-	// iterate through the text and strip the tags
-	for (let i = 0; i < text.length; i++) {
-		// check if the tag has started
-		if (text[i] === '<') {
-			isTag = true;
-		}
-
-		// add the character to the stripped text if it isn't a tag
-		if (!isTag) {
-			strippedText += text[i];
-			mapping.push(i);
-		}
-
-		// check if the tag has ended
-		if (text[i] === '>') {
-			isTag = false;
-		}
-	}
-
-	return { strippedText, mapping };
 }
 
 function findAnnotationIndexes(selectedText: string, rawText: string, charIndex: number) {
-	// strip tags and create the mapping
-	const { strippedText, mapping } = stripHtmlTagsWithMapping(rawText);
-	const start = strippedText.indexOf(selectedText, charIndex);
-	const end = start + selectedText.length;
+	// find the start index in the stripped text
+	const start = charIndex;
+	const cleanedSelectedText = selectedText.replace(/\n/g, '');
+	let end = start + cleanedSelectedText.length;
 
-	if (start === -1) {
-		throw new Error("Selected text not found in raw text.");
+	if (start === -1 || end > rawText.length) {
+		throw new Error("Selected text not found in stripped text.");
 	}
 
-	// map the indexes back to the original text
-	const originalStart = mapping[start];
-	const originalEnd = mapping[end - 1] + 1;
-
-	return { start: originalStart, end: originalEnd };
+	return { start: start, end: end };
 }
 
 // create annotation button
@@ -447,10 +472,26 @@ const handleTextSelection = ({ textContentRef, selectedText, setSelectedText, se
 		const startContainer = range.startContainer.parentElement;
 		const endContainer = range.endContainer.parentElement;
 
+		// Function to find the closest div element
+		const findClosestDiv = (element: HTMLElement | null): HTMLElement | null => {
+			while (element && element.tagName !== 'DIV') {
+				element = element.parentElement;
+			}
+			return element;
+		};
+
+		const containsAnnotationId = (element: HTMLElement | null): boolean => {
+			if (!element) return false;
+			return !!element.querySelector('#annotation');
+		};
+
+		const startDiv = findClosestDiv(startContainer);
+		const endDiv = findClosestDiv(endContainer);
+
 		// prevent the annotation button from appearing if the selection spans multiple elements
-		if (startContainer === endContainer) {
+		if (startDiv === endDiv) {
 			// check if the selected text is within an element with id "annotation"
-			if (startContainer?.closest('#annotation')) {
+			if (containsAnnotationId(startDiv)) {
 				selection.removeAllRanges();
 				setSelectedText('');
 				return;
@@ -462,8 +503,8 @@ const handleTextSelection = ({ textContentRef, selectedText, setSelectedText, se
 				setSelectedText('');
 			} else {
 				setSelectedText(selection.toString());
-				if (startContainer) {
-					const charIndex = getCharacterIndex(startContainer, range.startContainer, range.startOffset);
+				if (startDiv) {
+					const charIndex = getCharacterIndex(startDiv, range.startContainer, range.startOffset);
 					setCharIndex(charIndex);
 
 					// get bounding box of the text selection
@@ -486,27 +527,30 @@ const handleTextSelection = ({ textContentRef, selectedText, setSelectedText, se
 };
 
 // get character index helper for annotation selection
-const getCharacterIndex = (parentNode: Node, startNode: Node, startOffset: number): number => {
-	let index = 0;
-	let node: Node | null = parentNode.firstChild;
+const getCharacterIndex = (parentDiv: HTMLElement, startContainer: Node, startOffset: number): number => {
+	let charIndex = 0;
 
-	while (node) {
-		if (node === startNode) {
-			index += startOffset;
-			break;
+	const traverseNodes = (node: Node): boolean => {
+		if (node === startContainer) {
+			charIndex += startOffset;
+			return true;
 		}
 
-		if (node.nodeType === Node.TEXT_NODE && node.textContent) {
-			index += node.textContent.length;
-		} else if (node.nodeType === Node.ELEMENT_NODE && (node as Element).id === 'annotation') {
-			// skip annotation elements
-			index += (node as HTMLElement).innerText.length;
+		if (node.nodeType === Node.TEXT_NODE) {
+			charIndex += node.textContent?.length || 0;
+		} else if (node.nodeType === Node.ELEMENT_NODE) {
+			for (let i = 0; i < node.childNodes.length; i++) {
+				if (traverseNodes(node.childNodes[i])) {
+					return true;
+				}
+			}
 		}
 
-		node = node.nextSibling;
-	}
+		return false;
+	};
 
-	return index;
+	traverseNodes(parentDiv);
+	return charIndex;
 };
 
 // home page component
@@ -693,7 +737,7 @@ function Home() {
 							<div className={styles.textContent}>
 								{currentText < textData.length && textData[currentText].text.length > 0 ? (
 									<div key={"textContent0"} className={styles.textContentItem}>
-										<p dangerouslySetInnerHTML={{
+										<div dangerouslySetInnerHTML={{
 											__html: renderAnnotatedText(textData[currentText].text[currentLanguage].text,
 												textData[currentText].text[currentLanguage].annotations)
 										}} />
