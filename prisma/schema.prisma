@@ -57,13 +57,14 @@ model PieceMoveSet {
 }
 
 model User {
-  id                  Int          @id @default(autoincrement())
+  id                  Int                         @id @default(autoincrement())
   username            String
   auth                String
   levels              String[]
-  discordId           String       @unique
+  discordId           String                      @unique
   accountCreationDate Int
-  Annotation          Annotation[]
+  annotations         Annotation[]
+  interactions        UserAnnotationInteraction[]
 
   @@unique([username, auth])
 }
@@ -85,15 +86,32 @@ model Text {
 }
 
 model Annotation {
-  id           Int    @id @default(autoincrement())
+  id           Int                         @id @default(autoincrement())
   start        Int
   end          Int
   description  String
-  likes        Int    @default(0)
-  dislikes     Int    @default(0)
+  likes        Int                         @default(0)
+  dislikes     Int                         @default(0)
   textId       Int
-  text         Text   @relation(fields: [textId], references: [id])
+  text         Text                        @relation(fields: [textId], references: [id])
   creationDate Int
   userId       Int
-  user         User?  @relation(fields: [userId], references: [id])
+  user         User?                       @relation(fields: [userId], references: [id])
+  interactions UserAnnotationInteraction[]
+}
+
+model UserAnnotationInteraction {
+  id           Int             @id @default(autoincrement())
+  userId       Int
+  annotationId Int
+  type         InteractionType
+  user         User            @relation(fields: [userId], references: [id])
+  annotation   Annotation      @relation(fields: [annotationId], references: [id])
+
+  @@unique([userId, annotationId])
+}
+
+enum InteractionType {
+  LIKE
+  DISLIKE
 }

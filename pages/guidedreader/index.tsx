@@ -118,7 +118,7 @@ function Home() {
 				)}
 				{currentAnnotation && (
 					<AnnotationModal setCurrentAnnotation={setCurrentAnnotation} currentAnnotation={currentAnnotation}
-						currentLanguage={currentLanguage} currentText={currentText} textData={textData} />
+						currentLanguage={currentLanguage} currentText={currentText} textData={textData} userDetails={userDetails} />
 				)}
 				{selectedText && !creatingAnnotation && (
 					<CreateAnnotationButton buttonPosition={{
@@ -148,6 +148,7 @@ function Home() {
 										<div key={"textModule" + index} onClick={() => {
 											let textIndex = textData[index].id - 1;
 											setCurrentLanguage(0);
+											setCurrentAnnotation('');
 											setCurrentText(textIndex);
 											setCurrentTextID(textData[textIndex].text[0].id);
 										}}>
@@ -174,6 +175,7 @@ function Home() {
 								<select className={styles.languageChangeBox} onChange={(e) => {
 									const selectedIndex = parseInt(e.target.value, 10);
 									setCurrentLanguage(selectedIndex);
+									setCurrentAnnotation('');
 									setCurrentTextID(textData[currentText].text[selectedIndex].id);
 								}}>
 									{textData[currentText] && textData[currentText].text.map((text, index) => (

@@ -102,13 +102,31 @@
     font-size: 1.2rem;
 }
 
-.annotationModalAuthor {
+.annotationModalAuthorWrapper {
     position: relative;
+    display: flex;
+    flex-direction: row;
     font-family: 'Open Sans', sans-serif;
     font-size: 1rem;
     margin-bottom: 10px;
     color: #494b50;
     margin-top: auto;
+}
+
+.annotationModalVotesWrapper {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    padding-top: 8px;
+}
+
+.annotationModalVotes {
+    margin-left: 8px;
+    margin-right: 25px;
+}
+
+.annotationModalCorrection {
+    margin-left: 15px;
 }
 
 .navWrapper {
