@@ -2,6 +2,12 @@ import styles from '../styles/profile.module.css';
 import Image from 'next/image';
 import { getRoleByLevel } from '../../utils/helperutils';
 
+const helper: React.FC = () => {
+    return null;
+};
+
+export default helper;
+
 // profile picture size
 const SIZE = 200;
 
@@ -26,7 +32,7 @@ export const ProfileModule = ({ username, discordId, avatar, nickname, level }: 
                     <span className={styles.levelName} style={{ color: levelColor }}>{levelName}</span>
                 </div>
                 <div className={styles.annotationsWrapper}>
-                    
+
                 </div>
             </div>
         </div>
