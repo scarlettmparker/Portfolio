@@ -9,7 +9,7 @@ import { handleAnnotationClick } from './utils/annotationutils';
 import { handleTextSelection } from './utils/charutils';
 import { fetchData } from './utils/textutils';
 import { getUserDetails, findLevelSeparators, clearCookies } from './utils/helperutils';
-import { IndexUser, NotLoggedIn } from './jsx/indexuser';
+import { IndexUser, NotLoggedIn } from './jsx/indexuserjsx';
 import { TextModule } from './jsx/textjsx';
 import { AnnotationModal, CreatingAnnotationModal, CreateAnnotationButton } from './jsx/annotationjsx';
 

@@ -1,0 +1,62 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+.profileWrapper {
+    display: flex;
+    flex-direction: row;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #f0f6ff;
+    width: fit-content;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 15px 35px 15px 20px;
+    border-radius: 13px;
+}
+
+.avatar {
+    border-radius: 8px;
+    pointer-events: none;
+    user-select: none;
+}
+
+.profileDetails {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+    margin-left: 20px;
+    margin-top: 5px;
+}
+
+.userLevelWrapper {
+    margin-top: -2px;
+}
+
+.nickname {
+    font-weight: bold;
+    font-size: 28px;
+    color: #0a2342;
+}
+
+.username {
+    font-style: italic;
+    color: #557797;
+}
+
+.bigNameWrapper {
+    display: flex;
+    flex-direction: row;
+}
+
+.level {
+    display: flex;
+    align-items: center;
+    margin-top: 6px;
+    margin-left: 8px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.levelName {
+    margin-left: 5px;
+}
