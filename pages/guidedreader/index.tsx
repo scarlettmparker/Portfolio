@@ -9,7 +9,8 @@ import { handleAnnotationClick } from './utils/annotationutils';
 import { handleTextSelection } from './utils/charutils';
 import { fetchData } from './utils/textutils';
 import { getUserDetails, findLevelSeparators, clearCookies } from './utils/helperutils';
-import { TextModule, LevelDisplay } from './jsx/textjsx';
+import { IndexUser, NotLoggedIn } from './jsx/indexuserjsx';
+import { TextModule } from './jsx/textjsx';
 import { AnnotationModal, CreatingAnnotationModal, CreateAnnotationButton } from './jsx/annotationjsx';
 
 // home page component
@@ -113,8 +114,10 @@ function Home() {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<div className={styles.pageWrapper}>
-				{isLoggedIn && (
-					<p>Good Morning, {userDetails.user.username} <LevelDisplay level={userDetails.user.levels[0]} /></p>
+				{isLoggedIn ? (
+					<IndexUser userDetails={userDetails} />
+				) : (
+					<NotLoggedIn />
 				)}
 				{currentAnnotation && (
 					<AnnotationModal setCurrentAnnotation={setCurrentAnnotation} currentAnnotation={currentAnnotation}

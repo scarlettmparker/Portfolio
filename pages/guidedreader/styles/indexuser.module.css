@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+.profileWrapper {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    right: 0;
+    margin-top: 15px;
+    margin-right: 40px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.avatarWrapper {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    user-select: none;
+    margin-bottom: 5px;
+}
+
+.avatar {
+    border-radius: 50%;
+}
+
+.avatar:hover {
+    cursor: pointer;
+}
+
+.signIn {
+    transition: color 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.signIn:hover {
+    color: #e85548;
+}

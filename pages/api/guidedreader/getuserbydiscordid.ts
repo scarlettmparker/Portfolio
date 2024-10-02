@@ -13,8 +13,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         // get the user by ID
         const user = await prisma.user.findUnique({
-            where: { id: Number(userId) },
-            select: { username: true },
+            where: { discordId: userId as string },
+            select: {
+                avatar: true,
+                nickname: true,
+                username: true,
+                levels: true,
+            },
         });
 
         if (!user) {
