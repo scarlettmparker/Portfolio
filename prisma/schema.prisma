@@ -58,10 +58,12 @@ model PieceMoveSet {
 
 model User {
   id                  Int                         @id @default(autoincrement())
+  discordId           String                      @unique
   username            String
   auth                String
+  avatar              String                      @default("0")
+  nickname            String                      @default("None")
   levels              String[]
-  discordId           String                      @unique
   accountCreationDate Int
   annotations         Annotation[]
   interactions        UserAnnotationInteraction[]

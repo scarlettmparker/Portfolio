@@ -1,6 +1,7 @@
 import styles from '../styles/index.module.css';
 import React, { useState, useEffect } from "react";
 import { hideAnnotationButton, hideAnnotationAnimation, submitAnnotation, voteAnnotation } from "../utils/annotationutils";
+import { BOT_LINK } from "../utils/helperutils";
 import { Author } from '../types/types';
 import Image from 'next/image';
 
@@ -9,8 +10,6 @@ const helper: React.FC = () => {
 };
 
 export default helper;
-
-const BOT_LINK = process.env.NEXT_PUBLIC_BOT_LINK;
 
 // annotation modal props
 interface AnnotationModalProps {
@@ -25,7 +24,7 @@ interface AnnotationModalProps {
 const fetchAuthorData = async (userId: string, setAuthor: (author: Author | null) => void) => {
     const response = await fetch(`./api/guidedreader/getuserbyid?userId=${userId}`);
     const userData = await response.json();
-    setAuthor(userData);
+    setAuthor(userData.user);
 };
 
 const checkLikeStatus = async (currentAnnotationData: any, userId: string, setHasLiked: (value: boolean) => void, setHasDisliked: (value: boolean) => void) => {
@@ -66,6 +65,7 @@ export const AnnotationModal: React.FC<AnnotationModalProps> = ({ setCurrentAnno
         const likes = currentAnnotationData.likes;
         const dislikes = currentAnnotationData.dislikes;
 
+        // check if the user has liked or disliked the annotation
         if (userDetails?.user) {
             checkLikeStatus(currentAnnotationData, userDetails.user.id, setHasLiked, setHasDisliked);
         }

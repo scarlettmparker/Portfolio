@@ -30,7 +30,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     // exchange the code for an access token
-    console.log(REDIRECT_URL);
     const tokenResponse = await fetch(DISCORD_TOKEN_URL, {
       method: 'POST',
       headers: {
@@ -98,6 +97,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             body: JSON.stringify({
               username: roles.user.username,
               auth: access_token,
+              avatar: roles.user.avatar,
+              nickname: roles.nick,
               levels: userRoles.map(role => role.id.toString()),
               discordId: roles.user.id,
             }),
@@ -107,7 +108,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           if (!createUser.ok) {
             return res.status(500).json({ error: 'Failed to create user' });
           }
-
 
           // if the user is created successfully, set the session token and redirect to /guidedreader
           const userData = await createUser.json();

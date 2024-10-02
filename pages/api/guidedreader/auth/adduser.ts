@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt';
 const SALT_ROUNDS = 10;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const { username, auth, levels, discordId } = req.body;
+    const { username, auth, avatar, nickname, levels, discordId } = req.body;
     const currentTime = Math.floor(Date.now() / 1000);
 
     console.log('Received body:', req.body);
@@ -34,8 +34,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 username: username,
                 levels: levels,
                 auth: hashedAuth,
+                avatar: avatar,
+                nickname: nickname,
                 discordId: discordId,
-                accountCreationDate: currentTime
+                accountCreationDate: currentTime,
             }
         });
         if (!user) {
@@ -51,6 +53,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 username: username,
                 levels: levels,
                 auth: hashedAuth,
+                avatar: avatar,
+                nickname: nickname,
             }
         });
         if (!user) {

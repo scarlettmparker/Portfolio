@@ -27,7 +27,6 @@
     cursor: pointer;
     font-family: 'Open Sans', sans-serif;
     transition: transform 1s;
-    /* Smooth transition for the rotation */
 }
 
 .annotationModalClose:hover {

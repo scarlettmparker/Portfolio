@@ -7,6 +7,7 @@ const helper: React.FC = () => {
 
 export default helper;
 
+export const BOT_LINK = process.env.NEXT_PUBLIC_BOT_LINK;
 
 // helper function to clear cookies
 export const clearCookies = () => {
