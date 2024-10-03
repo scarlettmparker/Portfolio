@@ -47,20 +47,26 @@ export const AnnotationModal: React.FC<AnnotationModalProps> = ({ setCurrentAnno
                 X
             </span>
             <div className={styles.annotationWrapper}>
-                {annotations.map((annotation, index) => (
-                    <AnnotationItem
-                        key={annotation.id}
-                        annotation={annotation}
-                        handleVote={(like: boolean) => handleVote(annotation.id, like, index, annotations, setAnnotations, userDetails)}
-                    />
-                ))}
+                <div className={styles.annotationInnerWrapper}>
+                    {annotations.map((annotation, index) => (
+                        <AnnotationItem
+                            key={annotation.id}
+                            annotation={annotation}
+                            handleVote={(like: boolean) => handleVote(annotation.id, like, index, annotations, setAnnotations, userDetails)}
+                        />
+                    ))}
+                </div>
 
                 <span className={styles.correctionWrapper}>
                     <span className={styles.correctionText} onClick={() => {
-                        setCurrentAnnotation('');
-                        setCorrectingAnnotation(true);
-                        setCurrentStart(currentAnnotationData.start);
-                        setCurrentEnd(currentAnnotationData.end);
+                        if (userDetails) {
+                            setCurrentAnnotation('');
+                            setCorrectingAnnotation(true);
+                            setCurrentStart(currentAnnotationData.start);
+                            setCurrentEnd(currentAnnotationData.end);
+                        } else {
+                            window.location.href = BOT_LINK!;
+                        }
                     }}>Think you can provide a better annotation?</span>
                 </span>
             </div>
