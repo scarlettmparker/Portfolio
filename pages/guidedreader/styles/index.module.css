@@ -96,6 +96,11 @@
     width: 92%;
 }
 
+.annotationInnerWrapper {
+    height: 90%;
+    overflow-y: auto;
+}
+
 .singleAnnotationWrapper {
     margin-left: 10px;
 }
