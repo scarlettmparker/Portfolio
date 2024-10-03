@@ -57,6 +57,7 @@ export const AnnotationModal: React.FC<AnnotationModalProps> = ({ setCurrentAnno
 
                 <span className={styles.correctionWrapper}>
                     <span className={styles.correctionText} onClick={() => {
+                        setCurrentAnnotation('');
                         setCorrectingAnnotation(true);
                         setCurrentStart(currentAnnotationData.start);
                         setCurrentEnd(currentAnnotationData.end);
