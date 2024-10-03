@@ -27,7 +27,7 @@ export async function voteAnnotation(currentAnnotationId: number, userDetails: a
         userId: userDetails.user.id,
         isLike: like
     }
-    
+
     // send the vote to the database with api endpoint
     const response = await fetch('./api/guidedreader/voteannotation', {
         method: 'POST',
@@ -44,7 +44,7 @@ export async function voteAnnotation(currentAnnotationId: number, userDetails: a
         console.error(responseData.error);
         return;
     }
-    
+
     // calculate the new votes based on the current state
     let voteChange = 0;
     if (hasLiked) {
@@ -62,23 +62,29 @@ export async function voteAnnotation(currentAnnotationId: number, userDetails: a
 }
 
 // submit annotation to the database
-export async function submitAnnotation(selectedText: string, annotationText: string, userDetails: any, currentTextID: number, charIndex: number) {
+export async function submitAnnotation(selectedText: string | null = null, annotationText: string, userDetails: any,
+    currentTextID: number, charIndex: number | null = null, start: number | null = null, end: number | null = null) {
     // get the current unix time
     const currentTime = Math.floor(Date.now() / 1000);
+    let response = null;
 
-    // send request to get raw text
-    let response = await fetch('./api/guidedreader/getrawtext', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            textID: currentTextID
-        })
-    });
+    // send request to get raw text if start and end are not provided
+    if (start === null && end === null && selectedText !== null && charIndex !== null) {
+        response = await fetch('./api/guidedreader/getrawtext', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                textID: currentTextID
+            })
+        });
 
-    let rawText = await response.json();
-    const { start, end } = findAnnotationIndexes(selectedText, rawText.text, charIndex);
+        let rawText = await response.json();
+        const indexes = findAnnotationIndexes(selectedText, rawText.text, charIndex);
+        start = indexes.start;
+        end = indexes.end;
+    }
 
     // structure the annotation
     const annotation = {
@@ -110,14 +116,57 @@ export async function submitAnnotation(selectedText: string, annotationText: str
     }
 }
 
+export const fetchAnnotations = async (currentText: any, currentLanguage: string, currentAnnotationData: any, userDetails: any, setAnnotations: React.Dispatch<React.SetStateAction<any[]>>) => {
+    const fetchedAnnotations = currentText.text[currentLanguage].annotations;
+
+    // get the author and votes data for each annotation and filter based on the start and end
+    const annotationsWithDetails = await Promise.all(
+        fetchedAnnotations
+            .filter((annotation: any) => annotation.start === currentAnnotationData.start && annotation.end === currentAnnotationData.end)
+            .map(async (annotation: any) => {
+                // get the author and votes data
+                const author = await fetchAuthorData(annotation.userId);
+                const votesData = await checkLikeStatus(annotation.id, userDetails?.user?.id);
+
+                return {
+                    ...annotation,
+                    author,
+                    hasLiked: votesData.interactionType === 'LIKE',
+                    hasDisliked: votesData.interactionType === 'DISLIKE',
+                    votes: annotation.likes - annotation.dislikes,
+                };
+            })
+    );
+
+    // sort the annotations based on votes
+    const sortedAnnotations = annotationsWithDetails.sort((a: any, b: any) => b.votes - a.votes);
+    setAnnotations(sortedAnnotations);
+};
+
+// handle the voting for the annotation
+export const handleVote = async (annotationId: number, like: boolean, index: number, annotations: any[], setAnnotations: React.Dispatch<React.SetStateAction<any[]>>, userDetails: any) => {
+    const annotation = annotations[index];
+    const newVotes = { ...annotation };
+
+    // update the votes
+    await voteAnnotation(annotationId, userDetails, like, annotation.hasLiked, (value: boolean) => (newVotes.hasLiked = value), annotation.hasDisliked,
+        (value: boolean) => (newVotes.hasDisliked = value), annotation.votes, (value: number) => (newVotes.votes = value));
+
+    const updatedAnnotations = [...annotations];
+    updatedAnnotations[index] = newVotes;
+    setAnnotations(updatedAnnotations);
+};
+
 // do the annotation animation for the modal
-export function hideAnnotationAnimation(setCurrentAnnotation: (value: string) => void, elementToHide: string, setCreatingAnnotation?: (value: boolean) => void) {
+export function hideAnnotationAnimation(setCurrentAnnotation: ((value: string) => void) | null, elementToHide: string, setCreatingAnnotation?: (value: boolean) => void) {
     let annotationModal = document.getElementById(elementToHide);
     annotationModal?.classList.add(styles.annotationModalHidden);
 
-    // wait for the modal to be hidden before setting resetting the annotation
+    // wait for the modal to be hidden before resetting the annotation
     setTimeout(() => {
-        setCurrentAnnotation('');
+        if (setCurrentAnnotation) {
+            setCurrentAnnotation('');
+        }
         if (elementToHide == "createAnnotationModal" && setCreatingAnnotation) {
             setCreatingAnnotation(false);
         }
@@ -135,6 +184,28 @@ export const handleAnnotationClick = (event: Event, currentAnnotation: string, s
             displayAnnotatedText(decodeURIComponent(description), currentAnnotation, setCurrentAnnotation);
         }
     }
+};
+
+// get author data from the user id
+const fetchAuthorData = async (userId: string) => {
+    const response = await fetch(`./api/guidedreader/getuserbyid?userId=${userId}`);
+    const userData = await response.json();
+    return userData.user;
+};
+
+// get votes for the annotation
+const checkLikeStatus = async (annotationId: number, userId: string) => {
+    const response = await fetch('./api/guidedreader/getannotationvotes', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            annotationId: annotationId,
+            userId: userId,
+        }),
+    });
+    return await response.json();
 };
 
 function findAnnotationIndexes(selectedText: string, rawText: string, charIndex: number) {

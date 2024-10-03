@@ -11,7 +11,10 @@ export default helper;
 // profile picture size
 const SIZE = 200;
 
-export const ProfileModule = ({ username, discordId, avatar, nickname, level }: {username: string, discordId: string, avatar: string, nickname: string, level: string}) => {
+export const ProfileModule = ({ username, discordId, avatar, nickname, level, numAnnotations, votes}:
+    {username: string, discordId: string, avatar: string, nickname: string, level: string, numAnnotations: number, votes: number}) => {
+
+    // get level styling from json
     const levelName = getRoleByLevel(level)?.name;
     const levelColor = getRoleByLevel(level)?.hex;
     const levelShortName = getRoleByLevel(level)?.shortname;
@@ -32,7 +35,8 @@ export const ProfileModule = ({ username, discordId, avatar, nickname, level }: 
                     <span className={styles.levelName} style={{ color: levelColor }}>{levelName}</span>
                 </div>
                 <div className={styles.annotationsWrapper}>
-
+                    <span className={styles.annotationCount}><b>{numAnnotations}</b> {numAnnotations === 1 ? 'Annotation' : 'Annotations'}</span>
+                    <span className={styles.voteCount}><b>{votes ?? 0 }</b> {votes === 1 ? 'Rating' : 'Ratings'}</span>
                 </div>
             </div>
         </div>

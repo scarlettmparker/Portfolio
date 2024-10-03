@@ -14,6 +14,8 @@ const ProfilePage = () => {
     const [avatar, setAvatar] = useState<string>('');
     const [nickname, setNickname] = useState<string>('');
     const [level, setLevel] = useState<string>('');
+    const [numAnnotations, setNumAnnotations] = useState<number>(0);
+    const [votes, setVotes] = useState<number>(0);
 
     if (router.isFallback) {
         return <div>Loading...</div>;
@@ -42,11 +44,14 @@ const ProfilePage = () => {
         setAvatar(userDetails.avatar);
         setNickname(userDetails.nickname);
         setLevel(userDetails.levels[0]);
+        setNumAnnotations(userDetails.numAnnotations);
+        setVotes(userDetails.totalVotes);
     }, [userDetails]);
 
     return (
         <div className={styles.pageWrapper}>
-            <ProfileModule username={username} discordId={userId as string} avatar={avatar} nickname={nickname} level={level} />
+            <ProfileModule username={username} discordId={userId as string} avatar={avatar}
+            nickname={nickname} level={level} numAnnotations={numAnnotations} votes={votes} />
         </div>
     );
 };

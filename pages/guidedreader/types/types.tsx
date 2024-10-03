@@ -4,11 +4,6 @@ const helper: React.FC = () => {
 
 export default helper;
 
-// author object (will be expanded upon)
-export interface Author {
-	username: string;
-}
-
 // text object containing multiple texts
 export interface TextObject {
     id: number;
@@ -30,4 +25,6 @@ export interface Annotation {
     start: number;
     end: number;
     description: string;
+    likes: number;
+    dislikes: number;
 }
