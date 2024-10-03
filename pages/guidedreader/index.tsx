@@ -137,7 +137,8 @@ function Home() {
 						x: buttonPosition.x,
 						y: buttonPosition.y
 					}} isLoggedIn={isLoggedIn}
-						setCreatingAnnotation={setCreatingAnnotation} />
+						setCreatingAnnotation={setCreatingAnnotation}
+						setCurrentAnnotation={setCurrentAnnotation} />
 				)}
 				{creatingAnnotation && (
 					<CreatingAnnotationModal setSelectedText={setSelectedText} selectedText={selectedText}

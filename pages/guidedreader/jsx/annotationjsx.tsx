@@ -95,8 +95,8 @@ const AnnotationItem = ({ annotation, handleVote }: { annotation: any; handleVot
 );
 
 // create annotation button
-export const CreateAnnotationButton = ({ buttonPosition, isLoggedIn, setCreatingAnnotation }:
-    { buttonPosition: { x: number, y: number }, isLoggedIn: boolean, setCreatingAnnotation: (value: boolean) => void }) => {
+export const CreateAnnotationButton = ({ buttonPosition, isLoggedIn, setCreatingAnnotation, setCurrentAnnotation }:
+    { buttonPosition: { x: number, y: number }, isLoggedIn: boolean, setCreatingAnnotation: (value: boolean) => void, setCurrentAnnotation: (value: string) => void }) => {
     return (
         <div
             className={styles.annotationPopup}
@@ -104,7 +104,10 @@ export const CreateAnnotationButton = ({ buttonPosition, isLoggedIn, setCreating
             onMouseUp={(e) => e.stopPropagation()} // stop propagation to prevent the modal from disappearing
         >
             {isLoggedIn ? (
-                <button onClick={() => { hideAnnotationButton(setCreatingAnnotation) }}
+                <button onClick={() => {
+                    setCurrentAnnotation('');
+                    hideAnnotationButton(setCreatingAnnotation)
+                }}
                     className={styles.annotateButton}>Annotate</button>
             ) : (
                 <button onClick={() => { window.location.href = BOT_LINK!; }}
