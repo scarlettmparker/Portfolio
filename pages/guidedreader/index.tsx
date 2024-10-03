@@ -4,6 +4,7 @@ import styles from './styles/index.module.css';
 import { useEffect, useState, useRef } from 'react';
 import { parseCookies } from 'nookies';
 import { TextObject } from './types/types'
+import { useRouter } from 'next/router';
 import { renderAnnotatedText } from './utils/renderutils';
 import { handleAnnotationClick, hideAnnotationAnimation } from './utils/annotationutils';
 import { handleTextSelection } from './utils/charutils';
@@ -36,11 +37,11 @@ function Home() {
 	const [userDetails, setUserDetails] = useState<any>(null);
 	const [selectedText, setSelectedText] = useState('')
 	const [charIndex, setCharIndex] = useState(-1);
-
 	const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
 
 	const textListRef = useRef<HTMLDivElement>(null);
 	const textContentRef = useRef<HTMLDivElement>(null);
+	const router = useRouter();
 
 	useEffect(() => {
 		const cookies = parseCookies();
@@ -113,9 +114,42 @@ function Home() {
 	}, [creatingAnnotation, selectedText]);
 
 	useEffect(() => {
+		// get the text id from the query parameter
+		const params = new URLSearchParams(window.location.search);
+		const textID = params.get('textId');
+
+		if (textID && !isNaN(Number(textID))) {
+			const foundTextIndex = textData.findIndex(text => text.id === Number(textID));
+			if (foundTextIndex !== -1) {
+				setCurrentText(foundTextIndex);
+			} else {
+				setCurrentText(0); // fallback to default if not found
+			}
+		} else {
+			setCurrentText(0); // fallback to default if no query parameter
+		}
+	}, [textData]);
+
+	useEffect(() => {
 		// fetch the text data if it doesn't exist
 		fetchCurrentTextData(textData, currentText, setTextData, setCurrentTextID);
+		if (textData[currentText]) {
+			router.replace(
+				{
+					query: { textId: textData[currentText].id },
+				},
+				undefined,
+				{ shallow: true }
+			);
+		}
 	}, [currentText, textData]);
+
+	const scrollToLevel = (level: string) => {
+        const levelElement = textListRef.current?.querySelector(`[data-level="${level}"]`);
+        if (levelElement) {
+            levelElement.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
 
 	return (
 		<>
@@ -157,9 +191,9 @@ function Home() {
 					<TextList textData={textData} levelSeparators={levelSeparators} setCurrentText={setCurrentText} setCurrentAnnotation={setCurrentAnnotation}
 						setCurrentLanguage={setCurrentLanguage} currentText={currentText} textListRef={textListRef} />
 					<div className={styles.textWrapper}>
-						<LevelNavigation currentLevel={currentLevel} />
-						<Toolbar textData={textData} setCurrentAnnotation={setCurrentAnnotation} setCurrentLanguage={setCurrentLanguage} currentText={currentText} setCurrentTextID={setCurrentTextID}/>
-						<TextModule currentText={currentText} textContentRef={textContentRef} textData={textData} renderAnnotatedText={renderAnnotatedText} currentLanguage={currentLanguage}/>
+						<LevelNavigation currentLevel={currentLevel} scrollToLevel={scrollToLevel} />
+						<Toolbar textData={textData} setCurrentAnnotation={setCurrentAnnotation} setCurrentLanguage={setCurrentLanguage} currentText={currentText} setCurrentTextID={setCurrentTextID} />
+						<TextModule currentText={currentText} textContentRef={textContentRef} textData={textData} renderAnnotatedText={renderAnnotatedText} currentLanguage={currentLanguage} />
 					</div>
 				</div>
 			</div>

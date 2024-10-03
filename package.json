@@ -9,9 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/preset-env": "^7.25.7",
     "@prisma/client": "^5.20.0",
     "@tweenjs/tween.js": "^25.0.0",
+    "@uiw/react-md-editor": "^4.0.4",
     "axios": "^1.7.7",
+    "babel-loader": "^9.2.1",
     "bcrypt": "^5.1.1",
     "cheerio": "^1.0.0",
     "d3-color": "^3.1.0",
@@ -20,6 +24,7 @@
     "dat.gui": "^0.7.9",
     "freezeframe": "^5.0.2",
     "lodash": "^4.17.21",
+    "md-block": "^0.0.1",
     "next": "^14.2.13",
     "next-auth": "^4.24.8",
     "node-html-parser": "^6.1.13",
@@ -27,7 +32,10 @@
     "react": "^18",
     "react-dom": "^18",
     "react-draggable": "^4.4.6",
+    "react-markdown": "^9.0.1",
+    "react-markdown-textarea": "^1.0.1",
     "react-select": "^5.8.1",
+    "remark-gfm": "^4.0.0",
     "socket.io": "^4.8.0",
     "socket.io-client": "^4.8.0",
     "three": "^0.169.0"

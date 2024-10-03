@@ -206,28 +206,44 @@
     color: white;
 }
 
-.activeNavItemA1 {
+.navItem {
+    user-select: none;
+    cursor: pointer;
+}
+
+
+.navItem:hover {
+    color: #a8b1be;
+}
+
+.activeNavItemA1, .activeNavItemA1:hover {
     color: #54de8e;
+    cursor: default;
 }
 
-.activeNavItemA2 {
+.activeNavItemA2, .activeNavItemA2:hover {
     color: #29ccb6;
+    cursor: default;
 }
 
-.activeNavItemB1 {
+.activeNavItemB1, .activeNavItemB1:hover {
     color: #f5a640;
+    cursor: default;
 }
 
-.activeNavItemB2 {
+.activeNavItemB2, .activeNavItemB2:hover {
     color: #ff776b;
+    cursor: default;
 }
 
-.activeNavItemC1 {
+.activeNavItemC1, .activeNavItemC1:hover {
     color: #f25289;
+    cursor: default;
 }
 
-.activeNavItemC2 {
+.activeNavItemC2, .activeNavItemC2:hover {
     color: #7ea5d6;
+    cursor: default;
 }
 
 .sideTitle {
