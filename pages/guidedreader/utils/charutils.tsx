@@ -23,26 +23,26 @@ export const handleTextSelection = ({ textContentRef, selectedText, setSelectedT
         const startContainer = range.startContainer.parentElement;
         const endContainer = range.endContainer.parentElement;
 
-        // Function to find the closest div element
-        const findClosestDiv = (element: HTMLElement | null): HTMLElement | null => {
-            while (element && element.tagName !== 'DIV') {
+        // Function to find the closest span element
+        const findClosestSpan = (element: HTMLElement | null): HTMLElement | null => {
+            while (element && element.tagName !== 'SPAN') {
                 element = element.parentElement;
             }
             return element;
         };
 
-        const containsAnnotationId = (element: HTMLElement | null): boolean => {
+        const containsPlainTextId = (element: HTMLElement | null): boolean => {
             if (!element) return false;
-            return !!element.querySelector('#annotation');
+            return element.id.startsWith('plain-text') || !!element.querySelector('[id^="plain-text"]');
         };
 
-        const startDiv = findClosestDiv(startContainer);
-        const endDiv = findClosestDiv(endContainer);
+        const startSpan = findClosestSpan(startContainer);
+        const endSpan = findClosestSpan(endContainer);
 
         // prevent the annotation button from appearing if the selection spans multiple elements
-        if (startDiv === endDiv) {
-            // check if the selected text is within an element with id "annotation"
-            if (containsAnnotationId(startDiv)) {
+        if (startSpan === endSpan) {
+            // check if the selected text is within an element with id starting with "plain-text"
+            if (!containsPlainTextId(startSpan) || !containsPlainTextId(endSpan)) {
                 selection.removeAllRanges();
                 setSelectedText('');
                 return;
@@ -54,8 +54,8 @@ export const handleTextSelection = ({ textContentRef, selectedText, setSelectedT
                 setSelectedText('');
             } else {
                 setSelectedText(selection.toString());
-                if (startDiv) {
-                    const charIndex = getCharacterIndex(startDiv, range.startContainer, range.startOffset);
+                if (startSpan) {
+                    const charIndex = getCharacterIndex(startSpan, range.startContainer, range.startOffset);
                     setCharIndex(charIndex);
 
                     // get bounding box of the text selection
