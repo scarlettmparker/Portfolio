@@ -126,13 +126,16 @@ export const fetchAnnotations = async (currentText: any, currentLanguage: string
             .map(async (annotation: any) => {
                 // get the author and votes data
                 const author = await fetchAuthorData(annotation.userId);
-                const votesData = await checkLikeStatus(annotation.id, userDetails?.user?.id);
+                let votesData;
+                if (userDetails?.user) {
+                    votesData = await checkLikeStatus(annotation.id, userDetails?.user?.id);
+                }
 
                 return {
                     ...annotation,
                     author,
-                    hasLiked: votesData.interactionType === 'LIKE',
-                    hasDisliked: votesData.interactionType === 'DISLIKE',
+                    hasLiked: votesData ? votesData.interactionType === 'LIKE' : false,
+                    hasDisliked: votesData ? votesData.interactionType === 'DISLIKE' : false,
                     votes: annotation.likes - annotation.dislikes,
                 };
             })
