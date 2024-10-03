@@ -28,3 +28,36 @@ export interface Annotation {
     likes: number;
     dislikes: number;
 }
+
+// props for text list
+export interface TextListProps {
+    textData: TextData[];
+    levelSeparators: LevelSeparator[];
+    setCurrentText: (index: number) => void;
+    setCurrentAnnotation: (annotation: string) => void;
+    setCurrentLanguage: (language: number) => void;
+    currentText: number;
+    textListRef: React.RefObject<HTMLDivElement>;
+}
+
+// props for toolbar
+export interface ToolbarProps {
+    textData: any;
+    setCurrentAnnotation: (annotation: string) => void;
+    setCurrentLanguage: (language: number) => void;
+    currentText: number;
+    setCurrentTextID: (id: number) => void;
+}
+
+// level separator interface
+interface LevelSeparator {
+    index: number;
+    level: string;
+}
+
+// text data interface
+interface TextData {
+    title: string;
+    level: string;
+    id: number;
+}

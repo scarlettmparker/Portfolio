@@ -148,6 +148,7 @@ const WritingAnnotationModal = ({ title, selectedText, annotationText, setAnnota
 export const CreatingAnnotationModal = ({ setSelectedText, selectedText, setCreatingAnnotation, userDetails, currentTextID, charIndex }:
     { setSelectedText: (value: string) => void, selectedText: string, setCreatingAnnotation: (value: boolean) => void, userDetails: any, currentTextID: number, charIndex: number }
 ) => {
+    console.log(currentTextID);
     const [annotationText, setAnnotationText] = useState("");
     const handleSubmit = () => {
         submitAnnotation(selectedText, annotationText, userDetails, currentTextID, charIndex);

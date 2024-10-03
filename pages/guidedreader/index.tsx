@@ -7,11 +7,12 @@ import { TextObject } from './types/types'
 import { renderAnnotatedText } from './utils/renderutils';
 import { handleAnnotationClick, hideAnnotationAnimation } from './utils/annotationutils';
 import { handleTextSelection } from './utils/charutils';
-import { fetchData } from './utils/textutils';
+import { fetchData, fetchCurrentTextData } from './utils/textutils';
 import { getUserDetails, findLevelSeparators, clearCookies } from './utils/helperutils';
 import { IndexUser, NotLoggedIn } from './jsx/indexuserjsx';
-import { TextModule } from './jsx/textjsx';
+import { LevelNavigation, TextList, TextModule } from './jsx/textjsx';
 import { AnnotationModal, CreatingAnnotationModal, CreateAnnotationButton, CorrectingAnnotationModal } from './jsx/annotationjsx';
+import { Toolbar } from './jsx/toolbarjsx';
 
 // home page component
 function Home() {
@@ -67,7 +68,6 @@ function Home() {
 			// set the text data and level separators
 			setTextData(data);
 			setCurrentText(data[0]?.id - 1 || 0);
-			setCurrentTextID(data[0]?.text[0].id || 0);
 			setLevelSeparators(findLevelSeparators(data));
 		};
 		fetchDataAsync();
@@ -112,6 +112,11 @@ function Home() {
 		};
 	}, [creatingAnnotation, selectedText]);
 
+	useEffect(() => {
+		// fetch the text data if it doesn't exist
+		fetchCurrentTextData(textData, currentText, setTextData, setCurrentTextID);
+	}, [currentText, textData]);
+
 	return (
 		<>
 			<Head>
@@ -149,72 +154,12 @@ function Home() {
 						currentTextID={currentTextID} start={currentStart} end={currentEnd} />
 				)}
 				<div className={styles.mainWrapper}>
-					<div className={styles.sideWrapper}>
-						<div className={styles.sideTitleWrapper}>
-							<span className={styles.sideTitle}>Texts (κείμενα)</span>
-						</div>
-						<div className={styles.textList} ref={textListRef}>
-							<div className={styles.textItemWrapper}>
-								{textData.length !== 0 ? textData.map(({ title, level }, index) => (
-									<>
-										{levelSeparators.some(separator => separator.index === index) ?
-											<div key={"levelSeparator" + index} data-index={index} className={`${styles.levelSeparator} levelSeparator`}>
-												{levelSeparators.find(separator => separator.index === index)?.level}
-											</div>
-											: null}
-										<div key={"textModule" + index} onClick={() => {
-											let textIndex = textData[index].id - 1;
-											setCurrentLanguage(0);
-											setCurrentAnnotation('');
-											setCurrentText(textIndex);
-											setCurrentTextID(textData[textIndex].text[0].id);
-										}}>
-											{TextModule(title, level, currentText === index)}
-										</div>
-									</>
-								)) : <span className={styles.loadingText}>Loading...</span>}
-							</div>
-						</div>
-					</div>
+					<TextList textData={textData} levelSeparators={levelSeparators} setCurrentText={setCurrentText} setCurrentAnnotation={setCurrentAnnotation}
+						setCurrentLanguage={setCurrentLanguage} currentText={currentText} textListRef={textListRef} />
 					<div className={styles.textWrapper}>
-						<div className={styles.navWrapper}>
-							<div className={styles.navItemWrapper}>
-								<span className={`${styles.navItem} ${currentLevel === 'Α1' || currentLevel === 'Α1 (8-12)' ? styles.activeNavItemA1 : ''}`}>A1</span>
-								<span className={`${styles.navItem} ${currentLevel === 'Α2' ? styles.activeNavItemA2 : ''}`}>A2</span>
-								<span className={`${styles.navItem} ${currentLevel === 'Β1' ? styles.activeNavItemB1 : ''}`}>B1</span>
-								<span className={`${styles.navItem} ${currentLevel === 'Β2' ? styles.activeNavItemB2 : ''} ${styles.navItemB2}`}>B2</span>
-								<span className={`${styles.navItem} ${currentLevel === 'Γ1' ? styles.activeNavItemC1 : ''}`}>C1</span>
-								<span className={`${styles.navItem} ${currentLevel === 'Γ2' ? styles.activeNavItemC2 : ''}`}>C2</span>
-							</div>
-						</div>
-						<div className={styles.toolbarWrapper}>
-							<div className={styles.languageChangeWrapper}>
-								<select className={styles.languageChangeBox} onChange={(e) => {
-									const selectedIndex = parseInt(e.target.value, 10);
-									setCurrentLanguage(selectedIndex);
-									setCurrentAnnotation('');
-									setCurrentTextID(textData[currentText].text[selectedIndex].id);
-								}}>
-									{textData[currentText] && textData[currentText].text.map((text, index) => (
-										<option key={"languageChange" + index} value={index}>
-											{text.language}
-										</option>
-									))}
-								</select>
-							</div>
-						</div>
-						<div className={styles.textContentWrapper} id="textContentWrapper" ref={textContentRef}>
-							<div className={styles.textContent}>
-								{currentText < textData.length && textData[currentText].text.length > 0 ? (
-									<div key={"textContent0"} className={styles.textContentItem}>
-										<div dangerouslySetInnerHTML={{
-											__html: renderAnnotatedText(textData[currentText].text[currentLanguage].text,
-												textData[currentText].text[currentLanguage].annotations)
-										}} />
-									</div>
-								) : null}
-							</div>
-						</div>
+						<LevelNavigation currentLevel={currentLevel} />
+						<Toolbar textData={textData} setCurrentAnnotation={setCurrentAnnotation} setCurrentLanguage={setCurrentLanguage} currentText={currentText} setCurrentTextID={setCurrentTextID}/>
+						<TextModule currentText={currentText} textContentRef={textContentRef} textData={textData} renderAnnotatedText={renderAnnotatedText} currentLanguage={currentLanguage}/>
 					</div>
 				</div>
 			</div>
