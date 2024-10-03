@@ -203,7 +203,7 @@ function Home() {
 								</select>
 							</div>
 						</div>
-						<div className={styles.textContentWrapper} ref={textContentRef}>
+						<div className={styles.textContentWrapper} id="textContentWrapper" ref={textContentRef}>
 							<div className={styles.textContent}>
 								{currentText < textData.length && textData[currentText].text.length > 0 ? (
 									<div key={"textContent0"} className={styles.textContentItem}>

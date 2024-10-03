@@ -23,26 +23,47 @@ export const handleTextSelection = ({ textContentRef, selectedText, setSelectedT
         const startContainer = range.startContainer.parentElement;
         const endContainer = range.endContainer.parentElement;
 
-        // Function to find the closest span element
-        const findClosestSpan = (element: HTMLElement | null): HTMLElement | null => {
-            while (element && element.tagName !== 'SPAN') {
+        // function to find the closest div element
+        const findClosestDiv = (element: HTMLElement | null): HTMLElement | null => {
+            while (element && element.tagName !== 'DIV') {
                 element = element.parentElement;
             }
             return element;
         };
 
-        const containsPlainTextId = (element: HTMLElement | null): boolean => {
+        const containsAnnotationId = (element: HTMLElement | null): boolean => {
             if (!element) return false;
-            return element.id.startsWith('plain-text') || !!element.querySelector('[id^="plain-text"]');
+            return !!element.querySelector('#annotation');
         };
 
-        const startSpan = findClosestSpan(startContainer);
-        const endSpan = findClosestSpan(endContainer);
+        const startDiv = findClosestDiv(startContainer);
+        const endDiv = findClosestDiv(endContainer);
+
+        // function to check if the selection is within a span with an id beginning with "annotated-text"
+        const isWithinAnnotatedText = (element: HTMLElement | null): boolean => {
+            while (element && element.id !== 'textContentWrapper') {
+                if (element.tagName === 'SPAN' && element.id.startsWith('annotated-text')) {
+                    return true;
+                }
+                element = element.parentElement;
+            }
+            return false;
+        };
+
+        // check every span inside textContentWrapper
+        const spans = textContentElement.querySelectorAll('span');
+        for (const span of spans) {
+            if (span.id.startsWith('annotated-text') && range.intersectsNode(span)) {
+                selection.removeAllRanges();
+                setSelectedText('');
+                return;
+            }
+        }
 
         // prevent the annotation button from appearing if the selection spans multiple elements
-        if (startSpan === endSpan) {
-            // check if the selected text is within an element with id starting with "plain-text"
-            if (!containsPlainTextId(startSpan) || !containsPlainTextId(endSpan)) {
+        if (startDiv === endDiv) {
+            // check if the selected text is within an element with id "annotation"
+            if (containsAnnotationId(startDiv) || isWithinAnnotatedText(startContainer) || isWithinAnnotatedText(endContainer)) {
                 selection.removeAllRanges();
                 setSelectedText('');
                 return;
@@ -54,8 +75,8 @@ export const handleTextSelection = ({ textContentRef, selectedText, setSelectedT
                 setSelectedText('');
             } else {
                 setSelectedText(selection.toString());
-                if (startSpan) {
-                    const charIndex = getCharacterIndex(startSpan, range.startContainer, range.startOffset);
+                if (startDiv) {
+                    const charIndex = getCharacterIndex(startDiv, range.startContainer, range.startOffset);
                     setCharIndex(charIndex);
 
                     // get bounding box of the text selection
