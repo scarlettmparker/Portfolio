@@ -4,6 +4,12 @@ import { hideAnnotationButton, hideAnnotationAnimation, submitAnnotation, fetchA
 import { BOT_LINK } from "../utils/helperutils";
 import Image from 'next/image';
 
+const helper: React.FC = () => {
+    return null;
+};
+
+export default helper;
+
 // annotation modal props
 interface AnnotationModalProps {
     setCurrentAnnotation: (value: string) => void;
