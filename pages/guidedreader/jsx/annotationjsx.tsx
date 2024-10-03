@@ -2,6 +2,8 @@ import styles from '../styles/index.module.css';
 import React, { useState, useEffect } from "react";
 import { hideAnnotationButton, hideAnnotationAnimation, submitAnnotation, fetchAnnotations, handleVote } from "../utils/annotationutils";
 import { BOT_LINK } from "../utils/helperutils";
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import Image from 'next/image';
 
 const helper: React.FC = () => {
@@ -128,16 +130,27 @@ export const CreateAnnotationButton = ({ buttonPosition, isLoggedIn, setCreating
 const WritingAnnotationModal = ({ title, selectedText, annotationText, setAnnotationText, onSubmit, onClose }:
     { title: string, selectedText: string | null, annotationText: string, setAnnotationText: (value: string) => void, onSubmit: () => void, onClose: () => void }
 ) => {
+    const [preview, setPreview] = useState(false);
     return (
         <div id="createAnnotationModal" className={styles.annotationModal}>
             <span className={styles.annotationModalTitle}><strong>{title}</strong></span>
             <span className={styles.annotationModalClose} onClick={onClose}>X</span>
             <div className={styles.annotationWrapper}>
                 <span className={styles.annotationModalText}>
-                    {selectedText && <span className={styles.annotationModalSelect}>{"- "} <i>{selectedText}</i></span>}
-                    <textarea className={styles.annotationTextarea} placeholder="Enter annotation here..." rows={10}
-                        cols={50} value={annotationText} onChange={(e) => setAnnotationText(e.target.value)} />
+                    {preview ? (
+                        <div className={styles.markdownOverlay}>
+                            <Markdown remarkPlugins={[remarkGfm]}>
+                                {annotationText}
+                            </Markdown>
+                        </div>
+                    ) : (
+                        <textarea className={styles.annotationTextarea} placeholder="Enter annotation here..." rows={10}
+                            cols={50} value={annotationText} onChange={(e) => setAnnotationText(e.target.value)} />
+                    )}
                     <button className={styles.submitButton} onClick={onSubmit}>Submit</button>
+                    <button className={styles.submitButton} onClick={() => {
+                        setPreview(!preview);
+                    }}>{preview ? "Edit" : "Preview"}</button>
                 </span>
             </div>
         </div>
@@ -148,7 +161,6 @@ const WritingAnnotationModal = ({ title, selectedText, annotationText, setAnnota
 export const CreatingAnnotationModal = ({ setSelectedText, selectedText, setCreatingAnnotation, userDetails, currentTextID, charIndex }:
     { setSelectedText: (value: string) => void, selectedText: string, setCreatingAnnotation: (value: boolean) => void, userDetails: any, currentTextID: number, charIndex: number }
 ) => {
-    console.log(currentTextID);
     const [annotationText, setAnnotationText] = useState("");
     const handleSubmit = () => {
         submitAnnotation(selectedText, annotationText, userDetails, currentTextID, charIndex);
