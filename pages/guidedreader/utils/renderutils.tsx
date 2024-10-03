@@ -2,7 +2,7 @@ import { Annotation } from '../types/types'
 import styles from '../styles/index.module.css';
 
 const helper: React.FC = () => {
-    return null;
+	return null;
 };
 
 export default helper;
@@ -10,9 +10,26 @@ export default helper;
 export const renderAnnotatedText = (text: string, annotations: Annotation[]) => {
 	const parts: string[] = [];
 	let lastIndex = 0;
+	let annotationCounter = 0;
+	let plainTextCounter = 0;
+
+	const annotationMap = new Map<string, Annotation>();
+
+	// create a map of annotations with the same start and end indices
+	annotations.forEach(annotation => {
+		const key = `${annotation.start}-${annotation.end}`;
+		const current = annotationMap.get(key);
+
+		if (!current || (annotation.likes - annotation.dislikes) > (current.likes - current.dislikes)) {
+			annotationMap.set(key, annotation);
+		}
+	});
+
+	// convert the map back to an array
+	const filteredAnnotations = Array.from(annotationMap.values());
 
 	// sort annotations by start index
-	annotations.sort((a, b) => a.start - b.start);
+	filteredAnnotations.sort((a, b) => a.start - b.start);
 
 	// create a temporary dom element to parse html
 	const tempDiv = document.createElement('div');
@@ -39,7 +56,7 @@ export const renderAnnotatedText = (text: string, annotations: Annotation[]) => 
 			let lastAnnotatedIndex = 0;
 
 			// check against annotations for this text node
-			annotations.forEach(({ description, start, end }) => {
+			filteredAnnotations.forEach(({ description, start, end }) => {
 				if (currentOffset < end && currentOffset + textLength > start) {
 					const overlapStart = Math.max(start, currentOffset);
 					const overlapEnd = Math.min(end, currentOffset + textLength);
@@ -47,13 +64,13 @@ export const renderAnnotatedText = (text: string, annotations: Annotation[]) => 
 					// push unannotated text before the overlap, ensuring no empty strings
 					const unannotatedText = sanitizedText.slice(lastAnnotatedIndex, overlapStart - currentOffset);
 					if (unannotatedText.trim()) {
-						parts.push(unannotatedText);
+						parts.push(`<span id="plain-text-${plainTextCounter++}">${unannotatedText}</span>`);
 					}
 
 					// create the annotated span for the overlapping text
 					const annotatedText = sanitizedText.slice(overlapStart - currentOffset, overlapEnd - currentOffset);
 					if (annotatedText.trim()) {
-						const annotatedHTML = `<span class="${styles.annotatedText}" data-description="${encodeURIComponent(description)}">${annotatedText}</span>`;
+						const annotatedHTML = `<span id="annotated-text-${annotationCounter++}" class="${styles.annotatedText}" data-description="${encodeURIComponent(description)}">${annotatedText}</span>`;
 						parts.push(annotatedHTML);
 					}
 					lastAnnotatedIndex = overlapEnd - currentOffset;
@@ -64,7 +81,7 @@ export const renderAnnotatedText = (text: string, annotations: Annotation[]) => 
 			if (lastAnnotatedIndex < textLength) {
 				const remainingText = sanitizedText.slice(lastAnnotatedIndex);
 				if (remainingText.trim()) {
-					parts.push(remainingText);
+					parts.push(`<span id="plain-text-${plainTextCounter++}">${remainingText}</span>`);
 				}
 			}
 
@@ -89,5 +106,19 @@ export const renderAnnotatedText = (text: string, annotations: Annotation[]) => 
 	processNode(tempDiv, 0);
 
 	// join all parts into a single string and remove <br> tags
-	return parts.join('').replace(/<br\s*\/?>/g, '');
+	const result = parts.join('').replace(/<br\s*\/?>/g, '');
+
+	// add css rule for margin-right space
+	const style = document.createElement('style');
+	style.innerHTML = `
+    	span[id^="annotated-text-"] {
+        	margin-right: 0;
+	    }
+	    span[id^="annotated-text-"]:not(:last-child):not(:has(+ span[id^="plain-text-"])) {
+	        margin-right: 5px;
+    	}
+	`;
+
+	document.head.appendChild(style);
+	return result;
 };

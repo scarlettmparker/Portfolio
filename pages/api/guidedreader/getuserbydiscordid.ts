@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        // get the user by ID
+        // get the user by ID along with annotations
         const user = await prisma.user.findUnique({
             where: { discordId: userId as string },
             select: {
@@ -19,6 +19,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 nickname: true,
                 username: true,
                 levels: true,
+                annotations: {
+                    select: {
+                        likes: true,
+                        dislikes: true,
+                    },
+                },
             },
         });
 
@@ -27,7 +33,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return;
         }
 
-        res.status(200).json({ user: user });
+        // calculate the number of annotations and total votes
+        const numAnnotations = user.annotations.length;
+
+        console.log(user.annotations);
+        const totalVotes = user.annotations.reduce((acc, annotation) => acc + (annotation.likes - annotation.dislikes), 0);
+        console.log(totalVotes);
+
+        res.status(200).json({
+            user: {
+                avatar: user.avatar,
+                nickname: user.nickname,
+                username: user.username,
+                levels: user.levels,
+                numAnnotations: numAnnotations,
+                totalVotes: totalVotes,
+            },
+        });
     } catch (error) {
         res.status(500).json({ error: 'Internal server error', details: error });
     }

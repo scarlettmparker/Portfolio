@@ -18,7 +18,6 @@ export const IndexUser = (userDetails: any) => {
     const user = userDetails.userDetails.user;
     const avatar = user.avatar;
     const userId = user.discordId;
-    const level = user.levels[0];
 
     const avatarUrl = `https://cdn.discordapp.com/avatars/${userId}/${avatar}.png?size=1024`;
     return (

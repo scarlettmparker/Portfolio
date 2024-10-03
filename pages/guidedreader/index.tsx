@@ -5,13 +5,13 @@ import { useEffect, useState, useRef } from 'react';
 import { parseCookies } from 'nookies';
 import { TextObject } from './types/types'
 import { renderAnnotatedText } from './utils/renderutils';
-import { handleAnnotationClick } from './utils/annotationutils';
+import { handleAnnotationClick, hideAnnotationAnimation } from './utils/annotationutils';
 import { handleTextSelection } from './utils/charutils';
 import { fetchData } from './utils/textutils';
 import { getUserDetails, findLevelSeparators, clearCookies } from './utils/helperutils';
 import { IndexUser, NotLoggedIn } from './jsx/indexuserjsx';
 import { TextModule } from './jsx/textjsx';
-import { AnnotationModal, CreatingAnnotationModal, CreateAnnotationButton } from './jsx/annotationjsx';
+import { AnnotationModal, CreatingAnnotationModal, CreateAnnotationButton, CorrectingAnnotationModal } from './jsx/annotationjsx';
 
 // home page component
 function Home() {
@@ -25,6 +25,11 @@ function Home() {
 	const [currentAnnotation, setCurrentAnnotation] = useState<string>('');
 	const [currentLanguage, setCurrentLanguage] = useState<number>(0);
 	const [creatingAnnotation, setCreatingAnnotation] = useState<boolean>(false);
+
+	// for correcting annotation nonsense
+	const [correctingAnnotation, setCorrectingAnnotation] = useState<boolean>(false);
+	const [currentStart, setCurrentStart] = useState<number>(0);
+	const [currentEnd, setCurrentEnd] = useState<number>(0);
 
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [userDetails, setUserDetails] = useState<any>(null);
@@ -120,10 +125,14 @@ function Home() {
 					<NotLoggedIn />
 				)}
 				{currentAnnotation && (
-					<AnnotationModal setCurrentAnnotation={setCurrentAnnotation} currentAnnotation={currentAnnotation}
-						currentLanguage={currentLanguage} currentText={textData[currentText]} userDetails={userDetails} />
+					<>
+						{creatingAnnotation && hideAnnotationAnimation(setSelectedText, "createAnnotationModal", setCreatingAnnotation)}
+						{correctingAnnotation && hideAnnotationAnimation(setSelectedText, "createAnnotationModal", setCorrectingAnnotation)}
+						<AnnotationModal setCurrentAnnotation={setCurrentAnnotation} currentAnnotation={currentAnnotation} currentLanguage={currentLanguage} currentText={textData[currentText]}
+							userDetails={userDetails} setCorrectingAnnotation={setCorrectingAnnotation} setCurrentStart={setCurrentStart} setCurrentEnd={setCurrentEnd} />
+					</>
 				)}
-				{selectedText && !creatingAnnotation && (
+				{selectedText && !creatingAnnotation && !correctingAnnotation && (
 					<CreateAnnotationButton buttonPosition={{
 						x: buttonPosition.x,
 						y: buttonPosition.y
@@ -134,6 +143,10 @@ function Home() {
 					<CreatingAnnotationModal setSelectedText={setSelectedText} selectedText={selectedText}
 						setCreatingAnnotation={setCreatingAnnotation} currentTextID={currentTextID} userDetails={userDetails} charIndex={charIndex} />
 				)}
+				{correctingAnnotation && (
+					<CorrectingAnnotationModal setCreatingAnnotation={setCorrectingAnnotation} userDetails={userDetails}
+						currentTextID={currentTextID} start={currentStart} end={currentEnd} />
+				)}
 				<div className={styles.mainWrapper}>
 					<div className={styles.sideWrapper}>
 						<div className={styles.sideTitleWrapper}>
@@ -141,7 +154,7 @@ function Home() {
 						</div>
 						<div className={styles.textList} ref={textListRef}>
 							<div className={styles.textItemWrapper}>
-								{textData.length !== 0 ? textData.map(({ title, level, id }, index) => (
+								{textData.length !== 0 ? textData.map(({ title, level }, index) => (
 									<>
 										{levelSeparators.some(separator => separator.index === index) ?
 											<div key={"levelSeparator" + index} data-index={index} className={`${styles.levelSeparator} levelSeparator`}>
