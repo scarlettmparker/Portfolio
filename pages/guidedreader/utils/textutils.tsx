@@ -1,3 +1,4 @@
+import { SetStateAction } from 'react';
 import { Text, TextObject } from '../types/types';
 
 const helper: React.FC = () => {
@@ -23,6 +24,37 @@ export const fetchData = async () => {
         }
     }
     return data;
+};
+
+export const fetchText = async (textId: number) => {
+    let response = await fetch('./api/guidedreader/loadtextdata', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ textId }),
+    });
+    return response.json();
+};
+
+// fetch the text data for the current text
+export const fetchCurrentTextData = async (textData: TextObject[], currentText: number, setTextData: { (value: any): void; }, setCurrentTextID: { (value: number): void;}) => {
+    if (textData[currentText] && !textData[currentText].text) {
+        const textID = textData[currentText].id;
+        const currentTextData = await fetchText(textID);
+
+        // update the text data with the fetched text data
+        setTextData((prevTextData: any) => {
+            const updatedTextData = [...prevTextData];
+            updatedTextData[currentText] = {
+                ...updatedTextData[currentText],
+                text: currentTextData.text
+            };
+            return updatedTextData;
+        });
+
+        setCurrentTextID(textID);
+    }
 };
 
 // fetch text titles from the api

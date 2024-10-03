@@ -5,95 +5,60 @@ const helper: React.FC = () => {
 export default helper;
 
 // function for selecting text for annotations
-export const handleTextSelection = ({ textContentRef, selectedText, setSelectedText, setButtonPosition, setCharIndex, creatingAnnotation }:
-    {
-        textContentRef: any, selectedText: string, setSelectedText: (value: string) => void, setButtonPosition: (value: { x: number, y: number }) => void,
-        setCharIndex: (value: number) => void, creatingAnnotation: boolean
-    }) => {
+export const handleTextSelection = ({
+    textContentRef, selectedText, setSelectedText, setButtonPosition, setCharIndex, creatingAnnotation
+}: {
+    textContentRef: any, selectedText: string, setSelectedText: (value: string) => void, setButtonPosition: (value: { x: number, y: number }) => void,
+    setCharIndex: (value: number) => void, creatingAnnotation: boolean
+}) => {
+    if (creatingAnnotation) return;
+
+    // get the selected text
     const selection = window.getSelection();
     const textContentElement = textContentRef.current;
 
-    if (creatingAnnotation) {
+    // check if the selection is valid
+    if (!selection || !selection.toString() || !textContentElement?.contains(selection.anchorNode)) {
+        setSelectedText('');
         return;
     }
 
-    // check if the selection is valid (part of the text content)
-    if (selection && selection.toString().length > 0 && textContentElement?.contains(selection.anchorNode)) {
-        const range = selection.getRangeAt(0);
-        const startContainer = range.startContainer.parentElement;
-        const endContainer = range.endContainer.parentElement;
+    // get the range and start/end elements
+    const range = selection.getRangeAt(0);
+    const startElement = range.startContainer.parentElement;
+    const endElement = range.endContainer.parentElement;
 
-        // function to find the closest div element
-        const findClosestDiv = (element: HTMLElement | null): HTMLElement | null => {
-            while (element && element.tagName !== 'DIV') {
-                element = element.parentElement;
-            }
-            return element;
-        };
+    // check if the selection is inside an annotation
+    const isAnnotated = (el: HTMLElement | null) => !!el?.closest('span[id^="annotated-text"]');
 
-        const containsAnnotationId = (element: HTMLElement | null): boolean => {
-            if (!element) return false;
-            return !!element.querySelector('#annotation');
-        };
+    // check if the selection is inside an annotation
+    if (Array.from(textContentElement.querySelectorAll('span[id^="annotated-text"]')).some(span => range.intersectsNode(span as Node))
+        || startElement?.closest('#annotation') || isAnnotated(startElement) || isAnnotated(endElement)) {
+        selection.removeAllRanges();
+        setSelectedText('');
+        return;
+    }
 
-        const startDiv = findClosestDiv(startContainer);
-        const endDiv = findClosestDiv(endContainer);
+    // check if the selection is the same as the selected text
+    if (selection.toString() === selectedText) {
+        selection.removeAllRanges();
+        setSelectedText('');
+        return;
+    }
 
-        // function to check if the selection is within a span with an id beginning with "annotated-text"
-        const isWithinAnnotatedText = (element: HTMLElement | null): boolean => {
-            while (element && element.id !== 'textContentWrapper') {
-                if (element.tagName === 'SPAN' && element.id.startsWith('annotated-text')) {
-                    return true;
-                }
-                element = element.parentElement;
-            }
-            return false;
-        };
+    // check if the selection is inside the text content
+    const startDiv = startElement?.closest('div');
+    if (startDiv && startDiv === endElement?.closest('div')) {
+        const charIndex = getCharacterIndex(startDiv, range.startContainer, range.startOffset);
+        setCharIndex(charIndex);
 
-        // check every span inside textContentWrapper
-        const spans = textContentElement.querySelectorAll('span');
-        for (const span of spans) {
-            if (span.id.startsWith('annotated-text') && range.intersectsNode(span)) {
-                selection.removeAllRanges();
-                setSelectedText('');
-                return;
-            }
-        }
-
-        // prevent the annotation button from appearing if the selection spans multiple elements
-        if (startDiv === endDiv) {
-            // check if the selected text is within an element with id "annotation"
-            if (containsAnnotationId(startDiv) || isWithinAnnotatedText(startContainer) || isWithinAnnotatedText(endContainer)) {
-                selection.removeAllRanges();
-                setSelectedText('');
-                return;
-            }
-
-            // check if the selected text is the same as the previously selected text
-            if (selection.toString() === selectedText) {
-                selection.removeAllRanges();
-                setSelectedText('');
-            } else {
-                setSelectedText(selection.toString());
-                if (startDiv) {
-                    const charIndex = getCharacterIndex(startDiv, range.startContainer, range.startOffset);
-                    setCharIndex(charIndex);
-
-                    // get bounding box of the text selection
-                    const rect = range.getBoundingClientRect();
-
-                    // calculate the center and set button position
-                    const middleX = rect.left + (rect.width / 2);
-                    const middleY = rect.top + (rect.height / 2);
-                    setButtonPosition({ x: middleX, y: middleY - 20 });
-                }
-            }
-        } else {
-            // clear the selection if it spans multiple elements
-            selection.removeAllRanges();
-            setSelectedText('');
-        }
+        // determine the position of the button
+        const { left, width, top, height } = range.getBoundingClientRect();
+        setButtonPosition({ x: left + width / 2, y: top + height / 2 - 20 });
+        setSelectedText(selection.toString());
     } else {
+        // clear the selection if it is not valid
+        selection.removeAllRanges();
         setSelectedText('');
     }
 };

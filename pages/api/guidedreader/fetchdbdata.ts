@@ -4,12 +4,10 @@ import { NextApiRequest, NextApiResponse } from 'next';
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const textObjects = await prisma.textObject.findMany({
-      include: {
-        text: {
-          include: {
-            annotations: true,
-          },
-        },
+      select: {
+        id: true,
+        title: true,
+        level: true,
       },
     });
     res.status(200).json(textObjects);
