@@ -114,6 +114,7 @@
 }
 
 .annotationModalText img {
+    margin-top: 15px;
     max-width: 400px;
 }
 
@@ -346,6 +347,7 @@
 }
 
 .submitButton:hover,
+.previewButton:hover,
 .annotateButton:hover {
     background-color: #0A2342;
     color: white;
