@@ -1,5 +1,10 @@
 import styles from '../styles/index.module.css';
 
+/* RETURNS FOR ANNOTATIONS
+    0: Annotation added successfully
+    1: Annotation is too short
+    2: Failed to add annotation (Internal Server Error)
+*/
 const BOT_LINK = process.env.NEXT_PUBLIC_BOT_LINK;
 
 const helper: React.FC = () => {
@@ -63,10 +68,14 @@ export async function voteAnnotation(currentAnnotationId: number, userDetails: a
 
 // submit annotation to the database
 export async function submitAnnotation(selectedText: string | null = null, annotationText: string, userDetails: any,
-    currentTextID: number, charIndex: number | null = null, start: number | null = null, end: number | null = null) {
+    currentTextID: number, charIndex: number | null = null, start: number | null = null, end: number | null = null): Promise<number> {
     // get the current unix time
     const currentTime = Math.floor(Date.now() / 1000);
     let response = null;
+
+    if (annotationText.length < 5) {
+        return 1;
+    }
 
     // send request to get raw text if start and end are not provided
     if (start === null && end === null && selectedText !== null && charIndex !== null) {
@@ -110,9 +119,10 @@ export async function submitAnnotation(selectedText: string | null = null, annot
     const data = await response.json();
     if (data.error) {
         console.error("Failed to add annotation", data);
+        return 2;
     } else {
         console.log("Annotation added successfully", data);
-        window.location.reload();
+        return 0;
     }
 }
 

@@ -7,6 +7,15 @@ const helper: React.FC = () => {
 
 export default helper;
 
+// because of random whitespaces in texts and stuff
+export const sanitizeText = (rawText: string): string => {
+	return rawText
+		.replace(/<[^>]*>/g, '') // remove HTML tags
+		.replace(/\u00A0/g, ' ') // replace non-breaking spaces with regular spaces
+		.replace(/\s+/g, ' ')    // replace all whitespace characters with a single space
+		.trim();                 // trim leading/trailing spaces
+};
+
 // render out annotations in the text
 export const renderAnnotatedText = (text: string, annotations: Annotation[]) => {
 	const parts: string[] = [];
@@ -32,15 +41,6 @@ export const renderAnnotatedText = (text: string, annotations: Annotation[]) => 
 	// create a temporary div to parse the text
 	const tempDiv = document.createElement('div');
 	tempDiv.innerHTML = text;
-
-	// because of random whitespaces in texts and stuff
-	const sanitizeText = (rawText: string): string => {
-		return rawText
-			.replace(/<[^>]*>/g, '') // remove HTML tags
-			.replace(/\u00A0/g, ' ') // replace non-breaking spaces with regular spaces
-			.replace(/\s+/g, ' ')    // replace all whitespace characters with a single space
-			.trim();                 // trim leading/trailing spaces
-	};
 
 	// handle text processing
 	const processTextNode = (textNode: string, startOffset: number) => {
