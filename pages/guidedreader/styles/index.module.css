@@ -109,6 +109,12 @@
     position: relative;
     font-family: 'Open Sans', sans-serif;
     font-size: 1.2rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.annotationModalText img {
+    max-width: 400px;
 }
 
 .annotationModalAuthorWrapper {
@@ -211,7 +217,6 @@
     cursor: pointer;
 }
 
-
 .navItem:hover {
     color: #a8b1be;
 }
@@ -312,8 +317,26 @@
     transform: translate(-50%, -50%);
 }
 
-.annotateButton,
+.informMarkdown {
+    position: relative;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 0.9rem;
+    margin-left: 3px;
+}
+
+.annotationModalButtons {
+    position: absolute;
+    bottom: 3%;
+    left: 1%;
+}
+
 .submitButton {
+    margin-right: 10px;
+}
+
+.annotateButton,
+.submitButton,
+.previewButton {
     background-color: white;
     font-family: 'Open Sans', sans-serif;
     font-size: 1rem;
@@ -328,10 +351,24 @@
     color: white;
 }
 
+.annotationModalText {
+    height: 495px;
+    overflow-y: scroll;
+    width: 100%;
+}
+
 .annotationTextarea {
     font-family: 'Open Sans', sans-serif;
+    font-size: 1.1rem;
     width: 95%;
     margin-top: 10px;
+}
+
+.markdownOverlay {
+    font-size: 1.1rem;
+    width: 93%;
+    margin-top: -4px;
+    margin-left: 3px;
 }
 
 .textItemWrapper {

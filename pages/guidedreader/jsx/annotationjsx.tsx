@@ -20,12 +20,11 @@ interface AnnotationModalProps {
     currentText: any;
     userDetails: any;
     setCorrectingAnnotation: (value: boolean) => void;
-    setCurrentStart: (value: number) => void;
-    setCurrentEnd: (value: number) => void;
+    setCorrectingAnnotationData: (value: any) => void;
 }
 
 // annotation modal
-export const AnnotationModal: React.FC<AnnotationModalProps> = ({ setCurrentAnnotation, currentAnnotation, currentLanguage, currentText, userDetails, setCorrectingAnnotation, setCurrentStart, setCurrentEnd }) => {
+export const AnnotationModal: React.FC<AnnotationModalProps> = ({ setCurrentAnnotation, currentAnnotation, currentLanguage, currentText, userDetails, setCorrectingAnnotation, setCorrectingAnnotationData }) => {
     const [annotations, setAnnotations] = useState<any[]>([]);
 
     // get the current annotation data
@@ -64,8 +63,7 @@ export const AnnotationModal: React.FC<AnnotationModalProps> = ({ setCurrentAnno
                         if (userDetails) {
                             setCurrentAnnotation('');
                             setCorrectingAnnotation(true);
-                            setCurrentStart(currentAnnotationData.start);
-                            setCurrentEnd(currentAnnotationData.end);
+                            setCorrectingAnnotationData(currentAnnotationData);
                         } else {
                             window.location.href = BOT_LINK!;
                         }
@@ -79,7 +77,11 @@ export const AnnotationModal: React.FC<AnnotationModalProps> = ({ setCurrentAnno
 // annotation item
 const AnnotationItem = ({ annotation, handleVote }: { annotation: any; handleVote: (like: boolean) => void }) => (
     <div className={styles.singleAnnotationWrapper}>
-        <span className={styles.annotationModalText} dangerouslySetInnerHTML={{ __html: annotation.description }}></span>
+        <span className={styles.annotationModalText}>
+            <Markdown remarkPlugins={[remarkGfm]}>
+                {annotation.description}
+            </Markdown>
+        </span>
         <div className={styles.annotationModalAuthorWrapper}>
             <span className={styles.annotationModalAuthor}>Annotation by:
                 <a href={`/guidedreader/profile/${annotation.author.discordId}`} className={styles.annotationModalAuthorLink}>
@@ -137,6 +139,7 @@ const WritingAnnotationModal = ({ title, selectedText, annotationText, setAnnota
             <span className={styles.annotationModalClose} onClick={onClose}>X</span>
             <div className={styles.annotationWrapper}>
                 <span className={styles.annotationModalText}>
+                    <b>{selectedText}</b>
                     {preview ? (
                         <div className={styles.markdownOverlay}>
                             <Markdown remarkPlugins={[remarkGfm]}>
@@ -144,14 +147,18 @@ const WritingAnnotationModal = ({ title, selectedText, annotationText, setAnnota
                             </Markdown>
                         </div>
                     ) : (
-                        <textarea className={styles.annotationTextarea} placeholder="Enter annotation here..." rows={10}
-                            cols={50} value={annotationText} onChange={(e) => setAnnotationText(e.target.value)} />
+                        <textarea className={styles.annotationTextarea} placeholder="Enter annotation here..." rows={18}
+                            cols={60} value={annotationText} onChange={(e) => setAnnotationText(e.target.value)} />
                     )}
+                </span>
+                <span className={styles.informMarkdown}><a target="_blank" href="https://www.markdownguide.org/basic-syntax/">
+                Annotations are formatted with Markdown</a></span>
+                <div className={styles.annotationModalButtons}>
                     <button className={styles.submitButton} onClick={onSubmit}>Submit</button>
-                    <button className={styles.submitButton} onClick={() => {
+                    <button className={styles.previewButton} onClick={() => {
                         setPreview(!preview);
                     }}>{preview ? "Edit" : "Preview"}</button>
-                </span>
+                </div>
             </div>
         </div>
     );
@@ -162,8 +169,16 @@ export const CreatingAnnotationModal = ({ setSelectedText, selectedText, setCrea
     { setSelectedText: (value: string) => void, selectedText: string, setCreatingAnnotation: (value: boolean) => void, userDetails: any, currentTextID: number, charIndex: number }
 ) => {
     const [annotationText, setAnnotationText] = useState("");
-    const handleSubmit = () => {
-        submitAnnotation(selectedText, annotationText, userDetails, currentTextID, charIndex);
+    const handleSubmit = async () => {
+        let result = await submitAnnotation(selectedText, annotationText, userDetails, currentTextID, charIndex);
+        // successfully submitted annotation
+        if (result == 0) {
+            window.location.reload();
+        } else if (result == 1) {
+            console.log("Annotation too short!");
+        } else if (result == 2) {
+            console.log("Failed to add annotation (Internal Server Error)");
+        }
     };
     const handleClose = () => {
         hideAnnotationAnimation(setSelectedText, "createAnnotationModal", setCreatingAnnotation);
@@ -175,10 +190,13 @@ export const CreatingAnnotationModal = ({ setSelectedText, selectedText, setCrea
 };
 
 // correct annotation modal
-export const CorrectingAnnotationModal = ({ setCreatingAnnotation, userDetails, currentTextID, start, end }:
-    { setCreatingAnnotation: (value: boolean) => void, userDetails: any, currentTextID: number, start: number, end: number }
+export const CorrectingAnnotationModal = ({ setCreatingAnnotation, userDetails, currentTextID, currentText, correctingAnnotationData }:
+    { setCreatingAnnotation: (value: boolean) => void, userDetails: any, currentTextID: number, currentText: any, correctingAnnotationData: any }
 ) => {
     const [annotationText, setAnnotationText] = useState("");
+    const start = correctingAnnotationData.start;
+    const end = correctingAnnotationData.end;
+
     const handleSubmit = () => {
         submitAnnotation(null, annotationText, userDetails, currentTextID, null, start, end);
     };

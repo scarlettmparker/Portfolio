@@ -1,6 +1,12 @@
 import prisma from '../prismaclient';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getToken } from 'next-auth/jwt';
+import DOMPurify from 'dompurify';
+import { JSDOM } from 'jsdom';
+
+// create a dompurify instance with jsdom
+const window = new JSDOM('').window;
+const domPurify = DOMPurify(window);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     // get annotation info from request link
@@ -13,12 +19,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(401).json({ error: 'Unauthorized' });
     }
 
+    // sanitize the description
+    const sanitizedDescription = domPurify.sanitize(description);
+
     // create annotation
     let annotation = await prisma.annotation.create({
         data: {
             start: start,
             end: end,
-            description: description,
+            description: sanitizedDescription,
             userId: userId,
             textId: textId,
             creationDate: creationDate
