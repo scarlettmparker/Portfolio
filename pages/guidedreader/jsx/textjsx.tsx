@@ -3,6 +3,12 @@ import React, { useRef, useState, useEffect } from 'react';
 import { TextListProps } from '../types/types';
 import { sortTextData as sortTextDataUtil, filterTextData, observeLevelSeparators } from '../utils/textutils';
 
+const helper: React.FC = () => {
+    return null;
+};
+
+export default helper;
+
 // CONSTS
 const SORT_OPTIONS = ['Level A-C', 'Level C-A'];
 const LEVELS = ['Α1', 'Α2', 'Β1', 'Β2', 'Γ1', 'Γ2'];
