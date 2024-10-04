@@ -1,4 +1,3 @@
-import { SetStateAction } from 'react';
 import { Text, TextObject } from '../types/types';
 
 const helper: React.FC = () => {
@@ -6,6 +5,10 @@ const helper: React.FC = () => {
 };
 
 export default helper;
+
+export const LEVELS_ORDER = ['Α1', 'Α1 (8-12)', 'Α2', 'Β1', 'Β2', 'Γ1', 'Γ2'];
+const LEVELS_ORDER_REVERSED = [...LEVELS_ORDER].reverse();
+const LEVEL_GROUPS = { 'Α1': ['Α1', 'Α1 (8-12)'], 'Α2': ['Α2'], 'Β1': ['Β1'], 'Β2': ['Β2'], 'Γ1': ['Γ1'], 'Γ2': ['Γ2'] };
 
 // get database data for the default texts
 export const fetchData = async () => {
@@ -55,6 +58,53 @@ export const fetchCurrentTextData = async (textData: TextObject[], currentText: 
 
         setCurrentTextID(textID);
     }
+};
+
+// filter text data based on selected levels and search term
+export const filterTextData = (textData: any[], selectedLevels: any[], searchTerm: string) => {
+    const filteredTextData = textData.filter(({ title, level }) => {
+        const inSelectedLevels = selectedLevels.some(selectedLevel => LEVEL_GROUPS[selectedLevel as keyof typeof LEVEL_GROUPS].includes(level));
+        const matchesSearch = title.toLowerCase().includes(searchTerm.toLowerCase());
+        return inSelectedLevels && matchesSearch;
+    });
+
+    return { filteredTextData };
+};
+
+// observer for level separators
+export const observeLevelSeparators = (textListRef: React.RefObject<HTMLDivElement>, setCurrentLevel: { (level: string): void; }) => {
+    const observer = new IntersectionObserver((entries) => {
+        // find the level separator that is intersecting
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const level = entry.target.getAttribute('data-level') || '';
+                setCurrentLevel(level);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    const elements = textListRef.current?.querySelectorAll('.levelSeparator');
+    elements?.forEach(el => observer.observe(el));
+
+    return () => {
+        elements?.forEach(el => observer.unobserve(el));
+    };
+};
+
+// sort the text data based on the selected sort option
+export const sortTextData = (textData: any, levelSeparators: any, sortOption: string) => {
+    const levelOrder = sortOption === 'Level A-C' ? LEVELS_ORDER : LEVELS_ORDER_REVERSED;
+
+    const sortedTextData = [...textData].sort((a, b) => {
+        return levelOrder.indexOf(a.level) - levelOrder.indexOf(b.level);
+    });
+
+    const sortedLevelSeparators = [...levelSeparators].map(separator => {
+        const sortedIndex = sortedTextData.findIndex(text => text.level === separator.level);
+        return { ...separator, index: sortedIndex };
+    });
+
+    return { sortedTextData, sortedLevelSeparators };
 };
 
 // fetch text titles from the api

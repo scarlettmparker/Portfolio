@@ -1,6 +1,7 @@
 import styles from '../styles/index.module.css';
 import React, { useState, useEffect } from "react";
 import { hideAnnotationButton, hideAnnotationAnimation, submitAnnotation, fetchAnnotations, handleVote } from "../utils/annotationutils";
+import { AnnotationModalProps } from "../types/types";
 import { BOT_LINK } from "../utils/helperutils";
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -11,17 +12,6 @@ const helper: React.FC = () => {
 };
 
 export default helper;
-
-// annotation modal props
-interface AnnotationModalProps {
-    setCurrentAnnotation: (value: string) => void;
-    currentAnnotation: string;
-    currentLanguage: number;
-    currentText: any;
-    userDetails: any;
-    setCorrectingAnnotation: (value: boolean) => void;
-    setCorrectingAnnotationData: (value: any) => void;
-}
 
 // annotation modal
 export const AnnotationModal: React.FC<AnnotationModalProps> = ({ setCurrentAnnotation, currentAnnotation, currentLanguage, currentText, userDetails, setCorrectingAnnotation, setCorrectingAnnotationData }) => {

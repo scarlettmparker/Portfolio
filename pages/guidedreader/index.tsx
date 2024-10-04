@@ -73,26 +73,6 @@ function Home() {
         fetchDataAsync();
     }, []);
 
-    useEffect(() => {
-        // create an observer to track the level separators
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const index = parseInt(entry.target.getAttribute('data-index') || '0', 10);
-                    setCurrentLevel(textData[index].level);
-                }
-            });
-        }, { threshold: 0.5 });
-
-        // observe the level separators
-        const elements = textListRef.current?.querySelectorAll('.levelSeparator');
-        elements?.forEach(el => observer.observe(el));
-
-        return () => {
-            elements?.forEach(el => observer.unobserve(el));
-        };
-    }, [textData]);
-
     // click event listeners for opening annnotations
     useEffect(() => {
         const currentRef = textContentRef.current;
@@ -190,7 +170,7 @@ function Home() {
                 )}
                 <div className={styles.mainWrapper}>
                     <TextList textData={textData} levelSeparators={levelSeparators} setCurrentText={setCurrentText} setCurrentAnnotation={setCurrentAnnotation}
-                        setCurrentLanguage={setCurrentLanguage} currentText={currentText} textListRef={textListRef} />
+                        setCurrentLanguage={setCurrentLanguage} currentText={currentText} textListRef={textListRef} setCurrentLevel={setCurrentLevel}/>
                     <div className={styles.textWrapper}>
                         <LevelNavigation currentLevel={currentLevel} scrollToLevel={scrollToLevel} />
                         <Toolbar textData={textData} setCurrentAnnotation={setCurrentAnnotation} setCurrentLanguage={setCurrentLanguage} currentText={currentText} setCurrentTextID={setCurrentTextID} />
