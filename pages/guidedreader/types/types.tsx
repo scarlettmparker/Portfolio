@@ -29,6 +29,17 @@ export interface Annotation {
     dislikes: number;
 }
 
+// annotation modal props
+export interface AnnotationModalProps {
+    setCurrentAnnotation: (value: string) => void;
+    currentAnnotation: string;
+    currentLanguage: number;
+    currentText: any;
+    userDetails: any;
+    setCorrectingAnnotation: (value: boolean) => void;
+    setCorrectingAnnotationData: (value: any) => void;
+}
+
 // props for text list
 export interface TextListProps {
     textData: TextData[];
@@ -38,6 +49,7 @@ export interface TextListProps {
     setCurrentLanguage: (language: number) => void;
     currentText: number;
     textListRef: React.RefObject<HTMLDivElement>;
+    setCurrentLevel: (level: string) => void;
 }
 
 // props for toolbar
