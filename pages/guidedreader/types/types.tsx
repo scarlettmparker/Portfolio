@@ -61,6 +61,16 @@ export interface ToolbarProps {
     setCurrentTextID: (id: number) => void;
 }
 
+// button with alt text for toolbar
+export interface ButtonWithAltTextProps {
+    label: string;
+    altText: string;
+    onClick?: () => void;
+    disabled?: boolean;
+    className?: string;
+    buttonRef?: React.RefObject<HTMLButtonElement>;
+}
+
 // level separator interface
 interface LevelSeparator {
     index: number;

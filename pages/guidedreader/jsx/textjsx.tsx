@@ -160,7 +160,7 @@ export const TextModule: React.FC<{
 }> = ({ currentText, textContentRef, textData, renderAnnotatedText, currentLanguage }) => {
     return (
         <div className={styles.textContentWrapper} id="textContentWrapper" ref={textContentRef}>
-            <div className={styles.textContent}>
+            <div className={styles.textContent} id="textContent">
                 {currentText < textData.length && textData[currentText].text?.length > 0 ? (
                     <div key={"textContent0"} className={styles.textContentItem}>
                         <div dangerouslySetInnerHTML={{
