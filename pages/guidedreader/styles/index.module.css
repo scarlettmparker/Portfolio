@@ -317,14 +317,14 @@
     outline: none;
 }
 
-.levelCheckboxes {
+.levelCheckboxes, .fontSizeMenu {
     position: absolute;
     background: white;
     display: flex;
     flex-direction: column;
     font-family: 'Open Sans', sans-serif;
     width: 60px;
-    z-index: 2;
+    z-index: 8;
     padding-top: 10px;
     padding-bottom: 10px;
     padding-right: 5px;
@@ -332,6 +332,15 @@
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     font-size: 1rem;
+}
+
+.fontSizeMenu {
+    flex-direction: row;
+    width: fit-content;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
+    margin-left: -25px;
 }
 
 .levelCheckboxLabel {
@@ -384,7 +393,9 @@
 .annotateButton,
 .submitButton,
 .previewButton,
-.dropdownButton {
+.dropdownButton,
+.fontSizeButton,
+.fontButton {
     background-color: white;
     font-family: 'Open Sans', sans-serif;
     font-size: 1rem;
@@ -396,9 +407,36 @@
 .submitButton:hover,
 .previewButton:hover,
 .annotateButton:hover,
-.dropdownButton:hover {
+.dropdownButton:hover,
+.fontSizeButton:hover,
+.fontButton:hover {
     background-color: #0A2342;
     color: white;
+}
+
+.alt {
+    display: flex;
+    justify-content: center;
+}
+
+.altText {
+    margin-top: 29px;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    z-index: 1000;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #000;
+    position: absolute;
+    color: #fff;
+    white-space: nowrap;
+}
+
+.fontButton {
+    position: relative;
+    margin-left: 6px;
+    margin-right: 2px;
+    width: 30px
 }
 
 .annotationModalText {
@@ -453,6 +491,7 @@
 
 .toolbarWrapper {
     position: absolute;
+    z-index: 10;
     width: 90%;
     height: 50px;
     background-color: #fbfbfb;
@@ -460,6 +499,14 @@
     left: 50%;
     border-radius: 10px;
     transform: translateX(-50%);
+}
+
+.toolbarItems {
+    display: flex;
+    margin-left: 15px;
+    justify-content: first baseline;
+    align-items: center;
+    height: 100%;
 }
 
 .languageChangeWrapper {
