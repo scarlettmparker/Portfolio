@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 import { load } from 'cheerio';
+import rateLimitMiddleware from "@/middleware/rateLimiter";
 
 const detailBaseUrl = "https://www.greek-language.gr";
 
@@ -25,7 +26,7 @@ const fetchDetailData = async (url: string) => {
     }
 };
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+async function handler (req: NextApiRequest, res: NextApiResponse) {
     const { results } = req.body;
 
     if (!Array.isArray(results)) {
@@ -44,3 +45,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const allResults = await Promise.all(requests);
     res.status(200).json({ results: allResults });
 };
+
+export default rateLimitMiddleware(handler);

@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 import { load } from 'cheerio';
+import rateLimitMiddleware from "@/middleware/rateLimiter";
 
 const increment = 20;
 const baseUrl = "https://www.greek-language.gr/certification/dbs/teachers/index.html?start=";
@@ -32,7 +33,7 @@ const fetchData = async (start: number) => {
     }
 };
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+async function handler (req: NextApiRequest, res: NextApiResponse) {
     const numPages = Math.min(parseInt(req.query.numPages as string) || 17, 17);
     const requests = Array.from({ length: numPages }, (_, i) => fetchData(i * increment));
     
@@ -40,3 +41,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const allResults = (await Promise.all(requests)).flat();
     res.status(200).json({ results: allResults });
 };
+
+export default rateLimitMiddleware(handler);

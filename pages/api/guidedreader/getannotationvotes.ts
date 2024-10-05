@@ -1,7 +1,8 @@
 import prisma from '../prismaclient';
 import { NextApiRequest, NextApiResponse } from 'next';
+import rateLimitMiddleware from "@/middleware/rateLimiter";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { annotationId, userId } = req.body;
 
     // get the interaction data from the database
@@ -21,3 +22,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(200).json({ interactionType: 'NONE' });
     }
 }
+
+export default rateLimitMiddleware(handler);

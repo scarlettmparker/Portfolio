@@ -1,7 +1,8 @@
 import prisma from '../prismaclient';
 import { NextApiRequest, NextApiResponse } from 'next';
+import rateLimitMiddleware from "@/middleware/rateLimiter";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+async function handler (req: NextApiRequest, res: NextApiResponse) {
     const textID = req.body.textID;
     try {
         const text = await prisma.text.findUnique({
@@ -14,3 +15,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(500).json({ error: 'Failed to fetch text', details: error });
     }
 }
+
+export default rateLimitMiddleware(handler);
