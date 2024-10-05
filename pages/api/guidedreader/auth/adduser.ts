@@ -2,10 +2,11 @@ import prisma from '../../prismaclient';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getToken } from 'next-auth/jwt';
 import bcrypt from 'bcrypt';
+import rateLimitMiddleware from "@/middleware/rateLimiter";
 
 const SALT_ROUNDS = 10;
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { username, auth, avatar, nickname, levels, discordId } = req.body;
     const currentTime = Math.floor(Date.now() / 1000);
 
@@ -71,3 +72,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     return res.status(200).json({ message: 'User logged in successfully', user: user });
 }
+
+export default rateLimitMiddleware(handler);

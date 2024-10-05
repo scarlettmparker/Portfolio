@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { setCookie } from 'nookies';
 import roles from '../../../guidedreader/data/roles.json';
+import rateLimitMiddleware from "@/middleware/rateLimiter";
 
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
@@ -22,7 +23,7 @@ type Role = {
 // list of roles in greek learning
 const ROLES: Role[] = roles;
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { code } = req.query;
   if (!code) {
     return res.status(400).json({ error: 'No code provided' });
@@ -133,3 +134,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+export default rateLimitMiddleware(handler);

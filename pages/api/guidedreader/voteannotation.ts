@@ -1,8 +1,9 @@
 import prisma from '../prismaclient';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getToken } from 'next-auth/jwt';
+import rateLimitMiddleware from "@/middleware/rateLimiter";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { annotationId, userId, isLike } = req.body;
 
     // get token from request
@@ -116,3 +117,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     return res.status(200).json({ message: 'Success' });
 }
+
+export default rateLimitMiddleware(handler);

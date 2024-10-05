@@ -1,7 +1,8 @@
 import prisma from '../../prismaclient';
 import { NextApiRequest, NextApiResponse } from 'next';
+import rateLimitMiddleware from "@/middleware/rateLimiter";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
     const token = req.headers.authorization;
 
     // verify the user's token
@@ -22,3 +23,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     return res.status(200).json({ user: user });
 }
+
+export default rateLimitMiddleware(handler);

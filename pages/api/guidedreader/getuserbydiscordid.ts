@@ -1,7 +1,8 @@
 import prisma from '../prismaclient';
 import { NextApiRequest, NextApiResponse } from 'next';
+import rateLimitMiddleware from "@/middleware/rateLimiter";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { userId } = req.query;
 
     // check if the userID is valid
@@ -54,3 +55,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(500).json({ error: 'Internal server error', details: error });
     }
 }
+
+export default rateLimitMiddleware(handler);

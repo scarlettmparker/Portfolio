@@ -3,12 +3,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { getToken } from 'next-auth/jwt';
 import DOMPurify from 'dompurify';
 import { JSDOM } from 'jsdom';
+import rateLimitMiddleware from "@/middleware/rateLimiter";
 
 // create a dompurify instance with jsdom
 const window = new JSDOM('').window;
 const domPurify = DOMPurify(window);
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
     // get annotation info from request link
     const { start, end, description, userId, textId, creationDate } = req.body;
 
@@ -40,3 +41,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     return res.status(200).json(annotation);
 }
+
+export default rateLimitMiddleware(handler);

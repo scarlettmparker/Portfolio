@@ -1,7 +1,8 @@
 import prisma from '../prismaclient';
 import { NextApiRequest, NextApiResponse } from 'next';
+import rateLimitMiddleware from "@/middleware/rateLimiter";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     const textObjects = await prisma.textObject.findMany({
       select: {
@@ -15,3 +16,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(500).json({ error: 'Failed to fetch text objects' });
   }
 };
+
+export default rateLimitMiddleware(handler);
