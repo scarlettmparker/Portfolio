@@ -630,19 +630,14 @@
 }
 
 @media screen and (max-width: 925px) {
+    .textItem {
+        font-size: 1rem;
+    }
+    .textContent{
+        font-size: 1rem;
+    }
     .textWrapper {
         width: 90vw;
-    }
-}
-
-@media screen and (max-height: 680px) {
-    .mainWrapper {
-        height: 90vh;
-        top: 0%;
-    }
-
-    .sideWrapper {
-        top: 5%;
     }
 }
 
@@ -653,18 +648,24 @@
 }
 
 @media screen and (max-height: 650px) {
-    .textWrapper {
-        height: 100vh;
-        top: 13%;
+    .mainWrapper {
+        height: 300px;
+        top: 0%;
+        transform: translate(50%, 0%)
     }
-    .textContentWrapper {
-        margin-top: 50px;
+    .textContentWrapper, .textContent, .textContentItem {
+        overflow-y: hidden;
     }
-    .toolbarWrapper {
-        margin-top: 10px;
+    .sideTitleWrapper {
+        display: none;
+    }
+    .textList {
+        margin-top: 0px;
+        bottom: 6%;
     }
     .showButton {
-        margin-top: 84px;
+        margin-top: 80px;
+        margin-left: 20px;
     }
 }
 
@@ -674,6 +675,13 @@
         width: 100vw;
         height: 100vh;
     }
+
+    .annotationModalClose {
+        margin-top: 5px;
+        margin-left: 5px;
+        padding: 20px;
+        font-weight: bold;
+    }
 }
 
 @media screen and (max-width: 400px) {
@@ -682,12 +690,14 @@
     }
     .sideWrapper {
         position: absolute;
-        height: 100vh;
+        height: 800px;
         margin-top: 50px;
     }
+    .textWrapper {
+        height: 800px;
+    }
     .mainWrapper {
-        top: 0%;
+        height: 100vh;
         margin-top: -50px;
-        transform: translate(50%, 0%);
     }
 }
