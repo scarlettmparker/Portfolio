@@ -1,19 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
-.pageWrapper {
-    content: '';
-    width: 100%;
-    height: 100%;
-}
-
 .mainWrapper {
     position: absolute;
     right: 50%;
     top: 50%;
     transform: translate(50%, -50%);
+    margin-right: 100px;
     display: flex;
     flex-direction: row;
-    margin-right: 100px;
 }
 
 .annotationModalClose {
@@ -178,7 +172,7 @@
     width: fit-content;
     color: #38646d;
     user-select: none;
-    
+
     transition: color 0.2s ease-in-out;
     margin-left: 3px;
 }
@@ -189,7 +183,7 @@
 
 .navWrapper {
     position: absolute;
-    width: 750px;
+    width: 100%;
     height: 50px;
     content: '';
     background-color: #0A2342;
@@ -222,32 +216,38 @@
     color: #a8b1be;
 }
 
-.activeNavItemA1, .activeNavItemA1:hover {
+.activeNavItemA1,
+.activeNavItemA1:hover {
     color: #54de8e;
     cursor: default;
 }
 
-.activeNavItemA2, .activeNavItemA2:hover {
+.activeNavItemA2,
+.activeNavItemA2:hover {
     color: #29ccb6;
     cursor: default;
 }
 
-.activeNavItemB1, .activeNavItemB1:hover {
+.activeNavItemB1,
+.activeNavItemB1:hover {
     color: #f5a640;
     cursor: default;
 }
 
-.activeNavItemB2, .activeNavItemB2:hover {
+.activeNavItemB2,
+.activeNavItemB2:hover {
     color: #ff776b;
     cursor: default;
 }
 
-.activeNavItemC1, .activeNavItemC1:hover {
+.activeNavItemC1,
+.activeNavItemC1:hover {
     color: #f25289;
     cursor: default;
 }
 
-.activeNavItemC2, .activeNavItemC2:hover {
+.activeNavItemC2,
+.activeNavItemC2:hover {
     color: #7ea5d6;
     cursor: default;
 }
@@ -317,7 +317,8 @@
     outline: none;
 }
 
-.levelCheckboxes, .fontSizeMenu {
+.levelCheckboxes,
+.fontSizeMenu {
     position: absolute;
     background: white;
     display: flex;
@@ -390,18 +391,41 @@
     margin-right: 10px;
 }
 
+.hideButton {
+    position: relative;
+    float: left;
+    margin-left: 15px;
+    margin-top: 10px;
+}
+
+.showButton {
+    position: absolute;
+    z-index: 10;
+    margin-left: 15px;
+    margin-top: 60px;
+}
+
+.dropdownButton {
+    display: flex;
+    justify-content: center;
+}
+
 .annotateButton,
 .submitButton,
 .previewButton,
 .dropdownButton,
 .fontSizeButton,
-.fontButton {
+.fontButton,
+.showButton,
+.hideButton {
     background-color: white;
     font-family: 'Open Sans', sans-serif;
     font-size: 1rem;
     padding: 2px 10px 2px 10px;
     border-width: 1px;
     border-color: #0A2342;
+    height: 30px;
+    width: 30px;
 }
 
 .submitButton:hover,
@@ -409,7 +433,9 @@
 .annotateButton:hover,
 .dropdownButton:hover,
 .fontSizeButton:hover,
-.fontButton:hover {
+.fontButton:hover,
+.showButton:hover,
+.hideButton:hover {
     background-color: #0A2342;
     color: white;
 }
@@ -420,11 +446,11 @@
 }
 
 .altText {
-    margin-top: 29px;
     padding: 5px;
+    margin-top: 4.5px;
     border-radius: 5px;
     font-size: 0.9rem;
-    z-index: 1000;
+    z-index: 1001;
     font-family: 'Open Sans', sans-serif;
     background-color: #000;
     position: absolute;
@@ -469,6 +495,7 @@
     margin: auto;
     width: 90%;
     padding: 10px;
+    margin-left: 10px;
     margin-bottom: 20px;
     font-size: 1.2rem;
     background-color: #fbfbfb;
@@ -491,8 +518,8 @@
 
 .toolbarWrapper {
     position: absolute;
-    z-index: 10;
-    width: 90%;
+    z-index: 5;
+    width: 80%;
     height: 50px;
     background-color: #fbfbfb;
     margin-top: 75px;
@@ -571,12 +598,40 @@
 
 @media screen and (max-width: 1560px) {
     .mainWrapper {
-        margin-right: 100px;
+        margin-right: 0px;
     }
 }
 
-@media screen and (max-width: 1360px) {
-    .mainWrapper {
-        margin-right: 0px;
+@media screen and (max-width: 1150px) {
+    .textWrapper {
+        border-width: 0px;
+        width: 80vw;
+    }
+
+    .sideWrapper {
+        position: absolute;
+        z-index: 100;
+        border-width: 0px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .sideTitleWrapper {
+        border-radius: 0;
+    }
+
+    .navItemWrapper {
+        align-items: right;
+    }
+}
+
+@media screen and (max-width: 925px) {
+    .textWrapper {
+        width: 90vw;
+    }
+}
+
+@media screen and (max-width: 670px) {
+    .textWrapper {
+        width: 100vw;
     }
 }

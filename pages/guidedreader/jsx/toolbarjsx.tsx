@@ -88,15 +88,27 @@ export const Toolbar: React.FC<ToolbarProps> = ({ textData, setCurrentAnnotation
 }
 
 // button with alt text for the toolbar
-const ButtonWithAltText: React.FC<ButtonWithAltTextProps> = ({ label, altText, onClick, disabled, className, buttonRef }) => {
+export const ButtonWithAltText: React.FC<ButtonWithAltTextProps> = ({ label, altText, onClick, disabled, className, buttonRef }) => {
     const [showAltText, setShowAltText] = useState(false);
+    const altRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (showAltText && altRef.current) {
+            const altTextWidth = altRef.current.offsetWidth;
+            altRef.current.style.marginLeft = `-${altTextWidth / 2 - 4}px`;
+        }
+    }, [showAltText]);
 
     return (
-        <div className={styles.alt}>
-            <button className={className} onClick={onClick} disabled={disabled} onMouseEnter={() => setShowAltText(true)} onMouseLeave={() => setShowAltText(false)} ref={buttonRef}>
+        <>
+            <button className={className} onClick={onClick} disabled={disabled} onMouseEnter={() => setShowAltText(true)} onMouseLeave={() => setShowAltText(false)} ref={buttonRef} >
                 {label}
+                {showAltText && (
+                    <div className={styles.altText} ref={altRef} onMouseEnter={() => setShowAltText(false)}>
+                        {altText}
+                    </div>
+                )}
             </button>
-            {showAltText && <div className={styles.altText}>{altText}</div>}
-        </div>
+        </>
     );
 };
