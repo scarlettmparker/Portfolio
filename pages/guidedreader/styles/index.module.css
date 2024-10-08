@@ -336,6 +336,10 @@
     font-size: 1rem;
 }
 
+.levelCheckboxes {
+    width: 70px;
+}
+
 .fontSizeMenu {
     flex-direction: row;
     width: fit-content;
