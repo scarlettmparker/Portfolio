@@ -173,7 +173,11 @@ export const handleVote = async (annotationId: number, like: boolean, index: num
 // do the annotation animation for the modal
 export function hideAnnotationAnimation(setCurrentAnnotation: ((value: string) => void) | null, elementToHide: string, setCreatingAnnotation?: (value: boolean) => void) {
     let annotationModal = document.getElementById(elementToHide);
-    annotationModal?.classList.add(styles.annotationModalHidden);
+    if (annotationModal) {
+        // Apply initial styles for the transition
+        annotationModal.style.transition = 'transform 1s';
+        annotationModal.style.transform = 'translate(120%, -50%)';
+    }
 
     // wait for the modal to be hidden before resetting the annotation
     setTimeout(() => {

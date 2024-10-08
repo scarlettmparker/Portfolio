@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
+.pageWrapper {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+}
 .mainWrapper {
     position: absolute;
     right: 50%;
@@ -67,17 +72,13 @@
     align-items: center;
     right: 0;
     width: 480px;
-    height: 40rem;
+    height: 640px;
     top: 50%;
     transform: translateY(-50%);
     z-index: 2;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 20px 0 0 20px;
     transition: right 0.5s ease-in-out;
-}
-
-.annotationModalHidden {
-    right: -30rem;
 }
 
 .annotationWrapper {
@@ -425,7 +426,7 @@
     border-width: 1px;
     border-color: #0A2342;
     height: 30px;
-    width: 30px;
+    width: fit-content;
 }
 
 .submitButton:hover,
@@ -630,14 +631,59 @@
     }
 }
 
+@media screen and (max-height: 680px) {
+    .mainWrapper {
+        height: 90vh;
+        top: 0%;
+    }
+
+    .sideWrapper {
+        top: 5%;
+    }
+}
+
 @media screen and (max-width: 670px) {
     .textWrapper {
         width: 100vw;
     }
 }
 
+@media screen and (max-height: 650px) {
+    .textWrapper {
+        height: 100vh;
+        top: 13%;
+    }
+    .textContentWrapper {
+        margin-top: 50px;
+    }
+    .toolbarWrapper {
+        margin-top: 10px;
+    }
+    .showButton {
+        margin-top: 84px;
+    }
+}
+
 @media screen and (max-width: 480px) {
     .annotationModal {
+        margin-top: 30px;
         width: 100vw;
+        height: 100vh;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .navWrapper {
+        display: none;
+    }
+    .sideWrapper {
+        position: absolute;
+        height: 100vh;
+        margin-top: 50px;
+    }
+    .mainWrapper {
+        top: 0%;
+        margin-top: -50px;
+        transform: translate(50%, 0%);
     }
 }
