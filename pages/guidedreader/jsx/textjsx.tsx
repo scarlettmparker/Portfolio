@@ -94,6 +94,9 @@ export const TextList: React.FC<TextListProps> = ({ textData, levelSeparators, s
                                         ) : null}
                                         <div key={"textModule" + originalIndex} onClick={() => {
                                             let textIndex = sortedData.sortedTextData[originalIndex].id - 1;
+                                            if (windowWidth < 1150) {
+                                                setHiddenSidebar(!hiddenSidebar);
+                                            }
                                             setCurrentLanguage(0);
                                             setCurrentAnnotation('');
                                             setCurrentText(textIndex);
