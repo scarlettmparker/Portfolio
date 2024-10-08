@@ -2,6 +2,7 @@ import styles from '../styles/index.module.css';
 import React, { useRef, useState, useEffect } from 'react';
 import { TextListProps } from '../types/types';
 import { sortTextData as sortTextDataUtil, filterTextData, observeLevelSeparators } from '../utils/textutils';
+import { ButtonWithAltText } from './toolbarjsx';
 
 const helper: React.FC = () => {
     return null;
@@ -19,6 +20,10 @@ export const TextList: React.FC<TextListProps> = ({ textData, levelSeparators, s
     const [sortOption, setSortOption] = useState(SORT_OPTIONS[0]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedLevels, setSelectedLevels] = useState(LEVELS);
+    const [hiddenSidebar, setHiddenSidebar] = useState(false);
+
+    const [isMounted, setIsMounted] = useState(false);
+    const [windowWidth, setWindowWidth] = useState(0);
 
     const levelRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
     const { filteredTextData } = filterTextData(sortedData.sortedTextData, selectedLevels, searchTerm);
@@ -33,43 +38,76 @@ export const TextList: React.FC<TextListProps> = ({ textData, levelSeparators, s
         return observeLevelSeparators(textListRef, setCurrentLevel);
     }, [filteredTextData, textListRef, setCurrentLevel]);
 
+    useEffect(() => {
+        setIsMounted(true);
+        setWindowWidth(window.innerWidth);
+
+        // get window width for responsive design
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    })
+
+    useEffect(() => {
+        if (hiddenSidebar) {
+            document.getElementById('mainWrapper')?.setAttribute('style', 'margin-right: 0');
+        } else if (windowWidth > 1560){
+            document.getElementById('mainWrapper')?.setAttribute('style', 'margin-right: 100px');
+        }
+    }, [hiddenSidebar])
+
     return (
-        <div className={styles.sideWrapper}>
-            <div className={styles.sideTitleWrapper}>
-                <span className={styles.sideTitle}>Texts (κείμενα)</span>
-            </div>
-            <div className={styles.textList} ref={textListRef}>
-                <TextFilter sortOptions={SORT_OPTIONS} onSortChange={(newSortOption) => setSortOption(newSortOption)} searchTerm={searchTerm}
-                    onSearchChange={setSearchTerm} selectedLevels={selectedLevels} onLevelChange={setSelectedLevels} />
-                <div className={styles.textItemWrapper}>
-                    {filteredTextData.map(({ title, level }, index) => {
-                        const originalIndex = sortedData.sortedTextData.findIndex(text => text.title === title && text.level === level);
+        <>
+            {!hiddenSidebar ? (
+                <div className={styles.sideWrapper}>
+                    <div className={styles.sideTitleWrapper}>
+                        <span className={styles.sideTitle}>Texts (κείμενα)</span>
+                        {isMounted && (
+                            <>
+                                <ButtonWithAltText label={windowWidth > 1150 ? ">" : "<"} altText="Hide Sidebar" className={styles.hideButton} onClick={() => setHiddenSidebar(!hiddenSidebar)} />
+                            </>
+                        )}
+                    </div>
+                    <div className={styles.textList} ref={textListRef}>
+                        <TextFilter sortOptions={SORT_OPTIONS} onSortChange={(newSortOption) => setSortOption(newSortOption)} searchTerm={searchTerm}
+                            onSearchChange={setSearchTerm} selectedLevels={selectedLevels} onLevelChange={setSelectedLevels} />
+                        <div className={styles.textItemWrapper}>
+                            {filteredTextData.map(({ title, level }, index) => {
+                                const originalIndex = sortedData.sortedTextData.findIndex(text => text.title === title && text.level === level);
 
-                        const previousTextLevel = index > 0 ? filteredTextData[index - 1].level : null;
-                        const shouldShowLevelSeparator = previousTextLevel !== level;
+                                const previousTextLevel = index > 0 ? filteredTextData[index - 1].level : null;
+                                const shouldShowLevelSeparator = previousTextLevel !== level;
 
-                        return (
-                            <React.Fragment key={index}>
-                                {shouldShowLevelSeparator ? (
-                                    <div key={"levelSeparator" + originalIndex} data-index={originalIndex} data-level={level}
-                                        className={`${styles.levelSeparator} levelSeparator`} ref={el => { levelRefs.current[level] = el; }} >
-                                        {level}
-                                    </div>
-                                ) : null}
-                                <div key={"textModule" + originalIndex} onClick={() => {
-                                    let textIndex = sortedData.sortedTextData[originalIndex].id - 1;
-                                    setCurrentLanguage(0);
-                                    setCurrentAnnotation('');
-                                    setCurrentText(textIndex);
-                                }}>
-                                    {TitleModule(title, currentText === originalIndex)}
-                                </div>
-                            </React.Fragment>
-                        );
-                    })}
+                                return (
+                                    <React.Fragment key={index}>
+                                        {shouldShowLevelSeparator ? (
+                                            <div key={"levelSeparator" + originalIndex} data-index={originalIndex} data-level={level}
+                                                className={`${styles.levelSeparator} levelSeparator`} ref={el => { levelRefs.current[level] = el; }} >
+                                                {level}
+                                            </div>
+                                        ) : null}
+                                        <div key={"textModule" + originalIndex} onClick={() => {
+                                            let textIndex = sortedData.sortedTextData[originalIndex].id - 1;
+                                            setCurrentLanguage(0);
+                                            setCurrentAnnotation('');
+                                            setCurrentText(textIndex);
+                                        }}>
+                                            {TitleModule(title, currentText === originalIndex)}
+                                        </div>
+                                    </React.Fragment>
+                                );
+                            })}
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            ) : <ButtonWithAltText label={windowWidth > 1150 ? "<" : ">"} altText="Show Sidebar" className={styles.showButton} onClick={() => setHiddenSidebar(!hiddenSidebar)} />}
+        </>
     );
 };
 

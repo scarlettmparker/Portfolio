@@ -138,44 +138,42 @@ function Home() {
                 <title>Guided Reader</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <div className={styles.pageWrapper}>
-                {isLoggedIn ? (
-                    <IndexUser userDetails={userDetails} />
-                ) : (
-                    <NotLoggedIn />
-                )}
-                {currentAnnotation && (
-                    <>
-                        {creatingAnnotation && hideAnnotationAnimation(setSelectedText, "createAnnotationModal", setCreatingAnnotation)}
-                        {correctingAnnotation && hideAnnotationAnimation(setSelectedText, "createAnnotationModal", setCorrectingAnnotation)}
-                        <AnnotationModal setCurrentAnnotation={setCurrentAnnotation} currentAnnotation={currentAnnotation} currentLanguage={currentLanguage} currentText={textData[currentText]}
-                            userDetails={userDetails} setCorrectingAnnotation={setCorrectingAnnotation} setCorrectingAnnotationData={setCorrectingAnnotationData} />
-                    </>
-                )}
-                {selectedText && !creatingAnnotation && !correctingAnnotation && (
-                    <CreateAnnotationButton buttonPosition={{
-                        x: buttonPosition.x,
-                        y: buttonPosition.y
-                    }} isLoggedIn={isLoggedIn}
-                        setCreatingAnnotation={setCreatingAnnotation}
-                        setCurrentAnnotation={setCurrentAnnotation} />
-                )}
-                {creatingAnnotation && (
-                    <CreatingAnnotationModal setSelectedText={setSelectedText} selectedText={selectedText}
-                        setCreatingAnnotation={setCreatingAnnotation} currentTextID={currentTextID} userDetails={userDetails} charIndex={charIndex} />
-                )}
-                {correctingAnnotation && (
-                    <CorrectingAnnotationModal setCreatingAnnotation={setCorrectingAnnotation} userDetails={userDetails}
-                        currentTextID={currentTextID} currentText={currentTextData.text[currentLanguage].text} correctingAnnotationData={correctingAnnotationData} />
-                )}
-                <div className={styles.mainWrapper}>
-                    <TextList textData={textData} levelSeparators={levelSeparators} setCurrentText={setCurrentText} setCurrentAnnotation={setCurrentAnnotation}
-                        setCurrentLanguage={setCurrentLanguage} currentText={currentText} textListRef={textListRef} setCurrentLevel={setCurrentLevel}/>
-                    <div className={styles.textWrapper}>
-                        <LevelNavigation currentLevel={currentLevel} scrollToLevel={scrollToLevel} />
-                        <Toolbar textData={textData} setCurrentAnnotation={setCurrentAnnotation} setCurrentLanguage={setCurrentLanguage} currentText={currentText} setCurrentTextID={setCurrentTextID} />
-                        <TextModule currentText={currentText} textContentRef={textContentRef} textData={textData} renderAnnotatedText={renderAnnotatedText} currentLanguage={currentLanguage} />
-                    </div>
+            {isLoggedIn ? (
+                <IndexUser userDetails={userDetails} />
+            ) : (
+                <NotLoggedIn />
+            )}
+            {currentAnnotation && (
+                <>
+                    {creatingAnnotation && hideAnnotationAnimation(setSelectedText, "createAnnotationModal", setCreatingAnnotation)}
+                    {correctingAnnotation && hideAnnotationAnimation(setSelectedText, "createAnnotationModal", setCorrectingAnnotation)}
+                    <AnnotationModal setCurrentAnnotation={setCurrentAnnotation} currentAnnotation={currentAnnotation} currentLanguage={currentLanguage} currentText={textData[currentText]}
+                        userDetails={userDetails} setCorrectingAnnotation={setCorrectingAnnotation} setCorrectingAnnotationData={setCorrectingAnnotationData} />
+                </>
+            )}
+            {selectedText && !creatingAnnotation && !correctingAnnotation && (
+                <CreateAnnotationButton buttonPosition={{
+                    x: buttonPosition.x,
+                    y: buttonPosition.y
+                }} isLoggedIn={isLoggedIn}
+                    setCreatingAnnotation={setCreatingAnnotation}
+                    setCurrentAnnotation={setCurrentAnnotation} />
+            )}
+            {creatingAnnotation && (
+                <CreatingAnnotationModal setSelectedText={setSelectedText} selectedText={selectedText}
+                    setCreatingAnnotation={setCreatingAnnotation} currentTextID={currentTextID} userDetails={userDetails} charIndex={charIndex} />
+            )}
+            {correctingAnnotation && (
+                <CorrectingAnnotationModal setCreatingAnnotation={setCorrectingAnnotation} userDetails={userDetails}
+                    currentTextID={currentTextID} currentText={currentTextData.text[currentLanguage].text} correctingAnnotationData={correctingAnnotationData} />
+            )}
+            <div className={styles.mainWrapper} id="mainWrapper">
+                <TextList textData={textData} levelSeparators={levelSeparators} setCurrentText={setCurrentText} setCurrentAnnotation={setCurrentAnnotation}
+                    setCurrentLanguage={setCurrentLanguage} currentText={currentText} textListRef={textListRef} setCurrentLevel={setCurrentLevel} />
+                <div className={styles.textWrapper}>
+                    <LevelNavigation currentLevel={currentLevel} scrollToLevel={scrollToLevel} />
+                    <Toolbar textData={textData} setCurrentAnnotation={setCurrentAnnotation} setCurrentLanguage={setCurrentLanguage} currentText={currentText} setCurrentTextID={setCurrentTextID} />
+                    <TextModule currentText={currentText} textContentRef={textContentRef} textData={textData} renderAnnotatedText={renderAnnotatedText} currentLanguage={currentLanguage} />
                 </div>
             </div>
         </>
