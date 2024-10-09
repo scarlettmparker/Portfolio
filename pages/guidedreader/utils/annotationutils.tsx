@@ -102,7 +102,7 @@ export async function submitAnnotation(selectedText: string | null = null, annot
         description: annotationText,
         userId: userDetails.user.id,
         textId: currentTextID,
-        creationDate: currentTime
+        creationDate: currentTime,
     };
 
     // send the annotation to the database

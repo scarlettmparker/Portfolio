@@ -1,6 +1,5 @@
 import prisma from '../../prismaclient';
 import { NextApiRequest, NextApiResponse } from 'next';
-import bcrypt from 'bcrypt'; // Import bcrypt for hashing
 import rateLimitMiddleware from "@/middleware/rateLimiter";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -26,8 +25,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // return only necessary user information
-    const { username, discordId, avatar, nickname, levels } = user;
-    return res.status(200).json({ user: { username, discordId, avatar, nickname, levels } });
+    const { id, username, discordId, avatar, nickname, levels } = user;
+    return res.status(200).json({ user: { id, username, discordId, avatar, nickname, levels } });
 }
 
 export default rateLimitMiddleware(handler);

@@ -24,19 +24,20 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const sanitizedDescription = domPurify.sanitize(description);
 
     // create annotation
-    let annotation = await prisma.annotation.create({
-        data: {
-            start: start,
-            end: end,
-            description: sanitizedDescription,
-            userId: userId,
-            textId: textId,
-            creationDate: creationDate
-        }
-    });
-
-    if (!annotation) {
-        return res.status(500).json({ error: 'Failed to create annotation' });
+    let annotation;
+    try {
+        annotation = await prisma.annotation.create({
+            data: {
+                start: start,
+                end: end,
+                description: sanitizedDescription,
+                userId: userId,
+                textId: textId,
+                creationDate: creationDate,
+            }
+        });
+    } catch (error: any) {
+        return res.status(500).json({ error: 'Failed to create annotation', details: error.message });
     }
 
     return res.status(200).json(annotation);
