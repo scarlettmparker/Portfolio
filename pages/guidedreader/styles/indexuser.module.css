@@ -18,7 +18,7 @@
     user-select: none;
     width: fit-content;
     position: absolute;
-    right: 10px;
+    right: 40px;
     top: 3px;
 }
 
@@ -47,5 +47,9 @@
 @media screen and (max-width: 670px) {
     .signIn {
         right: 30px;
+    }
+
+    .avatarWrapper {
+        right: 20px;
     }
 }
