@@ -159,7 +159,7 @@ export const CreatingAnnotationModal = ({ setSelectedText, selectedText, setCrea
     { setSelectedText: (value: string) => void, selectedText: string, setCreatingAnnotation: (value: boolean) => void, userDetails: any, currentTextID: number, charIndex: number }
 ) => {
     const [annotationText, setAnnotationText] = useState("");
-    const handleSubmit = async () => {
+    const handleSubmit = async () => {        
         let result = await submitAnnotation(selectedText, annotationText, userDetails, currentTextID, charIndex);
         // successfully submitted annotation
         if (result == 0) {

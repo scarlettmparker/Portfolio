@@ -2,7 +2,6 @@ import './styles/global.css';
 import Head from 'next/head';
 import styles from './styles/index.module.css';
 import { useEffect, useState, useRef } from 'react';
-import { parseCookies } from 'nookies';
 import { TextObject } from './types/types'
 import { useRouter } from 'next/router';
 import { renderAnnotatedText } from './utils/renderutils';
