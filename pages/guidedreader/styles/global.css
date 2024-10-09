@@ -1,6 +1,8 @@
-html, body {
+html,
+body {
     overflow-x: hidden;
-    min-height: 100dvh; min-width: 100vw;
+    min-height: 100dvh;
+    min-width: 100vw;
     margin: 0;
 }
 
@@ -23,3 +25,4 @@ a:hover {
 a:active {
     text-decoration: none;
 }
+

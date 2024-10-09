@@ -269,7 +269,8 @@
     border-radius: 10px 10px 10px 0;
     border-color: rgba(0, 0, 0, 0.1);
     border-width: 2px;
-    margin-bottom: 100px; /* just for some extra space */
+    margin-bottom: 100px;
+    /* just for some extra space */
 }
 
 .sideWrapper {
@@ -662,6 +663,14 @@
 }
 
 @media screen and (max-height: 650px) {
+    .textContentWrapper {
+        height: fit-content;
+    }
+
+    .textWrapper {
+        padding-bottom: 350px;
+    }
+
     .mainWrapper {
         margin-top: 0px;
         height: 300px;
@@ -685,14 +694,7 @@
     .correctionWrapper {
         bottom: 15px;
     }
-
-    .textContentWrapper,
-    .textContent,
-    .textContentItem {
-        overflow-y: hidden;
-    }
 }
-
 
 @media screen and (max-width: 540px) {
     .navWrapper {
@@ -725,7 +727,7 @@
     }
 
     .annotationModal {
-        top: 80px;  
+        top: 80px;
     }
 
     .sideWrapper {
