@@ -14,13 +14,40 @@ import { IndexUser, NotLoggedIn } from './jsx/indexuserjsx';
 import { LevelNavigation, TextList, TextModule } from './jsx/textjsx';
 import { AnnotationModal, CreatingAnnotationModal, CreateAnnotationButton, CorrectingAnnotationModal } from './jsx/annotationjsx';
 import { Toolbar } from './jsx/toolbarjsx';
+import { GetServerSideProps } from 'next';
+import { parse } from 'cookie';
+
+// get server side props for user details
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    // get the user token from the cookies
+    const { req } = context;
+    const cookies = parse(req.headers.cookie || '');
+    const userToken = cookies.token;
+
+    let user = null;
+    if (userToken) {
+        // get the user details
+        const response = await getUserDetails(userToken, req);
+        if (response.ok) {
+            user = await response.json();
+        }
+    }
+
+    // return the user details
+    return {
+        props: {
+            user: user || null,
+        },
+    };
+};
 
 // home page component
-function Home() {
+function Home({ user }: any) {
     // react states yahoooo
     const [textData, setTextData] = useState<TextObject[]>([]);
     const [currentText, setCurrentText] = useState<number>(textData[0]?.id || 0);
     const [currentTextID, setCurrentTextID] = useState<number>(0);
+    const [hasURLData, setHasURLData] = useState<boolean>(false);
 
     const [levelSeparators, setLevelSeparators] = useState<{ index: number, level: string }[]>([]);
     const [currentLevel, setCurrentLevel] = useState<string>('');
@@ -43,20 +70,9 @@ function Home() {
     const router = useRouter();
 
     useEffect(() => {
-        const cookies = parseCookies();
-        const userToken = cookies.token;
-
-        // get the user details if the token exists
-        if (userToken) {
-            getUserDetails(userToken).then(response => response.json()).then(data => {
-                // if the user doesn't exist, clear the cookies
-                if (!data.user) {
-                    clearCookies();
-                } else {
-                    setUserDetails(data);
-                    setIsLoggedIn(true);
-                }
-            });
+        if (user) {
+            setUserDetails(user);
+            setIsLoggedIn(true);
         }
     }, []);
 
@@ -101,6 +117,7 @@ function Home() {
             const foundTextIndex = textData.findIndex(text => text.id === Number(textID));
             if (foundTextIndex !== -1) {
                 setCurrentText(foundTextIndex);
+                setHasURLData(true);
             } else {
                 setCurrentText(0); // fallback to default if not found
             }
@@ -169,7 +186,7 @@ function Home() {
             )}
             <div className={styles.mainWrapper} id="mainWrapper">
                 <TextList textData={textData} levelSeparators={levelSeparators} setCurrentText={setCurrentText} setCurrentAnnotation={setCurrentAnnotation}
-                    setCurrentLanguage={setCurrentLanguage} currentText={currentText} textListRef={textListRef} setCurrentLevel={setCurrentLevel} />
+                    setCurrentLanguage={setCurrentLanguage} currentText={currentText} textListRef={textListRef} setCurrentLevel={setCurrentLevel} hasURLData={hasURLData}/>
                 <div className={styles.textWrapper}>
                     <LevelNavigation currentLevel={currentLevel} scrollToLevel={scrollToLevel} />
                     <Toolbar textData={textData} setCurrentAnnotation={setCurrentAnnotation} setCurrentLanguage={setCurrentLanguage} currentText={currentText} setCurrentTextID={setCurrentTextID} />

@@ -5,72 +5,93 @@ import bcrypt from 'bcrypt';
 import rateLimitMiddleware from "@/middleware/rateLimiter";
 
 const SALT_ROUNDS = 10;
+const DISCORD_USER_URL = 'https://discord.com/api/users/@me';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { username, auth, avatar, nickname, levels, discordId } = req.body;
     const currentTime = Math.floor(Date.now() / 1000);
 
-    console.log('Received body:', req.body);
-    console.log('Auth token:', auth);
-
-    // ensure request body is valid
+    // ensure request body is valid and sanitize inputs
     if (!username || !auth || !levels || !discordId) {
         return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // hash the uath token
+    // sanitize inputs
+    const sanitizedUsername = username.trim();
+    const sanitizedAvatar = avatar ? avatar.trim() : null;
+    const sanitizedNickname = nickname ? nickname.trim() : null;
+    const sanitizedLevels = Array.isArray(levels) ? levels.map(level => level.trim()) : [];
+
+    // hash the auth token
     const hashedAuth = await bcrypt.hash(auth, SALT_ROUNDS);
 
-    // check if the user already exists
-    let user = await prisma.user.findUnique({
-        where: {
-            discordId: discordId,
-        },
-    });
-
-    if (!user) {
-        // user doesn't exist, create the user
-        user = await prisma.user.create({
-            data: {
-                username: username,
-                levels: levels,
-                auth: hashedAuth,
-                avatar: avatar,
-                nickname: nickname,
-                discordId: discordId,
-                accountCreationDate: currentTime,
-            }
+    // verify the user's token with discord
+    try {
+        const response = await fetch(DISCORD_USER_URL, {
+            headers: {
+                Authorization: `Bearer ${auth}`,
+            },
         });
-        if (!user) {
-            return res.status(500).json({ error: 'Failed to create user' });
+
+        // if verification fails return an unauthorized response
+        if (!response.ok) {
+            return res.status(401).json({ error: 'Invalid access token' });
         }
-    } else {
-        // user exists, update the user
-        user = await prisma.user.update({
+
+        // proceed with user creation or update
+        let user = await prisma.user.findUnique({
             where: {
                 discordId: discordId,
             },
-            data: {
-                username: username,
-                levels: levels,
-                auth: hashedAuth,
-                avatar: avatar,
-                nickname: nickname,
-            }
         });
+
         if (!user) {
-            return res.status(500).json({ error: 'Failed to update user' });
+            // user doesn't exist, create the user
+            user = await prisma.user.create({
+                data: {
+                    username: sanitizedUsername,
+                    levels: sanitizedLevels,
+                    auth: hashedAuth,
+                    avatar: sanitizedAvatar,
+                    nickname: sanitizedNickname,
+                    discordId: discordId,
+                    accountCreationDate: currentTime,
+                }
+            });
+            if (!user) {
+                return res.status(500).json({ error: 'Failed to create user' });
+            }
+        } else {
+            // user exists, update the user
+            user = await prisma.user.update({
+                where: {
+                    discordId: discordId,
+                },
+                data: {
+                    username: sanitizedUsername,
+                    levels: sanitizedLevels,
+                    auth: hashedAuth,
+                    avatar: sanitizedAvatar,
+                    nickname: sanitizedNickname,
+                }
+            });
+            if (!user) {
+                return res.status(500).json({ error: 'Failed to update user' });
+            }
         }
+    
+        // verify the user's token
+        const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET, raw: true });
+    
+        if (!token) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+    
+        return res.status(200).json({ message: 'User logged in successfully', user: user });
+    } catch (error) {
+        console.error('Error during Discord user verification:', error);
+        return res.status(500).json({ error: 'Internal server error' });
     }
-
-    // verify the user's token
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET, raw: true });
-
-    if (!token) {
-        return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    return res.status(200).json({ message: 'User logged in successfully', user: user });
 }
 
 export default rateLimitMiddleware(handler);

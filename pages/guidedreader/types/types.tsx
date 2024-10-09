@@ -50,6 +50,7 @@ export interface TextListProps {
     currentText: number;
     textListRef: React.RefObject<HTMLDivElement>;
     setCurrentLevel: (level: string) => void;
+    hasURLData: boolean;
 }
 
 // props for toolbar
