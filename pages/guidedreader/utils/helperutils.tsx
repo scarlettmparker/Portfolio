@@ -1,5 +1,7 @@
 import roles from '../data/roles.json';
+import { IncomingMessage } from 'http';
 import { TextObject } from '../types/types';
+import { NextApiRequest } from 'next';
 
 const helper: React.FC = () => {
     return null;
@@ -18,12 +20,20 @@ export const clearCookies = () => {
 };
 
 // get user details using auth token
-export async function getUserDetails(auth: string) {
-    return fetch('./api/guidedreader/auth/getuser', {
+export async function getUserDetails(auth: string, req: IncomingMessage) {
+    const nextApiReq = req as NextApiRequest;
+
+    // construct the base URL using the request object
+    const protocol = req.headers['x-forwarded-proto'] || 'http';
+    const baseUrl = `${protocol}://${nextApiReq.headers.host}`;
+    const url = `${baseUrl}/api/guidedreader/auth/getuser`;
+
+    // uses absolute url due to ?textId stuff and other query params
+    return fetch(url, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': auth,
+            'Authorization': `Bearer ${auth}`,
         },
     });
 }

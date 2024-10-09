@@ -61,10 +61,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     });
 
     // if the guilds request fails, return an error
-    const guilds = await guildsResponse.json();
     if (!guildsResponse.ok) {
       return res.status(500).json({ error: 'Failed to fetch user guilds' });
     }
+
+    const guilds = await guildsResponse.json();
 
     // check if the user is in the Greek Learning Guild and return their roles
     const isInGreekLearningGuild = guilds.some((guild: any) => guild.id === GREEK_LEARNING_GUILD_ID);
@@ -75,55 +76,58 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         },
       });
 
-      // if the roles request fails, return an error
-      const roles = await rolesResponse.json();
       if (!rolesResponse.ok) {
         return res.status(500).json({ error: 'Failed to fetch user roles' });
-      } else {
-        let userRoles: Role[] = [];
-        roles.roles.forEach((role: any) => {
-          // check if the user has any of the required roles to contribute to texts
-          const roleData = ROLES.find(r => r.id == role);
-          if (roleData) {
-            userRoles.push(roleData);
-          }
-        });
-        if (userRoles.length > 0) {
-          const createUser = await fetch('http://localhost:3000/api/guidedreader/auth/adduser', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${access_token}`, // include the access token in the request
-            },
-            body: JSON.stringify({
-              username: roles.user.username,
-              auth: access_token,
-              avatar: roles.user.avatar,
-              nickname: roles.nick,
-              levels: userRoles.map(role => role.id.toString()),
-              discordId: roles.user.id,
-            }),
-          });
+      }
 
-          // if the user creation fails, return an error
-          if (!createUser.ok) {
-            return res.status(500).json({ error: 'Failed to create user' });
-          }
-
-          // if the user is created successfully, set the session token and redirect to /guidedreader
-          const userData = await createUser.json();
-          const sessionToken = userData.user.auth;
-
-          setCookie({ res }, 'token', sessionToken, {
-            maxAge: 3 * 24 * 60 * 60, // 3 days
-            path: '/',
-          });
-
-          // redirect to /guidedreader after successful login
-          return res.redirect(302, '/guidedreader');
-        } else {
-          return res.status(403).json({ error: 'You do not have the required roles to contribute to texts' });
+      // if the roles request fails, return an error
+      const roles = await rolesResponse.json();
+      let userRoles: Role[] = [];
+      roles.roles.forEach((role: any) => {
+        // check if the user has any of the required roles to contribute to texts
+        const roleData = ROLES.find(r => r.id == role);
+        if (roleData) {
+          userRoles.push(roleData);
         }
+      });
+
+      if (userRoles.length > 0) {
+        const createUser = await fetch('http://localhost:3000/api/guidedreader/auth/adduser', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${access_token}`,
+          },
+          body: JSON.stringify({
+            username: roles.user.username,
+            auth: access_token,
+            avatar: roles.user.avatar,
+            nickname: roles.nick,
+            levels: userRoles.map(role => role.id.toString()),
+            discordId: roles.user.id,
+          }),
+        });
+
+        // if the user creation fails, return an error
+        if (!createUser.ok) {
+          return res.status(500).json({ error: 'Failed to create useaaar' });
+        }
+
+        // if the user is created successfully, set the session token and redirect to /guidedreader
+        const userData = await createUser.json();
+        const sessionToken = userData.user.auth;
+
+        setCookie({ res }, 'token', sessionToken, {
+          maxAge: 3 * 24 * 60 * 60, // 3 days
+          secure: process.env.NODE_ENV === 'production',
+          httpOnly: true, // no client side access to the cookie
+          path: '/',
+        });
+
+        // redirect to /guidedreader after successful login
+        return res.redirect(302, '/guidedreader');
+      } else {
+        return res.status(403).json({ error: 'You do not have the required roles to contribute to texts' });
       }
     } else {
       return res.status(403).json({ error: 'You are not a member of the Greek Learning Guild' });

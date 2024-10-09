@@ -66,8 +66,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({ textData, setCurrentAnnotation
                     <ButtonWithAltText label="T" altText="Font Size" onClick={toggleFontSizeMenu} className={styles.fontSizeButton} buttonRef={fontSizeButtonRef} />
                     {fontSizeMenuVisible && (
                         <div className={styles.fontSizeMenu} ref={fontSizeMenuRef}>
-                            <button className={styles.fontButton} onClick={() => changeFontSize('+')} disabled={isIncreaseDisabled}>+</button>
                             <button className={styles.fontButton} onClick={() => changeFontSize('-')} disabled={isDecreaseDisabled}>-</button>
+                            <button className={styles.fontButton} onClick={() => changeFontSize('+')} disabled={isIncreaseDisabled}>+</button>
                         </div>
                     )}
                 </div>

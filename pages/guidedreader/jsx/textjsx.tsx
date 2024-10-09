@@ -15,7 +15,7 @@ const SORT_OPTIONS = ['Level A-C', 'Level C-A'];
 const LEVELS = ['Α1', 'Α2', 'Β1', 'Β2', 'Γ1', 'Γ2'];
 
 // text list component (left bar)
-export const TextList: React.FC<TextListProps> = ({ textData, levelSeparators, setCurrentText, setCurrentAnnotation, setCurrentLanguage, currentText, textListRef, setCurrentLevel }) => {
+export const TextList: React.FC<TextListProps> = ({ textData, levelSeparators, setCurrentText, setCurrentAnnotation, setCurrentLanguage, currentText, textListRef, setCurrentLevel, hasURLData }) => {
     const [sortedData, setSortedData] = useState({ sortedTextData: textData, sortedLevelSeparators: levelSeparators });
     const [sortOption, setSortOption] = useState(SORT_OPTIONS[0]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -55,12 +55,23 @@ export const TextList: React.FC<TextListProps> = ({ textData, levelSeparators, s
     })
 
     useEffect(() => {
-        if (hiddenSidebar) {
-            document.getElementById('mainWrapper')?.setAttribute('style', 'margin-right: 0');
-        } else if (windowWidth > 1560){
-            document.getElementById('mainWrapper')?.setAttribute('style', 'margin-right: 100px');
+        // if the user loads on a specific text and may be on mobile
+        if (hasURLData && window.innerWidth < 1150) {
+            setHiddenSidebar(true);
         }
-    }, [hiddenSidebar])
+    }, [hasURLData])
+
+    useEffect(() => {
+        // change the margin of the main wrapper based on the sidebar visibility
+        // this is for if someone suddenly decides to change the screen size
+        if (hiddenSidebar && windowWidth > 1560) {
+            document.getElementById('mainWrapper')?.setAttribute('style', 'margin-right: 0');
+        } else if (!hiddenSidebar && windowWidth > 1560) {
+            document.getElementById('mainWrapper')?.setAttribute('style', 'margin-right: 100px');
+        } else if (!hiddenSidebar && windowWidth < 1560) {
+            document.getElementById('mainWrapper')?.setAttribute('style', 'margin-right: 0');
+        }
+    }, [hiddenSidebar, windowWidth])
 
     return (
         <>

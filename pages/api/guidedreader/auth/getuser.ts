@@ -1,15 +1,19 @@
 import prisma from '../../prismaclient';
 import { NextApiRequest, NextApiResponse } from 'next';
+import bcrypt from 'bcrypt'; // Import bcrypt for hashing
 import rateLimitMiddleware from "@/middleware/rateLimiter";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const token = req.headers.authorization;
+    const authHeader = req.headers.authorization;
 
-    // verify the user's token
-    if (!token) {
+    // ensure auth header is present
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({ error: 'Unauthorized' });
     }
 
+    const token = authHeader.split(' ')[1];
+
+    // verify the user's token in the database
     const user = await prisma.user.findFirst({
         where: {
             auth: token
@@ -21,7 +25,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    return res.status(200).json({ user: user });
+    // return only necessary user information
+    const { username, discordId, avatar, nickname, levels } = user;
+    return res.status(200).json({ user: { username, discordId, avatar, nickname, levels } });
 }
 
 export default rateLimitMiddleware(handler);
