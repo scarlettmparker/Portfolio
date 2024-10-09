@@ -269,7 +269,8 @@
     border-radius: 10px 10px 10px 0;
     border-color: rgba(0, 0, 0, 0.1);
     border-width: 2px;
-    margin-bottom: 100px; /* just for some extra space */
+    margin-bottom: 100px;
+    /* just for some extra space */
 }
 
 .sideWrapper {
@@ -685,12 +686,6 @@
     .correctionWrapper {
         bottom: 15px;
     }
-
-    .textContentWrapper,
-    .textContent,
-    .textContentItem {
-        overflow-y: hidden;
-    }
 }
 
 
@@ -725,7 +720,7 @@
     }
 
     .annotationModal {
-        top: 80px;  
+        top: 80px;
     }
 
     .sideWrapper {
