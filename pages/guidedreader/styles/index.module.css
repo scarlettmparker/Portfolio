@@ -1,16 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 .pageWrapper {
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
+    width: fit-content;
 }
+
 .mainWrapper {
     position: absolute;
     right: 50%;
-    top: 50%;
-    transform: translate(50%, -50%);
+    transform: translateX(50%);
+    margin-top: 60px;
     margin-right: 100px;
+    width: fit-content;
     display: flex;
     flex-direction: row;
 }
@@ -73,8 +73,7 @@
     right: 0;
     width: 480px;
     height: 640px;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 120px;
     z-index: 2;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 20px 0 0 20px;
@@ -164,7 +163,7 @@
 
 .correctionWrapper {
     position: absolute;
-    bottom: 2%;
+    bottom: 10px;
 }
 
 .correctionText {
@@ -173,7 +172,6 @@
     width: fit-content;
     color: #38646d;
     user-select: none;
-
     transition: color 0.2s ease-in-out;
     margin-left: 3px;
 }
@@ -271,6 +269,7 @@
     border-radius: 10px 10px 10px 0;
     border-color: rgba(0, 0, 0, 0.1);
     border-width: 2px;
+    margin-bottom: 100px; /* just for some extra space */
 }
 
 .sideWrapper {
@@ -622,72 +621,129 @@
 
     .sideTitleWrapper {
         border-radius: 0;
+        display: none;
+    }
+
+    .textList {
+        top: 0px;
     }
 
     .navItemWrapper {
         align-items: right;
     }
+
+    .showButton {
+        margin-top: 85px;
+    }
 }
 
 @media screen and (max-width: 925px) {
+    .textItem {
+        font-size: 1rem;
+    }
+
+    .textContent {
+        font-size: 1rem;
+    }
+
     .textWrapper {
         width: 90vw;
     }
 }
 
-@media screen and (max-height: 680px) {
-    .mainWrapper {
-        height: 90vh;
-        top: 0%;
-    }
-
-    .sideWrapper {
-        top: 5%;
-    }
-}
-
 @media screen and (max-width: 670px) {
+    .mainWrapper {
+        width: fit-content;
+    }
+
     .textWrapper {
         width: 100vw;
     }
 }
 
 @media screen and (max-height: 650px) {
-    .textWrapper {
-        height: 100vh;
-        top: 13%;
+    .mainWrapper {
+        margin-top: 0px;
+        height: 300px;
     }
-    .textContentWrapper {
+
+    .annotationModal {
+        width: 60vw;
+        height: 550px;
+    }
+
+    .textContentWrapper,
+    .textContent,
+    .textContentItem {
+        overflow-y: hidden;
+    }
+}
+
+
+@media screen and (max-width: 540px) {
+    .navWrapper {
+        display: none;
+    }
+
+    .searchInput {
+        width: 60vw;
+    }
+
+    .textFilterWrapper {
+        width: 95vw;
+        overflow-x: hidden;
+    }
+
+    .textItemWrapper {
+        width: 100vw;
+        overflow-x: hidden;
+    }
+
+    .textList {
+        overflow-x: hidden;
+    }
+
+    .textItem {
+        margin-left: 0px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .annotationModal {
+        top: 80px;  
+    }
+
+    .sideWrapper {
+        position: absolute;
+        width: 100vw;
+        height: 800px;
         margin-top: 50px;
     }
-    .toolbarWrapper {
-        margin-top: 10px;
-    }
+
     .showButton {
-        margin-top: 84px;
+        margin-left: 0px;
+    }
+
+    .textWrapper {
+        height: 800px;
+    }
+
+    .mainWrapper {
+        height: 100vh;
+        margin-top: -50px;
     }
 }
 
 @media screen and (max-width: 480px) {
     .annotationModal {
-        margin-top: 30px;
         width: 100vw;
         height: 100vh;
     }
-}
 
-@media screen and (max-width: 400px) {
-    .navWrapper {
-        display: none;
-    }
-    .sideWrapper {
-        position: absolute;
-        height: 100vh;
-        margin-top: 50px;
-    }
-    .mainWrapper {
-        top: 0%;
-        margin-top: -50px;
-        transform: translate(50%, 0%);
+    .annotationModalClose {
+        margin-top: 5px;
+        margin-left: 5px;
+        padding: 20px;
+        font-weight: bold;
     }
 }

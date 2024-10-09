@@ -138,11 +138,6 @@ function Home() {
                 <title>Guided Reader</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            {isLoggedIn ? (
-                <IndexUser userDetails={userDetails} />
-            ) : (
-                <NotLoggedIn />
-            )}
             {currentAnnotation && (
                 <>
                     {creatingAnnotation && hideAnnotationAnimation(setSelectedText, "createAnnotationModal", setCreatingAnnotation)}
@@ -166,6 +161,11 @@ function Home() {
             {correctingAnnotation && (
                 <CorrectingAnnotationModal setCreatingAnnotation={setCorrectingAnnotation} userDetails={userDetails}
                     currentTextID={currentTextID} currentText={currentTextData.text[currentLanguage].text} correctingAnnotationData={correctingAnnotationData} />
+            )}
+            {isLoggedIn ? (
+                <IndexUser userDetails={userDetails} />
+            ) : (
+                <NotLoggedIn />
             )}
             <div className={styles.mainWrapper} id="mainWrapper">
                 <TextList textData={textData} levelSeparators={levelSeparators} setCurrentText={setCurrentText} setCurrentAnnotation={setCurrentAnnotation}

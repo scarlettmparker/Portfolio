@@ -1,22 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 .profileWrapper {
-    position: absolute;
+    position: relative;
     display: flex;
     flex-direction: column;
-    right: 0;
+    justify-content: right;
+    align-items: center;
     z-index: 2;
-    margin-top: 15px;
-    margin-right: 30px;
     font-family: 'Open Sans', sans-serif;
+    background-color: rgb(23, 23, 23);
+    height: 56px;
+    width: 100vw;
 }
 
 .avatarWrapper {
     display: flex;
-    justify-content: right;
-    align-items: center;
     user-select: none;
-    margin-bottom: 5px;
+    width: fit-content;
+    position: absolute;
+    right: 10px;
+    top: 3px;
 }
 
 .avatar {
@@ -28,16 +31,15 @@
 }
 
 .signIn {
+    position: absolute;
+    right: 50px;
+    top: 49%;
+    transform: translateY(-50%);
+    color: white;
     transition: color 0.3s ease-in-out;
     cursor: pointer;
 }
 
 .signIn:hover {
     color: #e85548;
-}
-
-@media screen and (max-width: 670px) {
-    .profileWrapper {
-        display: none;
-    }
 }
