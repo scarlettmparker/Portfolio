@@ -667,9 +667,23 @@
         height: 300px;
     }
 
+    .navWrapper {
+        border-radius: 0;
+    }
+
+    .singleAnnotationWrapper {
+        margin-left: 2px;
+    }
+
     .annotationModal {
-        width: 60vw;
+        margin-top: -20px;
+        width: 80vw;
         height: 550px;
+        padding-bottom: 25px;
+    }
+
+    .correctionWrapper {
+        bottom: 15px;
     }
 
     .textContentWrapper,
@@ -737,7 +751,10 @@
 @media screen and (max-width: 480px) {
     .annotationModal {
         width: 100vw;
-        height: 100vh;
+    }
+
+    .singleAnnotationWrapper {
+        margin-left: 0px;
     }
 
     .annotationModalClose {
@@ -745,5 +762,9 @@
         margin-left: 5px;
         padding: 20px;
         font-weight: bold;
+    }
+
+    .correctionText {
+        margin-left: 0px;
     }
 }

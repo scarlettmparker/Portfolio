@@ -43,3 +43,9 @@
 .signIn:hover {
     color: #e85548;
 }
+
+@media screen and (max-width: 670px) {
+    .signIn {
+        right: 30px;
+    }
+}
