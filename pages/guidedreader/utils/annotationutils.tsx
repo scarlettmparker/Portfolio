@@ -176,7 +176,7 @@ export function hideAnnotationAnimation(setCurrentAnnotation: ((value: string) =
     if (annotationModal) {
         // Apply initial styles for the transition
         annotationModal.style.transition = 'transform 1s';
-        annotationModal.style.transform = 'translate(120%, -50%)';
+        annotationModal.style.transform = 'translateX(120%)';
     }
 
     // wait for the modal to be hidden before resetting the annotation

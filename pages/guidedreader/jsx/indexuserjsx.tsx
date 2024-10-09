@@ -10,7 +10,7 @@ const helper: React.FC = () => {
 export default helper;
 
 // profile picture size
-const SIZE = 70;
+const SIZE = 50;
 
 // user profile component
 export const IndexUser = (userDetails: any) => {
