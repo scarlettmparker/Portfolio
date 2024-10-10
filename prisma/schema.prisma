@@ -67,8 +67,24 @@ model User {
   accountCreationDate Int
   annotations         Annotation[]
   interactions        UserAnnotationInteraction[]
+  RestrictedUser      RestrictedUser?
+  BannedUser          BannedUser?
 
   @@unique([username, auth])
+}
+
+model RestrictedUser {
+  id        Int    @id @default(autoincrement())
+  discordId String @unique
+  reason    String
+  user      User   @relation(fields: [discordId], references: [discordId])
+}
+
+model BannedUser {
+  id        Int    @id @default(autoincrement())
+  discordId String @unique
+  reason    String
+  user      User   @relation(fields: [discordId], references: [discordId])
 }
 
 model TextObject {

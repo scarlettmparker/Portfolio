@@ -19,6 +19,18 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         }
     });
 
+    if (user) {
+        // check if the user is banned
+        let bannedUser = await prisma.bannedUser.findUnique({
+            where: {
+                discordId: user.discordId,
+            },
+        });
+        if (bannedUser) {
+            return res.status(403).json({ error: 'User is banned. Reason: ' + bannedUser.reason });
+        }
+    }
+
     // check if the user exists
     if (!user) {
         return res.status(401).json({ error: 'Unauthorized' });

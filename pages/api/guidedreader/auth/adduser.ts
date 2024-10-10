@@ -38,6 +38,17 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             return res.status(401).json({ error: 'Invalid access token' });
         }
 
+        // check if the user is banned
+        let bannedUser = await prisma.bannedUser.findFirst({
+            where: {
+                discordId: discordId,
+            },
+        });
+
+        if (bannedUser) {
+            return res.status(403).json({ error: 'User is banned. Reason: ' + bannedUser.reason });
+        }
+
         // proceed with user creation or update
         let user = await prisma.user.findUnique({
             where: {
@@ -79,14 +90,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
                 return res.status(500).json({ error: 'Failed to update user' });
             }
         }
-    
+
         // verify the user's token
         const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET, raw: true });
-    
+
         if (!token) {
             return res.status(401).json({ error: 'Unauthorized' });
         }
-    
+
         return res.status(200).json({ message: 'User logged in successfully', user: user });
     } catch (error) {
         console.error('Error during Discord user verification:', error);

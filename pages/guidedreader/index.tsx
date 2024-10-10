@@ -66,7 +66,7 @@ function Home({ user }: any) {
     const [correctingAnnotation, setCorrectingAnnotation] = useState<boolean>(false);
     const [correctingAnnotationData, setCorrectingAnnotationData] = useState<any>(null);
 
-    const [themeName, setThemeName] = useState<string>('cake');
+    const [themeName, setThemeName] = useState<string>('default');
     const [currentThemeData, setCurrentThemeData] = useState<Theme | null>(null);
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);

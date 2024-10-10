@@ -110,7 +110,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
         // if the user creation fails, return an error
         if (!createUser.ok) {
-          return res.status(500).json({ error: 'Failed to create useaaar' });
+          const createUserError = await createUser.json();
+          return res.status(500).json({ error: createUserError.error });
         }
 
         // if the user is created successfully, set the session token and redirect to /guidedreader

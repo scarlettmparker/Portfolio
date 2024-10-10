@@ -37,6 +37,28 @@ const fetchImageDimensions = async (imageUrl: string) => {
 async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { start, end, description, userId, textId, creationDate } = req.body;
 
+    let user = await prisma.user.findUnique({
+        where: {
+            id: userId,
+        },
+    });
+
+    // check if the user exists
+    if (!user) {
+        return res.status(404).json({ error: 'User not found!' });
+    } else {
+        // check if the user is restricted (can't post annotations)
+        let restrictedUser = await prisma.restrictedUser.findFirst({
+            where: {
+                discordId: user.discordId,
+            },
+        });
+
+        if (restrictedUser) {
+            return res.status(403).json({ error: 'User is restricted. Reason: ' + restrictedUser.reason });
+        }
+    }
+    
     // get token from request
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET, raw: true });
 

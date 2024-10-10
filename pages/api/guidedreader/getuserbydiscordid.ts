@@ -36,10 +36,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
         // calculate the number of annotations and total votes
         const numAnnotations = user.annotations.length;
-
-        console.log(user.annotations);
         const totalVotes = user.annotations.reduce((acc, annotation) => acc + (annotation.likes - annotation.dislikes), 0);
-        console.log(totalVotes);
 
         res.status(200).json({
             user: {
