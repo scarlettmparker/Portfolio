@@ -1,0 +1,17 @@
+[
+	{
+		"name": "cake",
+		"has_images": true,
+		"image_path": "/assets/guidedreader/theme/cake/",
+		"images": [
+		  {
+			"id": 0,
+			"name": "level_header"
+		  },
+		  {
+			"id": 1,
+			"name": "text_header"
+		  }
+		]
+	}
+]

@@ -29,6 +29,14 @@ export interface Annotation {
     dislikes: number;
 }
 
+// theme type
+export interface Theme {
+    name: string;
+    has_images: boolean;
+    image_path: string;
+    images: { id: number; name: string; }[];
+}
+
 // annotation modal props
 export interface AnnotationModalProps {
     setCurrentAnnotation: (value: string) => void;

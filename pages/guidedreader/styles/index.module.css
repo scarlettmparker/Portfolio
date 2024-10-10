@@ -10,6 +10,8 @@
     transform: translateX(50%);
     margin-top: 60px;
     margin-right: 100px;
+    padding-left: 10px;
+    padding-right: 10px;
     width: fit-content;
     display: flex;
     flex-direction: row;
@@ -17,7 +19,6 @@
 
 .annotationModalClose {
     position: absolute;
-    left: 0;
     top: 0;
     margin: 15px;
     margin-left: 20px;
@@ -58,11 +59,15 @@
 
 .annotationModalTitle {
     position: absolute;
+    display: flex;
+    justify-content: center;    
     font-family: 'Open Sans', sans-serif;
     font-size: 1.1rem;
     left: 50%;
     transform: translateX(-50%);
     margin-top: 25px;
+    min-width: fit-content;
+    width: 100%;
 }
 
 .annotationModal {
@@ -191,6 +196,7 @@
 
 .navItemWrapper {
     position: absolute;
+    z-index: 11;
     top: 50%;
     transform: translateY(-50%);
     left: 2.5%;
@@ -422,7 +428,8 @@
 .fontSizeButton,
 .fontButton,
 .showButton,
-.hideButton {
+.hideButton,
+.errorButton {
     background-color: white;
     font-family: 'Open Sans', sans-serif;
     font-size: 1rem;
@@ -440,7 +447,8 @@
 .fontSizeButton:hover,
 .fontButton:hover,
 .showButton:hover,
-.hideButton:hover {
+.hideButton:hover,
+.errorButton:hover {
     background-color: #0A2342;
     color: white;
 }
@@ -694,6 +702,14 @@
     .correctionWrapper {
         bottom: 15px;
     }
+
+    .annotationTextarea {
+        margin-top: 0px;
+    }
+
+    .informMarkdown {
+        visibility: hidden;
+    }
 }
 
 @media screen and (max-width: 540px) {
@@ -769,5 +785,11 @@
 
     .correctionText {
         margin-left: 0px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .informMarkdown {
+        visibility: hidden;
     }
 }

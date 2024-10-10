@@ -1,0 +1,6 @@
+.themeNavWrapper {
+    position: absolute;
+    z-index: 10;
+    right: 0;
+    margin-left: 10px;
+}

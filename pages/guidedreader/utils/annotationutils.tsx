@@ -68,14 +68,10 @@ export async function voteAnnotation(currentAnnotationId: number, userDetails: a
 
 // submit annotation to the database
 export async function submitAnnotation(selectedText: string | null = null, annotationText: string, userDetails: any,
-    currentTextID: number, charIndex: number | null = null, start: number | null = null, end: number | null = null): Promise<number> {
+    currentTextID: number, charIndex: number | null = null, start: number | null = null, end: number | null = null): Promise<{ valid: boolean, error?: any }> {
     // get the current unix time
     const currentTime = Math.floor(Date.now() / 1000);
     let response = null;
-
-    if (annotationText.length < 5) {
-        return 1;
-    }
 
     // send request to get raw text if start and end are not provided
     if (start === null && end === null && selectedText !== null && charIndex !== null) {
@@ -118,11 +114,9 @@ export async function submitAnnotation(selectedText: string | null = null, annot
     // get the response from the server
     const data = await response.json();
     if (data.error) {
-        console.error("Failed to add annotation", data);
-        return 2;
+        return { valid: false, error: data.error};
     } else {
-        console.log("Annotation added successfully", data);
-        return 0;
+        return { valid: true };
     }
 }
 
@@ -174,7 +168,7 @@ export const handleVote = async (annotationId: number, like: boolean, index: num
 export function hideAnnotationAnimation(setCurrentAnnotation: ((value: string) => void) | null, elementToHide: string, setCreatingAnnotation?: (value: boolean) => void) {
     let annotationModal = document.getElementById(elementToHide);
     if (annotationModal) {
-        // Apply initial styles for the transition
+        // apply initial styles for the transition
         annotationModal.style.transition = 'transform 1s';
         annotationModal.style.transform = 'translateX(120%)';
     }

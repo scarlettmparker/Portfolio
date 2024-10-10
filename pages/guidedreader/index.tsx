@@ -1,20 +1,24 @@
 import './styles/global.css';
 import Head from 'next/head';
 import styles from './styles/index.module.css';
+import themestyles from './styles/theme.module.css';
+import themejson from './data/theme.json';
+import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
-import { TextObject } from './types/types'
+import { TextObject, Theme } from './types/types'
 import { useRouter } from 'next/router';
 import { renderAnnotatedText } from './utils/renderutils';
 import { handleAnnotationClick, hideAnnotationAnimation } from './utils/annotationutils';
 import { handleTextSelection } from './utils/charutils';
 import { fetchData, fetchCurrentTextData } from './utils/textutils';
-import { getUserDetails, findLevelSeparators, clearCookies } from './utils/helperutils';
+import { getUserDetails, findLevelSeparators } from './utils/helperutils';
 import { IndexUser, NotLoggedIn } from './jsx/indexuserjsx';
 import { LevelNavigation, TextList, TextModule } from './jsx/textjsx';
 import { AnnotationModal, CreatingAnnotationModal, CreateAnnotationButton, CorrectingAnnotationModal } from './jsx/annotationjsx';
 import { Toolbar } from './jsx/toolbarjsx';
 import { GetServerSideProps } from 'next';
 import { parse } from 'cookie';
+import { ErrorBox } from './jsx/errorjsx';
 
 // get server side props for user details
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -54,9 +58,16 @@ function Home({ user }: any) {
     const [currentLanguage, setCurrentLanguage] = useState<number>(0);
     const [creatingAnnotation, setCreatingAnnotation] = useState<boolean>(false);
 
+    // error states
+    const [errorBox, setErrorBox] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>('');
+
     // for correcting annotation nonsense
     const [correctingAnnotation, setCorrectingAnnotation] = useState<boolean>(false);
     const [correctingAnnotationData, setCorrectingAnnotationData] = useState<any>(null);
+
+    const [themeName, setThemeName] = useState<string>('default');
+    const [currentThemeData, setCurrentThemeData] = useState<Theme | null>(null);
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userDetails, setUserDetails] = useState<any>(null);
@@ -74,6 +85,10 @@ function Home({ user }: any) {
             setIsLoggedIn(true);
         }
     }, []);
+
+    useEffect(() => {
+        setCurrentThemeData(themejson.find(t => t.name === themeName) || null);
+    }, [themeName]);
 
     const handleTextSelectionRef = () => handleTextSelection({ textContentRef, selectedText, setSelectedText, setButtonPosition, creatingAnnotation, setCharIndex });
 
@@ -146,14 +161,15 @@ function Home({ user }: any) {
         }
     };
 
-    const currentTextData = textData[currentText];
-
     return (
         <>
             <Head>
                 <title>Guided Reader</title>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
+            {errorBox && (
+                <ErrorBox error={errorMessage} setError={setErrorBox} />
+            )}
             {currentAnnotation && (
                 <>
                     {creatingAnnotation && hideAnnotationAnimation(setSelectedText, "createAnnotationModal", setCreatingAnnotation)}
@@ -171,12 +187,12 @@ function Home({ user }: any) {
                     setCurrentAnnotation={setCurrentAnnotation} />
             )}
             {creatingAnnotation && (
-                <CreatingAnnotationModal setSelectedText={setSelectedText} selectedText={selectedText}
+                <CreatingAnnotationModal setSelectedText={setSelectedText} setError={setErrorBox} setErrorMessage={setErrorMessage} selectedText={selectedText}
                     setCreatingAnnotation={setCreatingAnnotation} currentTextID={currentTextID} userDetails={userDetails} charIndex={charIndex} />
             )}
             {correctingAnnotation && (
-                <CorrectingAnnotationModal setCreatingAnnotation={setCorrectingAnnotation} userDetails={userDetails}
-                    currentTextID={currentTextID} currentText={currentTextData.text[currentLanguage].text} correctingAnnotationData={correctingAnnotationData} />
+                <CorrectingAnnotationModal setCreatingAnnotation={setCorrectingAnnotation} setError={setErrorBox} setErrorMessage={setErrorMessage}
+                    userDetails={userDetails} currentTextID={currentTextID} correctingAnnotationData={correctingAnnotationData} />
             )}
             {isLoggedIn ? (
                 <IndexUser userDetails={userDetails} />
@@ -185,9 +201,15 @@ function Home({ user }: any) {
             )}
             <div className={styles.mainWrapper} id="mainWrapper">
                 <TextList textData={textData} levelSeparators={levelSeparators} setCurrentText={setCurrentText} setCurrentAnnotation={setCurrentAnnotation}
-                    setCurrentLanguage={setCurrentLanguage} currentText={currentText} textListRef={textListRef} setCurrentLevel={setCurrentLevel} hasURLData={hasURLData}/>
+                    setCurrentLanguage={setCurrentLanguage} currentText={currentText} textListRef={textListRef} setCurrentLevel={setCurrentLevel} hasURLData={hasURLData} />
+                {currentThemeData && currentThemeData.has_images && (
+                    <div className={`${themestyles.themeNavWrapper}`}>
+                        <Image draggable={false} src={currentThemeData.image_path + currentThemeData.images.find((image: { id: number; name: string; }) => image.id === 0)?.name
+                            + ".png" || '/default-image.png'} alt="theme image" width={766} height={66} />
+                    </div>
+                )}
                 <div className={styles.textWrapper}>
-                    <LevelNavigation currentLevel={currentLevel} scrollToLevel={scrollToLevel} />
+                <LevelNavigation currentLevel={currentLevel} currentTheme={currentThemeData} scrollToLevel={scrollToLevel} />
                     <Toolbar textData={textData} setCurrentAnnotation={setCurrentAnnotation} setCurrentLanguage={setCurrentLanguage} currentText={currentText} setCurrentTextID={setCurrentTextID} />
                     <TextModule currentText={currentText} textContentRef={textContentRef} textData={textData} renderAnnotatedText={renderAnnotatedText} currentLanguage={currentLanguage} />
                 </div>

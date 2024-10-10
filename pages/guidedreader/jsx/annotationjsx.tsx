@@ -142,7 +142,7 @@ const WritingAnnotationModal = ({ title, selectedText, annotationText, setAnnota
                     )}
                 </span>
                 <span className={styles.informMarkdown}><a target="_blank" href="https://www.markdownguide.org/basic-syntax/">
-                Annotations are formatted with Markdown</a></span>
+                    Annotations are formatted with Markdown</a></span>
                 <div className={styles.annotationModalButtons}>
                     <button className={styles.submitButton} onClick={onSubmit}>Submit</button>
                     <button className={styles.previewButton} onClick={() => {
@@ -154,25 +154,36 @@ const WritingAnnotationModal = ({ title, selectedText, annotationText, setAnnota
     );
 };
 
+const handleSubmitAnnotation = async (selectedText: string | null, annotationText: string, setError: (value: boolean) => void, setErrorMessage: (value: string) => void,
+    userDetails: any, currentTextID: number, charIndex: number | null = null, start: number | null = null, end: number | null = null) => {
+    let result = await submitAnnotation(selectedText, annotationText, userDetails, currentTextID, charIndex, start, end);
+    
+    // successfully submitted annotation
+    if (result.valid) {
+        window.location.reload();
+    } else {
+        setError(true);
+        setErrorMessage(result.error);
+    }
+};
+
 // create annotation modal
-export const CreatingAnnotationModal = ({ setSelectedText, selectedText, setCreatingAnnotation, userDetails, currentTextID, charIndex }:
-    { setSelectedText: (value: string) => void, selectedText: string, setCreatingAnnotation: (value: boolean) => void, userDetails: any, currentTextID: number, charIndex: number }
+export const CreatingAnnotationModal = ({ setSelectedText, selectedText, setCreatingAnnotation, setError, setErrorMessage, userDetails, currentTextID, charIndex }:
+    {
+        setSelectedText: (value: string) => void, selectedText: string, setCreatingAnnotation: (value: boolean) => void,
+        setError: (value: boolean) => void, setErrorMessage: (value: string) => void, userDetails: any, currentTextID: number, charIndex: number
+    }
 ) => {
     const [annotationText, setAnnotationText] = useState("");
-    const handleSubmit = async () => {        
-        let result = await submitAnnotation(selectedText, annotationText, userDetails, currentTextID, charIndex);
-        // successfully submitted annotation
-        if (result == 0) {
-            window.location.reload();
-        } else if (result == 1) {
-            console.log("Annotation too short!");
-        } else if (result == 2) {
-            console.log("Failed to add annotation (Internal Server Error)");
-        }
+
+    const handleSubmit = () => {
+        handleSubmitAnnotation(selectedText, annotationText, setError, setErrorMessage, userDetails, currentTextID, charIndex);
     };
+
     const handleClose = () => {
         hideAnnotationAnimation(setSelectedText, "createAnnotationModal", setCreatingAnnotation);
     };
+
     return (
         <WritingAnnotationModal title="Annotate" selectedText={selectedText} annotationText={annotationText}
             setAnnotationText={setAnnotationText} onSubmit={handleSubmit} onClose={handleClose} />
@@ -180,19 +191,23 @@ export const CreatingAnnotationModal = ({ setSelectedText, selectedText, setCrea
 };
 
 // correct annotation modal
-export const CorrectingAnnotationModal = ({ setCreatingAnnotation, userDetails, currentTextID, currentText, correctingAnnotationData }:
-    { setCreatingAnnotation: (value: boolean) => void, userDetails: any, currentTextID: number, currentText: any, correctingAnnotationData: any }
+export const CorrectingAnnotationModal = ({ setCreatingAnnotation, setError, setErrorMessage, userDetails, currentTextID, correctingAnnotationData }:
+    {
+        setCreatingAnnotation: (value: boolean) => void, setError: (value: boolean) => void,
+        setErrorMessage: (value: string) => void, userDetails: any, currentTextID: number, correctingAnnotationData: any
+    }
 ) => {
     const [annotationText, setAnnotationText] = useState("");
-    const start = correctingAnnotationData.start;
-    const end = correctingAnnotationData.end;
+    const { start, end } = correctingAnnotationData;
 
     const handleSubmit = () => {
-        submitAnnotation(null, annotationText, userDetails, currentTextID, null, start, end);
+        handleSubmitAnnotation(null, annotationText, setError, setErrorMessage, userDetails, currentTextID, null, start, end);
     };
+
     const handleClose = () => {
         hideAnnotationAnimation(null, "createAnnotationModal", setCreatingAnnotation);
     };
+
     return (
         <WritingAnnotationModal title="Correct Annotation" selectedText={null} annotationText={annotationText}
             setAnnotationText={setAnnotationText} onSubmit={handleSubmit} onClose={handleClose} />

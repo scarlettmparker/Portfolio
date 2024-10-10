@@ -18,7 +18,7 @@ export const handleTextSelection = ({
     const textContentElement = textContentRef.current;
 
     // check if the selection is valid
-    if (!selection || !selection.toString() || !textContentElement?.contains(selection.anchorNode)) {
+    if (!selection || !selection.toString() || !textContentElement?.contains(selection.anchorNode) || selection.toString().length > 90) {
         setSelectedText('');
         return;
     }

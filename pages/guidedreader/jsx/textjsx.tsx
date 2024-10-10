@@ -1,5 +1,6 @@
 import styles from '../styles/index.module.css';
 import React, { useRef, useState, useEffect } from 'react';
+import { Theme } from '../types/types';
 import { TextListProps } from '../types/types';
 import { sortTextData as sortTextDataUtil, filterTextData, observeLevelSeparators } from '../utils/textutils';
 import { ButtonWithAltText } from './toolbarjsx';
@@ -48,7 +49,6 @@ export const TextList: React.FC<TextListProps> = ({ textData, levelSeparators, s
         };
 
         window.addEventListener('resize', handleResize);
-
         return () => {
             window.removeEventListener('resize', handleResize);
         };
@@ -192,18 +192,20 @@ const TextFilter: React.FC<{
 };
 
 // level navigation component
-export const LevelNavigation: React.FC<{ currentLevel: string, scrollToLevel: (level: string) => void }> = ({ currentLevel, scrollToLevel }) => (
-    <div className={styles.navWrapper}>
-        <div className={styles.navItemWrapper}>
-            <span className={`${styles.navItem} ${currentLevel === 'Α1' || currentLevel === 'Α1 (8-12)' ? styles.activeNavItemA1 : ''}`} onClick={() => scrollToLevel('Α1')}>Α1</span>
-            <span className={`${styles.navItem} ${currentLevel === 'Α2' ? styles.activeNavItemA2 : ''}`} onClick={() => scrollToLevel('Α2')}>Α2</span>
-            <span className={`${styles.navItem} ${currentLevel === 'Β1' ? styles.activeNavItemB1 : ''}`} onClick={() => scrollToLevel('Β1')}>Β1</span>
-            <span className={`${styles.navItem} ${currentLevel === 'Β2' ? styles.activeNavItemB2 : ''}`} onClick={() => scrollToLevel('Β2')}>Β2</span>
-            <span className={`${styles.navItem} ${currentLevel === 'Γ1' ? styles.activeNavItemC1 : ''}`} onClick={() => scrollToLevel('Γ1')}>Γ1</span>
-            <span className={`${styles.navItem} ${currentLevel === 'Γ2' ? styles.activeNavItemC2 : ''}`} onClick={() => scrollToLevel('Γ2')}>Γ2</span>
+export const LevelNavigation: React.FC<{ currentLevel: string, currentTheme: Theme | null, scrollToLevel: (level: string) => void }> = ({ currentLevel, currentTheme, scrollToLevel }) => {
+    return (
+        <div className={styles.navWrapper}>
+            <div className={styles.navItemWrapper}>
+                <span className={`${styles.navItem} ${currentLevel === 'Α1' || currentLevel === 'Α1 (8-12)' ? styles.activeNavItemA1 : ''}`} onClick={() => scrollToLevel('Α1')}>Α1</span>
+                <span className={`${styles.navItem} ${currentLevel === 'Α2' ? styles.activeNavItemA2 : ''}`} onClick={() => scrollToLevel('Α2')}>Α2</span>
+                <span className={`${styles.navItem} ${currentLevel === 'Β1' ? styles.activeNavItemB1 : ''}`} onClick={() => scrollToLevel('Β1')}>Β1</span>
+                <span className={`${styles.navItem} ${currentLevel === 'Β2' ? styles.activeNavItemB2 : ''}`} onClick={() => scrollToLevel('Β2')}>Β2</span>
+                <span className={`${styles.navItem} ${currentLevel === 'Γ1' ? styles.activeNavItemC1 : ''}`} onClick={() => scrollToLevel('Γ1')}>Γ1</span>
+                <span className={`${styles.navItem} ${currentLevel === 'Γ2' ? styles.activeNavItemC2 : ''}`} onClick={() => scrollToLevel('Γ2')}>Γ2</span>
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 // text module component
 export const TextModule: React.FC<{
