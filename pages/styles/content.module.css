@@ -11,7 +11,7 @@
 .professionWrapper,
 .projectWrapper {
     transform: translateX(-50%);
-    top: 360px;
+    top: 380px;
 }
 
 .professionWrapper {
@@ -199,6 +199,12 @@
     .portfolio {
         letter-spacing: 25px;
     }
+
+    .professionWrapper,
+    .projectWrapper {
+        transform: translateX(-50%);
+        top: 360px;
+    }
 }
 
 @media (max-width: 590px) {
@@ -262,7 +268,6 @@
 @media (max-width: 400px) {
     .developer {
         font-size: 28px;
-        line-height: 24px;
     }
 
     .artist,
@@ -282,18 +287,21 @@
     }
 
     .modalWrapper {
-        margin-top: -100px;
+        margin-top: -90px;
+    }
+
+    .developer {
+        line-height: 18px;
     }
 
     .developerText {
         font-size: 16px;
-        line-height: 24px;
     }
 }
 
 @media (max-width: 305px) {
     .developer {
-        line-height: 12px;
+        line-height: 8px;
     }
 
     .developerText {
@@ -315,11 +323,36 @@
     .portfolio {
         letter-spacing: 13px;
         margin-left: -10px;
+        line-height: -10px;
+    }
+
+    .developer {
+        line-height: 2px;
     }
 }
 
 @media (max-width: 240px) {
-    .developer, .artist, .portfolio {
+
+    .developer,
+    .artist,
+    .portfolio {
         display: none;
+    }
+
+    .professionWrapper {
+        margin-bottom: 0px;
+    }
+
+    .developerMenu {
+        border-radius: 10px 10px 0px 0px;
+    }
+
+    .portfolioMenu {
+        border-radius: 0px 0px 10px 10px;
+    }
+
+    .developerMenu,
+    .portfolioMenu {
+        border: 0px;
     }
 }

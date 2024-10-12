@@ -3,6 +3,7 @@ import cstyles from './styles/content.module.css';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import './styles/global.css';
+import Head from 'next/head';
 
 // constants
 const EXTENSION_LINK = "https://github.com/scarlettmparker/Accessibility-Toolbar";
@@ -53,7 +54,7 @@ const ProfessionModal = (
 
     return (
         <div className={`${cstyles.contentWrapper} ${cstyles.professionWrapper}`}>
-            <span className={`${cstyles.developer} ${cstyles.text}`}>FULL STACK DEVELOPER</span>
+            <span className={`${cstyles.developer} ${cstyles.text}`}>FULL-STACK DEVELOPER</span>
             <span className={`${cstyles.artist} ${cstyles.text}`}>ARTIST & DESIGNER</span>
             {!mobileDesign && (
                 <span className={cstyles.expandArrow} onClick={() => setDeveloperMenu(!developerMenu)}>{developerMenu ? <>▲</> : <>▼</>}</span>
@@ -61,7 +62,7 @@ const ProfessionModal = (
             {developerMenu && (
                 <div className={cstyles.developerMenu}>
                     <span className={cstyles.developerText}>
-                        <span className={cstyles.boldText}>Hi, I'm <span className={cstyles.scarlett}>Scarlett</span>, a 21-year-old full stack developer based in the United Kingdom.</span>
+                        <span className={cstyles.boldText}>Hi, I'm <span className={cstyles.scarlett}>Scarlett</span>, a 21-year-old full-stack developer based in the United Kingdom.</span>
                         <br /><br />Though my focus is on web applications, I've built a variety of projects, ranging from
                         an <a href={EXTENSION_LINK} className={cstyles.accessibilityLink} target="_blank">accessibility tool</a> extension with image
                         classification to a <a href={GUIDED_READER_LINK} className={cstyles.developerLink} target="_blank"> Genius-style guided reader</a> for Greek learners with user-submitted annotations.
@@ -126,6 +127,11 @@ const Home = () => {
 
     return (
         <>
+            <Head>
+                <title>Scarlett Parker</title>
+                <meta name="description" content="Scarlett Parker portfolio" />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
             <div className={styles.pageWrapper}>
                 <TitleModal windowWidth={windowWidth} />
                 <div className={cstyles.modalWrapper}>
