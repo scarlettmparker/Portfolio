@@ -1,22 +1,29 @@
 .pageWrapper {
-    position: relative;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 100vw;
     height: 100vh;
-    overflow: hidden; /* Prevents resizing issues by hiding overflowing elements */
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .background {
     position: fixed;
-    width: 1920px;
-    height: 1080px;
-    left: 50%;
-    transform: translateX(-50%);
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    top: 0;
     background: url('../../public/assets/portfolio/images/textured_background.png');
     background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     z-index: -1;
 }
 
 .titleWrapper {
+    user-select: none;
     position: absolute;
     width: 1920px;
     height: 1012px;
@@ -43,6 +50,7 @@
 .darkness {
     width: 1920px;
     z-index: 1;
+    position: fixed;
     mix-blend-mode: luminosity;
 }
 
