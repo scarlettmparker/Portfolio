@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+.contentWrapper {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+    line-height: 42px;
+}
+
+.professionWrapper, .projectWrapper {
+    transform: translateX(-50%);
+    top: 360px;
+}
+
+.professionWrapper {
+    left: 25%;
+}
+
+.projectWrapper {
+    left: 75%;
+}
+
+.developer,
+.artist,
+.portfolio {
+    font-family: "Open Sans", sans-serif;
+    font-weight: bold;
+    color: #101f21;
+    text-shadow: -3px -3px 0 rgba(255, 255, 255, 0.7), 3px -3px 0 rgba(255, 255, 255, 0.7),
+        -3px 3px 0 rgba(255, 255, 255, 0.7), 3px 3px 0 rgba(255, 255, 255, 0.7);
+}
+
+.developer {
+    font-size: 47px;
+}
+
+.artist, .portfolio {
+    font-size: 40px;
+}
+
+.artist {
+    letter-spacing: 10.5px;
+}
+
+.portfolio {
+    letter-spacing: 28.5px;
+}
+
+.expandArrow {
+    position: relative;
+    color: #101f21;
+    width: fit-content;
+    user-select: none;
+    font-size: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-shadow: 
+        -1px -1px 0 #f2f2f2,  
+        1px -1px 0 #f2f2f2,
+        -1px 1px 0 #f2f2f2,
+        1px 1px 0 #f2f2f2;
+    
+}
+
+.expandArrow:hover {
+    color: #f2f2f2;
+    text-shadow: 
+        -1px -1px 0 #101f21,  
+        1px -1px 0 #101f21,
+        -1px 1px 0 #101f21,
+        1px 1px 0 #101f21;
+    cursor: pointer;
+}

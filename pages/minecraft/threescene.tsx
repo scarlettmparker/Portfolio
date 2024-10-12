@@ -1,5 +1,5 @@
-import { createCamera, createRenderer } from '../index/SceneUtils';
-import { startAnimationLoop } from '../index/SceneCleanup';
+import { createCamera, createRenderer } from '../oldtjs/index/SceneUtils';
+import { startAnimationLoop } from '../oldtjs/index/SceneCleanup';
 import { vertexShader, fragmentShader } from './shaders/bookshader';
 import { manageWhispers, stopWhispers} from './musicutils';
 import * as THREE from 'three';

@@ -1,0 +1,58 @@
+.pageWrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden; /* Prevents resizing issues by hiding overflowing elements */
+}
+
+.background {
+    position: fixed;
+    width: 1920px;
+    height: 1080px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: url('../../public/assets/portfolio/images/textured_background.png');
+    background-size: cover;
+    z-index: -1;
+}
+
+.titleWrapper {
+    position: absolute;
+    width: 1920px;
+    height: 1012px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.title {
+    position: absolute;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+}
+
+.styledWrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.darkness {
+    width: 1920px;
+    z-index: 1;
+    mix-blend-mode: luminosity;
+}
+
+.backgroundImages {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: auto;
+}
+
+.titleImages {
+    width: 100%;
+}
