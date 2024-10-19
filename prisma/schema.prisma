@@ -69,6 +69,7 @@ model User {
   interactions        UserAnnotationInteraction[]
   RestrictedUser      RestrictedUser?
   BannedUser          BannedUser?
+  BypassUser          BypassUser?
 
   @@unique([username, auth])
 }
@@ -81,6 +82,13 @@ model RestrictedUser {
 }
 
 model BannedUser {
+  id        Int    @id @default(autoincrement())
+  discordId String @unique
+  reason    String
+  user      User   @relation(fields: [discordId], references: [discordId])
+}
+
+model BypassUser {
   id        Int    @id @default(autoincrement())
   discordId String @unique
   reason    String

@@ -18,7 +18,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     // sanitize inputs
     const sanitizedUsername = username.trim();
-    const sanitizedAvatar = avatar ? avatar.trim() : null;
+    const sanitizedAvatar = avatar ? avatar.trim() : 'default';
     const sanitizedNickname = nickname ? nickname.trim() : null;
     const sanitizedLevels = Array.isArray(levels) ? levels.map(level => level.trim()) : [];
 

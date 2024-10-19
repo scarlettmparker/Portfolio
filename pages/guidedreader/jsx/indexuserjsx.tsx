@@ -19,7 +19,9 @@ export const IndexUser = (userDetails: any) => {
     const avatar = user.avatar;
     const userId = user.discordId;
 
-    const avatarUrl = `https://cdn.discordapp.com/avatars/${userId}/${avatar}.png?size=1024`;
+    const avatarUrl = avatar === "default" 
+    ? "https://discord.com/assets/974be2a933143742e8b1.png" 
+    : `https://cdn.discordapp.com/avatars/${userId}/${avatar}.png?size=1024`
     return (
         <>
             <div className={styles.profileWrapper}>
