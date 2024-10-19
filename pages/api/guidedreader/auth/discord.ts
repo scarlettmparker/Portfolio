@@ -93,7 +93,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       },
     });
 
-    if (bypassUser) {
+    if (bypassUser && !isInGreekLearningGuild) {
       // create a template user for bypassed users
       const createUser = await fetch('http://localhost:3000/api/guidedreader/auth/adduser', {
         method: 'POST',
