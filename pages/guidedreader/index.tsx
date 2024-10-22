@@ -80,6 +80,17 @@ function Home({ user }: any) {
     const router = useRouter();
 
     useEffect(() => {
+        // clean up for wiktionary stuff
+        const handleBeforeUnload = () => {
+            localStorage.removeItem('lastSelectedText');
+        };
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, []);
+
+    useEffect(() => {
         if (user) {
             setUserDetails(user);
             setIsLoggedIn(true);

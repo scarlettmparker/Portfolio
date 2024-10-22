@@ -527,41 +527,6 @@
     background-color: #c6cbd7;
 }
 
-.toolbarWrapper {
-    position: absolute;
-    z-index: 5;
-    width: 80%;
-    height: 50px;
-    background-color: #fbfbfb;
-    margin-top: 75px;
-    left: 50%;
-    border-radius: 10px;
-    transform: translateX(-50%);
-}
-
-.toolbarItems {
-    display: flex;
-    margin-left: 15px;
-    justify-content: first baseline;
-    align-items: center;
-    height: 100%;
-}
-
-.languageChangeWrapper {
-    position: absolute;
-    right: 0;
-    margin-right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.languageChangeBox {
-    padding: 5px;
-    border: none;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 0.9rem;
-}
-
 .levelSeparator {
     font-family: 'Open Sans', sans-serif;
     position: relative;

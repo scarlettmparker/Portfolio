@@ -16,6 +16,11 @@ export const handleTextSelection = ({
     // get the selected text
     const selection = window.getSelection();
     const textContentElement = textContentRef.current;
+    
+    // store the selected text in local storage
+    if (selection && selection.toString().length > 0 && textContentElement?.contains(selection.anchorNode)) {
+        localStorage.setItem('lastSelectedText', selection.toString().trim());
+    }
 
     // check if the selection is valid
     if (!selection || !selection.toString() || !textContentElement?.contains(selection.anchorNode) || selection.toString().length > 90) {

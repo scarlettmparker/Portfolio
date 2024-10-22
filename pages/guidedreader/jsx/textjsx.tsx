@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Theme } from '../types/types';
 import { TextListProps } from '../types/types';
 import { sortTextData as sortTextDataUtil, filterTextData, observeLevelSeparators } from '../utils/textutils';
-import { ButtonWithAltText } from './toolbarjsx';
+import { ButtonWithAltText } from './toolbar/fontsizejsx';
 
 const helper: React.FC = () => {
     return null;
