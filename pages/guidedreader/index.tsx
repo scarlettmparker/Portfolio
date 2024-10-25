@@ -8,7 +8,7 @@ import { useEffect, useState, useRef } from 'react';
 import { TextObject, Theme } from './types/types'
 import { useRouter } from 'next/router';
 import { renderAnnotatedText } from './utils/renderutils';
-import { handleAnnotationClick, hideAnnotationAnimation } from './utils/annotationutils';
+import { handleAnnotationClick, hideAnnotationAnimation } from './utils/annotation/annotationutils';
 import { handleTextSelection } from './utils/charutils';
 import { fetchData, fetchCurrentTextData } from './utils/textutils';
 import { getUserDetails, findLevelSeparators } from './utils/helperutils';
@@ -186,7 +186,7 @@ function Home({ user }: any) {
                     {creatingAnnotation && hideAnnotationAnimation(setSelectedText, "createAnnotationModal", setCreatingAnnotation)}
                     {correctingAnnotation && hideAnnotationAnimation(setSelectedText, "createAnnotationModal", setCorrectingAnnotation)}
                     <AnnotationModal setCurrentAnnotation={setCurrentAnnotation} currentAnnotation={currentAnnotation} currentLanguage={currentLanguage} currentText={textData[currentText]}
-                        userDetails={userDetails} setCorrectingAnnotation={setCorrectingAnnotation} setCorrectingAnnotationData={setCorrectingAnnotationData} />
+                        userDetails={userDetails} setCorrectingAnnotation={setCorrectingAnnotation} setCorrectingAnnotationData={setCorrectingAnnotationData} setError={setErrorBox} setErrorMessage={setErrorMessage} />
                 </>
             )}
             {selectedText && !creatingAnnotation && !correctingAnnotation && (
@@ -220,7 +220,7 @@ function Home({ user }: any) {
                     </div>
                 )}
                 <div className={styles.textWrapper}>
-                <LevelNavigation currentLevel={currentLevel} currentTheme={currentThemeData} scrollToLevel={scrollToLevel} />
+                    <LevelNavigation currentLevel={currentLevel} currentTheme={currentThemeData} scrollToLevel={scrollToLevel} />
                     <Toolbar textData={textData} setCurrentAnnotation={setCurrentAnnotation} setCurrentLanguage={setCurrentLanguage} currentText={currentText} setCurrentTextID={setCurrentTextID} />
                     <TextModule currentText={currentText} textContentRef={textContentRef} textData={textData} renderAnnotatedText={renderAnnotatedText} currentLanguage={currentLanguage} />
                 </div>

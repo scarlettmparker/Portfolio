@@ -46,6 +46,8 @@ export interface AnnotationModalProps {
     userDetails: any;
     setCorrectingAnnotation: (value: boolean) => void;
     setCorrectingAnnotationData: (value: any) => void;
+    setError: (value: boolean) => void;
+    setErrorMessage: (value: string) => void;
 }
 
 // props for text list

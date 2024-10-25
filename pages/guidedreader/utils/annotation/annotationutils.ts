@@ -1,10 +1,4 @@
-import styles from '../styles/index.module.css';
-
-/* RETURNS FOR ANNOTATIONS
-    0: Annotation added successfully
-    1: Annotation is too short
-    2: Failed to add annotation (Internal Server Error)
-*/
+import styles from '../../styles/index.module.css';
 const BOT_LINK = process.env.NEXT_PUBLIC_BOT_LINK;
 
 const helper: React.FC = () => {
@@ -34,7 +28,7 @@ export async function voteAnnotation(currentAnnotationId: number, userDetails: a
     }
 
     // send the vote to the database with api endpoint
-    const response = await fetch('./api/guidedreader/voteannotation', {
+    const response = await fetch('./api/guidedreader/annotation/voteannotation', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -64,60 +58,6 @@ export async function voteAnnotation(currentAnnotationId: number, userDetails: a
     setVotes(votes + voteChange);
     setHasLiked(like ? !hasLiked : hasLiked && false);
     setHasDisliked(!like ? !hasDisliked : hasDisliked && false);
-}
-
-// submit annotation to the database
-export async function submitAnnotation(selectedText: string | null = null, annotationText: string, userDetails: any,
-    currentTextID: number, charIndex: number | null = null, start: number | null = null, end: number | null = null): Promise<{ valid: boolean, error?: any }> {
-    // get the current unix time
-    const currentTime = Math.floor(Date.now() / 1000);
-    let response = null;
-
-    // send request to get raw text if start and end are not provided
-    if (start === null && end === null && selectedText !== null && charIndex !== null) {
-        response = await fetch('./api/guidedreader/getrawtext', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                textID: currentTextID
-            })
-        });
-
-        let rawText = await response.json();
-        const indexes = findAnnotationIndexes(selectedText, rawText.text, charIndex);
-        start = indexes.start;
-        end = indexes.end;
-    }
-
-    // structure the annotation
-    const annotation = {
-        start: start,
-        end: end,
-        description: annotationText,
-        userId: userDetails.user.id,
-        textId: currentTextID,
-        creationDate: currentTime,
-    };
-
-    // send the annotation to the database
-    response = await fetch('./api/guidedreader/addannotation', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${userDetails.user.auth}`
-        },
-        body: JSON.stringify(annotation)
-    });
-
-    // get the response from the server
-    const data = await response.json();
-    if (data.error) {
-        return { valid: false, error: data.error};
-    } else {
-        return { valid: true };
-    }
 }
 
 export const fetchAnnotations = async (currentText: any, currentLanguage: string, currentAnnotationData: any, userDetails: any, setAnnotations: React.Dispatch<React.SetStateAction<any[]>>) => {
@@ -206,7 +146,7 @@ const fetchAuthorData = async (userId: string) => {
 
 // get votes for the annotation
 const checkLikeStatus = async (annotationId: number, userId: string) => {
-    const response = await fetch('./api/guidedreader/getannotationvotes', {
+    const response = await fetch('./api/guidedreader/annotation/getannotationvotes', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -219,7 +159,7 @@ const checkLikeStatus = async (annotationId: number, userId: string) => {
     return await response.json();
 };
 
-function findAnnotationIndexes(selectedText: string, rawText: string, charIndex: number) {
+export function findAnnotationIndexes(selectedText: string, rawText: string, charIndex: number) {
     // find the start index in the stripped text
     const start = charIndex;
     const cleanedSelectedText = selectedText.replace(/\n/g, '');

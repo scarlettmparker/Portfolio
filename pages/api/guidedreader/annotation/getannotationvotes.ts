@@ -1,4 +1,4 @@
-import prisma from '../prismaclient';
+import prisma from '../../prismaclient';
 import { NextApiRequest, NextApiResponse } from 'next';
 import rateLimitMiddleware from "@/middleware/rateLimiter";
 

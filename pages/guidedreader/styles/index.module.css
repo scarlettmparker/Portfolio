@@ -15,155 +15,6 @@
     flex-direction: row;
 }
 
-.annotationModalClose {
-    position: absolute;
-    top: 0;
-    margin: 15px;
-    margin-left: 20px;
-    font-size: 1rem;
-    color: #494b50;
-    cursor: pointer;
-    font-family: 'Open Sans', sans-serif;
-    transition: transform 1s;
-}
-
-.annotationModalClose:hover {
-    animation: spin 0.6s;
-}
-
-.annotationModalClose:not(:hover) {
-    animation: spinReverse 0.6s;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(-360deg);
-    }
-}
-
-@keyframes spinReverse {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.annotationModalTitle {
-    position: absolute;
-    display: flex;
-    justify-content: center;    
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1.1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-top: 25px;
-    min-width: fit-content;
-    width: 100%;
-}
-
-.annotationModal {
-    position: absolute;
-    background-color: #fbfbfb;
-    justify-content: center;
-    align-items: center;
-    right: 0;
-    width: 480px;
-    height: 640px;
-    top: 120px;
-    z-index: 2;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 20px 0 0 20px;
-    transition: right 0.5s ease-in-out;
-}
-
-.annotationWrapper {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    margin: 20px;
-    margin-top: 70px;
-    height: 88%;
-    width: 92%;
-}
-
-.annotationInnerWrapper {
-    height: 90%;
-    overflow-y: auto;
-}
-
-.singleAnnotationWrapper {
-    margin-left: 10px;
-}
-
-.annotationModalText {
-    position: relative;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1.2rem;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-}
-
-.annotationModalText img {
-    margin-top: 15px;
-    max-width: 400px;
-}
-
-.annotationModalAuthorWrapper {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1rem;
-    margin-bottom: 10px;
-    color: #494b50;
-    margin-top: auto;
-}
-
-.annotationModalAuthorLink {
-    margin-left: 5px;
-}
-
-.annotationModalVotesWrapper {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    padding-top: 8px;
-    margin-bottom: 10px;
-}
-
-.annotationModalVotesWrapper img:hover {
-    cursor: pointer;
-}
-
-.annotationVoteBackground {
-    position: absolute;
-    z-index: 0;
-    background-color: rgb(0, 0, 0, 0.0);
-    width: 30px;
-    height: 30px;
-    transform: translate(-6px, -6px);
-    border-radius: 30px;
-    padding: 2px;
-    margin-bottom: 10px;
-    pointer-events: none;
-}
-
-.annotationModalVotesWrapper img:hover {
-    background-color: rgb(0, 0, 0, 0.1);
-}
-
-.annotationModalVotes {
-    margin-left: 8px;
-    margin-right: 25px;
-}
-
 .correctionWrapper {
     position: absolute;
     bottom: 10px;
@@ -374,26 +225,11 @@
     margin-left: 20px;
 }
 
-.annotationPopup {
-    position: absolute;
-    z-index: 3;
-    top: 50%;
-    left: 50%;
-    margin: 0;
-    transform: translate(-50%, -50%);
-}
-
 .informMarkdown {
     position: relative;
     font-family: 'Open Sans', sans-serif;
     font-size: 0.9rem;
     margin-left: 3px;
-}
-
-.annotationModalButtons {
-    position: absolute;
-    bottom: 3%;
-    left: 1%;
 }
 
 .submitButton {
@@ -474,19 +310,6 @@
     margin-left: 6px;
     margin-right: 2px;
     width: 30px
-}
-
-.annotationModalText {
-    height: 495px;
-    overflow-y: scroll;
-    width: 100%;
-}
-
-.annotationTextarea {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1.1rem;
-    width: 95%;
-    margin-top: 10px;
 }
 
 .markdownOverlay {
@@ -651,23 +474,8 @@
         border-radius: 0;
     }
 
-    .singleAnnotationWrapper {
-        margin-left: 2px;
-    }
-
-    .annotationModal {
-        margin-top: -20px;
-        width: 80vw;
-        height: 550px;
-        padding-bottom: 25px;
-    }
-
     .correctionWrapper {
         bottom: 15px;
-    }
-
-    .annotationTextarea {
-        margin-top: 0px;
     }
 
     .informMarkdown {
@@ -705,10 +513,6 @@
         transform: translateX(-50%);
     }
 
-    .annotationModal {
-        top: 80px;
-    }
-
     .sideWrapper {
         position: absolute;
         width: 100vw;
@@ -731,21 +535,6 @@
 }
 
 @media screen and (max-width: 480px) {
-    .annotationModal {
-        width: 100vw;
-    }
-
-    .singleAnnotationWrapper {
-        margin-left: 0px;
-    }
-
-    .annotationModalClose {
-        margin-top: 5px;
-        margin-left: 5px;
-        padding: 20px;
-        font-weight: bold;
-    }
-
     .correctionText {
         margin-left: 0px;
     }

@@ -1,5 +1,6 @@
 import styles from '../styles/errors.module.css';
 import textstyles from '../styles/index.module.css';
+import annotationstyles from '../styles/annotation.module.css';
 
 const helper: React.FC = () => {
     return null;
@@ -12,7 +13,7 @@ export const ErrorBox = ({ error, setError }: { error: string, setError: (value:
     return (
         <div className={styles.errorBox}>
             <div className={`${textstyles.navWrapper} ${styles.errorTitle}`}>
-                <span className={`${textstyles.annotationModalClose} ${styles.errorClose}`} onClick={() => setError(false)}>X</span>
+                <span className={`${annotationstyles.annotationModalClose} ${styles.errorClose}`} onClick={() => setError(false)}>X</span>
                 <span className={styles.errorTitleText}>Error Submitting Annotation</span>
                 <span className={styles.errorTitleTextShort}>Error</span>
             </div>
