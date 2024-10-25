@@ -1,9 +1,11 @@
-import styles from '../styles/index.module.css';
+import styles from '../../styles/index.module.css';
 import React, { useRef, useState, useEffect } from 'react';
-import { Theme } from '../types/types';
-import { TextListProps } from '../types/types';
-import { sortTextData as sortTextDataUtil, filterTextData, observeLevelSeparators } from '../utils/textutils';
-import { ButtonWithAltText } from './toolbar/fontsizejsx';
+import { Theme } from '../../types/types';
+import { TextListProps } from '../../types/types';
+import { sortTextData as sortTextDataUtil, filterTextData, observeLevelSeparators } from '../../utils/textutils';
+import { ButtonWithAltText } from './../toolbar/fontsizejsx';
+import { parseVTT, VTTEntry } from '../../utils/render/vttutils';
+import Playback from './playbackjsx';
 
 const helper: React.FC = () => {
     return null;
@@ -212,19 +214,38 @@ export const TextModule: React.FC<{
     currentText: number, textContentRef: any, textData: any, renderAnnotatedText: any,
     currentLanguage: number
 }> = ({ currentText, textContentRef, textData, renderAnnotatedText, currentLanguage }) => {
+    const [currentTime, setCurrentTime] = useState(0);
+    const [vttEntries, setVttEntries] = useState<VTTEntry[]>([]);
+    const [isPlaying, setIsPlaying] = useState(false);
+
+    useEffect(() => {
+        const loadVTT = async () => {
+            const entries = await parseVTT('/assets/guidedreader/audios/vtt/157.vtt');
+            setVttEntries(entries);
+        };
+        loadVTT();
+    }, []);
+
     return (
-        <div className={styles.textContentWrapper} id="textContentWrapper" ref={textContentRef}>
-            <div className={styles.textContent} id="textContent">
-                {currentText < textData.length && textData[currentText].text?.length > 0 ? (
-                    <div key={"textContent0"} className={styles.textContentItem}>
-                        <div dangerouslySetInnerHTML={{
-                            __html: renderAnnotatedText(textData[currentText].text[currentLanguage].text,
-                                textData[currentText].text[currentLanguage].annotations)
-                        }} />
-                    </div>
-                ) : null}
+        <>
+            <div className={styles.textContentWrapper} id="textContentWrapper" ref={textContentRef}>
+                <div className={styles.textContent} id="textContent">
+                    {currentText < textData.length && textData[currentText].text?.length > 0 ? (
+                        <div key={"textContent0"} className={styles.textContentItem}>
+                            <div dangerouslySetInnerHTML={{
+                                __html: renderAnnotatedText(textData[currentText].text[currentLanguage].text,
+                                    textData[currentText].text[currentLanguage].annotations, currentTime, vttEntries, isPlaying)
+                            }} />
+                        </div>
+                    ) : null}
+                </div>
             </div>
-        </div>
+            {/*
+            <div className={styles.playbackWrapper}>
+                <Playback audioSrc={"/assets/guidedreader/audios/raw/157.mp3"} onTimeUpdate={setCurrentTime} setIsPlaying={setIsPlaying} />
+            </div>
+            */}
+        </>
     );
 }
 

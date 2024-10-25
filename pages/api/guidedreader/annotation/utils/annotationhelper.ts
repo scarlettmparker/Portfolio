@@ -7,6 +7,9 @@ const domPurify = DOMPurify(window);
 
 export class AnnotationHelper {
     static readonly MAX_IMAGE_COUNT = 3;
+
+    static readonly MIN_CHARACTERS = 10;
+    static readonly MAX_CHARACTERS = 750;
     
     // helper function to fetch a small part of the image and check dimensions
     static async fetchImageDimensions(imageUrl: string) {
@@ -45,10 +48,13 @@ export class AnnotationHelper {
     // check if the number of characters in description is within allowed bounds
     static isDescriptionValid(description: string) {
         const strippedDescription = description.replace(/<a\b[^>]*>(.*?)<\/a>/gi, '$1');
-        if (strippedDescription.length > 750) {
-            return { isValid: false, message: 'Annotation is too long! Maximum annotation length is 750 characters!' };
-        } else if (strippedDescription.length < 15) {
-            return { isValid: false, message: 'Annotation is too short! Minimum annotation length is 15 characters!' };
+        let minCharacters = AnnotationHelper.MIN_CHARACTERS;
+        let maxCharacters = AnnotationHelper.MAX_CHARACTERS;
+
+        if (strippedDescription.length > maxCharacters) {
+            return { isValid: false, message: `Annotation is too long! Maximum annotation length is ${maxCharacters} characters!` };
+        } else if (strippedDescription.length < minCharacters) {
+            return { isValid: false, message: `Annotation is too short! Minimum annotation length is ${minCharacters} characters!` };
         }
         return { isValid: true };
     }

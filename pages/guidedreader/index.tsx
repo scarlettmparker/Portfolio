@@ -7,14 +7,14 @@ import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
 import { TextObject, Theme } from './types/types'
 import { useRouter } from 'next/router';
-import { renderAnnotatedText } from './utils/renderutils';
+import { renderAnnotatedText } from './utils/render/renderutils';
 import { handleAnnotationClick, hideAnnotationAnimation } from './utils/annotation/annotationutils';
 import { handleTextSelection } from './utils/charutils';
 import { fetchData, fetchCurrentTextData } from './utils/textutils';
 import { getUserDetails, findLevelSeparators } from './utils/helperutils';
 import { IndexUser, NotLoggedIn } from './jsx/indexuserjsx';
-import { LevelNavigation, TextList, TextModule } from './jsx/textjsx';
-import { AnnotationModal, CreatingAnnotationModal, CreateAnnotationButton, CorrectingAnnotationModal } from './jsx/annotationjsx';
+import { LevelNavigation, TextList, TextModule } from './jsx/text/textjsx';
+import { AnnotationModal, CreatingAnnotationModal, CreateAnnotationButton, CorrectingAnnotationModal } from './jsx/text/annotationjsx';
 import { Toolbar } from './jsx/toolbarjsx';
 import { GetServerSideProps } from 'next';
 import { parse } from 'cookie';

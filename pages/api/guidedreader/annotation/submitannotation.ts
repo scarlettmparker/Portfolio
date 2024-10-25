@@ -28,12 +28,26 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             return res.status(403).json({ error: 'User is restricted. Reason: ' + restrictedUser.reason });
         }
     }
-    
+
     // get token from request
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET, raw: true });
 
     if (!token) {
         return res.status(401).json({ error: 'Unauthorized! Please try logging in again.' });
+    }
+
+    // check if the user has already submitted an annotation for the text
+    let existingAnnotation = await prisma.annotation.findFirst({
+        where: {
+            userId: userId,
+            textId: textId,
+            start: start,
+            end: end,
+        },
+    });
+
+    if (existingAnnotation) {
+        return res.status(409).json({ error: 'You have already submitted an annotation for this section!' });
     }
 
     // sanitize the description

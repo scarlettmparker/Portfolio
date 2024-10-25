@@ -29,6 +29,7 @@
 
 .errorText {
     position: absolute;
+    text-align: center;
     margin-top: 15px;
 }
 

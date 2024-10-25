@@ -74,13 +74,21 @@ export const filterTextData = (textData: any[], selectedLevels: any[], searchTer
 // observer for level separators
 export const observeLevelSeparators = (textListRef: React.RefObject<HTMLDivElement>, setCurrentLevel: { (level: string): void; }) => {
     const observer = new IntersectionObserver((entries) => {
+        let intersectingLevels = new Set<string>();
+
         // find the level separator that is intersecting
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const level = entry.target.getAttribute('data-level') || '';
-                setCurrentLevel(level);
+                intersectingLevels.add(level);
             }
         });
+
+        if (intersectingLevels.size > 1) {
+            setCurrentLevel("none");
+        } else if (intersectingLevels.size === 1) {
+            setCurrentLevel(Array.from(intersectingLevels)[0]);
+        }
     }, { threshold: 0.5 });
 
     const elements = textListRef.current?.querySelectorAll('.levelSeparator');

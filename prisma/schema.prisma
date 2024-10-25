@@ -68,10 +68,17 @@ model User {
   annotations         Annotation[]
   interactions        UserAnnotationInteraction[]
   RestrictedUser      RestrictedUser?
+  SuperUser           SuperUser?
   BannedUser          BannedUser?
   BypassUser          BypassUser?
 
   @@unique([username, auth])
+}
+
+model SuperUser {
+  id        Int    @id @default(autoincrement())
+  discordId String @unique
+  user      User   @relation(fields: [discordId], references: [discordId])
 }
 
 model RestrictedUser {
@@ -100,6 +107,7 @@ model TextObject {
   title String
   level String
   text  Text[]
+  textGroup Int   @default(0)
 }
 
 model Text {
@@ -109,6 +117,17 @@ model Text {
   textObjectId Int
   textObject   TextObject   @relation(fields: [textObjectId], references: [id])
   annotations  Annotation[]
+  audio        Audio?       @relation(fields: [audioId], references: [id])
+  audioId      Int?         @unique
+}
+
+model Audio {
+  id             Int    @id @default(autoincrement())
+  audioFile      String
+  vttFile        String
+  submissionName String
+  submissionLink String?
+  text           Text?
 }
 
 model Annotation {

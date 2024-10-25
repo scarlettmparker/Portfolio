@@ -38,6 +38,25 @@ export async function getUserDetails(auth: string, req: IncomingMessage) {
     });
 }
 
+// get super user status
+export async function getSuperUser(auth: string, req: IncomingMessage, discordId: string) {
+    const nextApiReq = req as NextApiRequest;
+
+    // construct the base URL using the request object
+    const protocol = req.headers['x-forwarded-proto'] || 'http';
+    const baseUrl = `${protocol}://${nextApiReq.headers.host}`;
+    const url = `${baseUrl}/api/guidedreader/getsuperuser`;
+
+    return fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${auth}`,
+        },
+        body: JSON.stringify({ discordId: discordId }),
+    });
+}
+
 // helper function
 export const getRoleByLevel = (level: string) => {
     return roles.find(role => role.id === level);

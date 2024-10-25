@@ -210,13 +210,13 @@
     }
 }
 
-@media screen and (max-height: 540px) {
+@media screen and (max-width: 540px) {
     .annotationModal {
         top: 80px;
     }
 }
 
-@media screen and (max-height: 480px) {
+@media screen and (max-width: 480px) {
     .annotationModal {
         width: 100vw;
     }

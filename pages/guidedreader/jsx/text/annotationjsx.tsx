@@ -1,14 +1,14 @@
-import styles from '../styles/index.module.css';
-import annotationStyles from '../styles/annotation.module.css';
+import styles from '../../styles/index.module.css';
+import annotationStyles from '../../styles/annotation.module.css';
 import React, { useState, useEffect } from "react";
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import Image from 'next/image';
-import { AnnotationModalProps } from "../types/types";
-import { BOT_LINK } from "../utils/helperutils";
-import { hideAnnotationButton, hideAnnotationAnimation, fetchAnnotations, handleVote } from "../utils/annotation/annotationutils";
-import { handleDeleteAnnotation, handleEditAnnotation, handleSubmitAnnotation } from '../utils/annotation/changehandler';
-import { deleteTimer } from '../utils/annotation/changeannotation';
+import { AnnotationModalProps } from "../../types/types";
+import { BOT_LINK } from "../../utils/helperutils";
+import { hideAnnotationButton, hideAnnotationAnimation, fetchAnnotations, handleVote } from "../../utils/annotation/annotationutils";
+import { handleDeleteAnnotation, handleEditAnnotation, handleSubmitAnnotation } from '../../utils/annotation/changehandler';
+import { deleteTimer } from '../../utils/annotation/changeannotation';
 
 const helper: React.FC = () => {
     return null;
@@ -89,7 +89,7 @@ const AnnotationItem = ({ annotation, handleVote, userDetails, setCurrentAnnotat
     }, [isDeleteConfirmationActive]);
 
     return (
-        <div className={styles.singleAnnotationWrapper}>
+        <div className={annotationStyles.singleAnnotationWrapper}>
             <span className={annotationStyles.annotationModalText}>
                 <Markdown remarkPlugins={[remarkGfm]}>
                     {annotation.description}
