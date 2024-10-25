@@ -4,6 +4,12 @@ export interface VTTEntry {
     text: string;
 }
 
+const helper: React.FC = () => {
+	return null;
+};
+
+export default helper;
+
 export const parseVTT = async (url: string): Promise<VTTEntry[]> => {
     const response = await fetch(url);
     const vttText = await response.text();
