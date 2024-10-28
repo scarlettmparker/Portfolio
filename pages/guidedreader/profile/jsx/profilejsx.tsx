@@ -24,7 +24,7 @@ export const ProfileModule = ({ username, discordId, avatar, nickname, level, nu
             <div className={styles.avatarWrapper}>
                 <Image 
                     src={avatar === "default" 
-                        ? "https://discord.com/assets/974be2a933143742e8b1.png" 
+                        ? "https://cdn.discordapp.com/embed/avatars/0.png" 
                         : `https://cdn.discordapp.com/avatars/${discordId}/${avatar}.png?size=1024`} 
                     className={styles.avatar} alt="User Avatar" width={SIZE} height={SIZE}
                 />
