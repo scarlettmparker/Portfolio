@@ -37,9 +37,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // return only necessary user information
-    const { id, username, discordId, avatar, nickname, levels } = user;
+    const { id, username, discordId, avatar, permissions, nickname, levels } = user;
     res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Path=/; Secure; SameSite=Strict`);
-    return res.status(200).json({ user: { id, username, discordId, avatar, nickname, levels } });
+
+    return res.status(200).json({ user: { id, username, discordId, avatar, permissions, nickname, levels } });
 }
 
 export default rateLimitMiddleware(handler);

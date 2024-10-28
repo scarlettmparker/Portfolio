@@ -1,6 +1,7 @@
 import styles from '../styles/profile.module.css';
 import Image from 'next/image';
 import { getRoleByLevel } from '../../utils/helperutils';
+import returnAvatar from '../../utils/avatarutils';
 
 const helper: React.FC = () => {
     return null;
@@ -23,9 +24,7 @@ export const ProfileModule = ({ username, discordId, avatar, nickname, level, nu
         <div className={styles.profileWrapper}>
             <div className={styles.avatarWrapper}>
                 <Image 
-                    src={avatar === "default" 
-                        ? "https://cdn.discordapp.com/embed/avatars/0.png" 
-                        : `https://cdn.discordapp.com/avatars/${discordId}/${avatar}.png?size=1024`} 
+                    src={returnAvatar(avatar, discordId)} 
                     className={styles.avatar} alt="User Avatar" width={SIZE} height={SIZE}
                 />
             </div>

@@ -1,4 +1,5 @@
 import styles from '../styles/indexuser.module.css';
+import returnAvatar from '../utils/avatarutils';
 import { BOT_LINK } from '../utils/helperutils';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -19,9 +20,7 @@ export const IndexUser = (userDetails: any) => {
     const avatar = user.avatar;
     const userId = user.discordId;
 
-    const avatarUrl = avatar === "default" 
-    ? "https://cdn.discordapp.com/embed/avatars/0.png"
-    : `https://cdn.discordapp.com/avatars/${userId}/${avatar}.png?size=1024`
+    const avatarUrl = returnAvatar(avatar, userId);
     return (
         <>
             <div className={styles.profileWrapper}>

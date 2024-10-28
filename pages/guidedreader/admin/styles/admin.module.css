@@ -39,6 +39,7 @@
     width: 85%;
     height: 50px;
     border-radius: 5px;
+    font-size: 16px;
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -60,22 +61,8 @@
 
 .adminMenuText {
     user-select: none;
-    font-size: 16px;
     font-weight: 500;
     padding-left: 15px;
 }
 
 /* toolbar stuff */
-
-.adminFlexWrapper {
-    width: 100%;
-}
-
-.adminToolbarWrapper {
-    position: relative;
-    content: '';
-    background-color: #292930;
-    width: 100%;
-    height: 60px;
-    border-bottom: 1px solid rgb(240, 235, 235);
-}

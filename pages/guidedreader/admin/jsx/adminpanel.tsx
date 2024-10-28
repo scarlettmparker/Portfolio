@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import styles from '../styles/admin.module.css';
-import User from './user';
+import User from './user/user';
 
 // menu type for admin panel loading api stuff
 type MenuType = {
     [key: string]: JSX.Element;
 };
 
-const AdminPanel = () => {
+const AdminPanel = ({userPermissions}: {userPermissions: string[]}) => {
     const [currentMenu, setCurrentMenu] = useState("");
 
     // menus for the admin panel
     const MENUS: MenuType = {
-        "User": <User />,
+        "User": <User userPermissions={userPermissions} />,
         "Annotation": <div>Annotation Component</div>,
         "Text": <div>Text Component</div>
     };
