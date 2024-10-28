@@ -19,8 +19,8 @@ export const handleSubmitAnnotation = async (selectedText: string | null, annota
     }
 };
 
-export const handleEditAnnotation = async (annotationID: number, annotationText: string, setError: (value: boolean) => void, setErrorMessage: (value: string) => void, userDetails: any, currentTextID: number) => {
-    let result = await editAnnotation(annotationID, annotationText, userDetails);
+export const handleEditAnnotation = async (annotationID: number, annotationText: string, setError: (value: boolean) => void, setErrorMessage: (value: string) => void) => {
+    let result = await editAnnotation(annotationID, annotationText);
 
     // successfully submitted annotation
     if (result.valid) {
@@ -31,8 +31,8 @@ export const handleEditAnnotation = async (annotationID: number, annotationText:
     }
 }
 
-export const handleDeleteAnnotation = async (annotationID: number, userDetails: any, setError: (value: boolean) => void, setErrorMessage: (value: string) => void) => {
-    let result = await deleteAnnotation(annotationID, userDetails);
+export const handleDeleteAnnotation = async (annotationID: number, setError: (value: boolean) => void, setErrorMessage: (value: string) => void) => {
+    let result = await deleteAnnotation(annotationID);
 
     // successfully deleted annotation
     if (result.valid) {

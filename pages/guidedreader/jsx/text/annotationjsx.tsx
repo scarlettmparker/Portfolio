@@ -121,7 +121,7 @@ const AnnotationItem = ({ annotation, handleVote, userDetails, setCurrentAnnotat
                             }}>Edit</span>
                             {isDeleteConfirmationActive ? (
                                 <span className={annotationStyles.annotationEditButton} onClick={() => {
-                                    handleDeleteAnnotation(annotation.id, userDetails, setError, setErrorMessage);
+                                    handleDeleteAnnotation(annotation.id, setError, setErrorMessage);
                                 }}>Are you sure?</span>
                             ) : (
                                 <span className={annotationStyles.annotationEditButton} onClick={() => {
@@ -239,7 +239,7 @@ export const CorrectingAnnotationModal = ({ setCreatingAnnotation, setError, set
         // if the annotation is being edited & the text has changed
         if (correctingAnnotationData.editing) {
             if (annotationText == correctingAnnotationData.description) { return; }
-            handleEditAnnotation(correctingAnnotationData.id, annotationText, setError, setErrorMessage, userDetails, currentTextID);
+            handleEditAnnotation(correctingAnnotationData.id, annotationText, setError, setErrorMessage);
         } else {
             handleSubmitAnnotation(null, annotationText, setError, setErrorMessage, userDetails, currentTextID, null, start, end);
         }

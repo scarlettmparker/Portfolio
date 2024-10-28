@@ -1,6 +1,6 @@
 import prisma from '../../prismaclient';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getToken } from 'next-auth/jwt';
+import { parse } from 'cookie';
 import rateLimitMiddleware from "@/middleware/rateLimiter";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -10,10 +10,20 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         return res.status(400).json({ error: 'Annotation ID is required!' });
     }
 
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET, raw: true });
+    // actually properly get the token (whoopsie)
+    const cookies = parse(req.headers.cookie || '');
+    const token = cookies.token;
 
     if (!token) {
         return res.status(401).json({ error: 'Unauthorized! Please try logging in again.' });
+    }
+
+    const user = await prisma.user.findFirst({
+        where: { auth: token },
+    });
+
+    if (!user) {
+        return res.status(401).json({ error: 'Unauthorized! User not found.' });
     }
 
     // find the matching annotation
@@ -22,9 +32,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             id: annotationId,
         },
     });
-
+    
     if (!annotation) {
         return res.status(404).json({ error: 'Annotation not found!' });
+    }
+
+    // ensure the user is the owner of the annotation
+    if (annotation.userId !== user.id) {
+        return res.status(401).json({ error: 'Unauthorized! User ID does not match.' });
     }
 
     try {

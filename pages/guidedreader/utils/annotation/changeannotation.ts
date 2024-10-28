@@ -46,7 +46,6 @@ export async function submitAnnotation(selectedText: string | null = null, annot
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${userDetails.user.auth}`
         },
         body: JSON.stringify(annotation)
     });
@@ -61,7 +60,7 @@ export async function submitAnnotation(selectedText: string | null = null, annot
 }
 
 // edit the annotation
-export async function editAnnotation(annotationId: number, annotationText: string, userDetails: any): Promise<{ valid: boolean, error?: any }> {
+export async function editAnnotation(annotationId: number, annotationText: string): Promise<{ valid: boolean, error?: any }> {
     const annotation = {
         annotationId: annotationId,
         annotationText: annotationText,
@@ -72,7 +71,6 @@ export async function editAnnotation(annotationId: number, annotationText: strin
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${userDetails.user.auth}`
         },
         body: JSON.stringify(annotation)
     });
@@ -96,12 +94,11 @@ export function deleteTimer(isDeleteConfirmationActive: boolean, setDeleteConfir
 }
 
 // delete the annotation
-export async function deleteAnnotation(annotationId: number, userDetails: any) {
+export async function deleteAnnotation(annotationId: number) {
     const response = await fetch('./api/guidedreader/annotation/deleteannotation', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${userDetails.user.auth}`
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({ annotationId: annotationId })
     });

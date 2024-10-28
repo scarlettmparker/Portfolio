@@ -1,16 +1,26 @@
 import prisma from '../../prismaclient';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getToken } from 'next-auth/jwt';
+import { parse } from 'cookie';
 import rateLimitMiddleware from "@/middleware/rateLimiter";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { annotationId, userId, isLike } = req.body;
 
     // get token from request
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET, raw: true });
+    const cookies = parse(req.headers.cookie || '');
+    const token = cookies.token;
 
     if (!token) {
         return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    // get user from token
+    const user = await prisma.user.findFirst({
+        where: { auth: token },
+    });
+
+    if (!user || user.id !== userId) {
+        return res.status(401).json({ error: 'Unauthorized! User ID does not match.' });
     }
 
     let annotation = await prisma.annotation.findUnique({
@@ -18,7 +28,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     });
 
     if (!annotation) {
-        return res.status(404).json({ error: 'Annotation not found' });
+        return res.status(404).json({ error: 'Annotation not found.' });
     }
 
     // check if user has already interacted with this annotation

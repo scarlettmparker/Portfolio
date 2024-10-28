@@ -60,10 +60,11 @@ model User {
   id                  Int                         @id @default(autoincrement())
   discordId           String                      @unique
   username            String
-  auth                String
+  auth                String                      @unique
   avatar              String                      @default("0")
   nickname            String                      @default("None")
   levels              String[]
+  permissions         String[]
   accountCreationDate Int
   annotations         Annotation[]
   interactions        UserAnnotationInteraction[]

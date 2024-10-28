@@ -13,6 +13,9 @@
 /.next/
 /out/
 
+# other stuff
+*.txt
+
 # production
 /build
 

@@ -1,11 +1,13 @@
 import '../styles/global.css';
+import styles from './styles/admin.module.css';
 import Head from 'next/head';
+import { parse } from 'cookie';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from "react";
-import { GetServerSideProps, NextApiRequest } from 'next';
-import { parse } from 'cookie';
+import { GetServerSideProps} from 'next';
 import { getSuperUser, getUserDetails } from "../utils/helperutils";
 import { IndexUser, NotLoggedIn } from "../jsx/indexuserjsx";
+import AdminPanel from './jsx/adminpanel';
 
 
 // get server side props for user details
@@ -68,10 +70,14 @@ function Home({ user }: any) {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             {isLoggedIn ? (
-                <IndexUser userDetails={userDetails} />
+                <div className={styles.pageWrapper}>
+                    <IndexUser userDetails={userDetails} />
+                    <AdminPanel userDetails={userDetails} />
+                </div>
             ) : (
                 <NotLoggedIn />
             )}
+            
         </div>
     );
 }

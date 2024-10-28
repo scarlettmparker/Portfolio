@@ -94,6 +94,7 @@ export const TextList: React.FC<TextListProps> = ({ textData, levelSeparators, s
                             {filteredTextData.map(({ title, level }, index) => {
                                 const originalIndex = sortedData.sortedTextData.findIndex(text => text.title === title && text.level === level);
 
+                                // check if the current text is the first in its level
                                 const previousTextLevel = index > 0 ? filteredTextData[index - 1].level : null;
                                 const shouldShowLevelSeparator = previousTextLevel !== level;
 
