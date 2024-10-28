@@ -7,11 +7,12 @@ type MenuType = {
     [key: string]: JSX.Element;
 };
 
-const AdminPanel = ({ userDetails }: { userDetails: any }) => {
+const AdminPanel = () => {
     const [currentMenu, setCurrentMenu] = useState("");
 
+    // menus for the admin panel
     const MENUS: MenuType = {
-        "User": <User userDetails={userDetails} />,
+        "User": <User />,
         "Annotation": <div>Annotation Component</div>,
         "Text": <div>Text Component</div>
     };

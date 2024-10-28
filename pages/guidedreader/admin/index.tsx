@@ -72,7 +72,7 @@ function Home({ user }: any) {
             {isLoggedIn ? (
                 <div className={styles.pageWrapper}>
                     <IndexUser userDetails={userDetails} />
-                    <AdminPanel userDetails={userDetails} />
+                    <AdminPanel />
                 </div>
             ) : (
                 <NotLoggedIn />

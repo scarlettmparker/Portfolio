@@ -21,32 +21,32 @@ const ChangeListButton = ({ direction, pageIndex, setPageIndex }: { direction: s
 };
 
 // user component
-const User = ({ userDetails }: { userDetails: any }) => {
+const User = () => {
     const [pageIndex, setPageIndex] = useState(0);
     const [users, setUsers] = useState([]);
+    const [numUsers, setNumUsers] = useState(0);
 
     useEffect(() => {
-        // fetch user data if it doesn't exist
-        const fetchUserData = async () => {
+        const fetchUsers = async () => {
             try {
+                // get number of users available to search through
                 const response = await fetch('/api/guidedreader/admin/user/getuserlength', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${userDetails.user.auth}`
                     }
                 });
                 const data = await response.json();
-                setUsers(data);
+                setNumUsers(data);
             } catch (error) {
                 console.error('Error fetching user data:', error);
             }
         };
 
         if (users.length === 0) {
-            fetchUserData();
+            fetchUsers();
         }
-    }, [users, userDetails.user.auth]);
+    }, [users]);
 
     return (
         <div className={styles.userWrapper}>
