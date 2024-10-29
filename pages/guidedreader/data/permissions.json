@@ -1,18 +1,18 @@
 {
     "user": {
-        "banUser": "Ban/Unban User",
+        "banUser": "Ban User",
         "restrictUser": "Restrict User",
         "changeLevel": "Change Level",
         "viewUserAnnotation": {
-            "description": "View User's Annotations",
-            "editUserAnnotation": "Edit User Annotation",
-            "removeUserAnnotation": "Remove User Annotation"
+            "description": "View User's Annotations"
         },
         "viewUserTexts": "View User's Texts"
     },
     "annotation": {
         "listAllAnnotations": "View Annotations on Text",
-        "removeAnnotation": "Remove Annotations on Text"
+        "removeAnnotation": "Remove Annotations on Text",
+        "editAnnotation": "Edit Annotation",
+        "deleteAnnotation": "Delete Annotation"
     },
     "text": {
         "viewByGroup": "View Texts by Group",

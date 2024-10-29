@@ -73,14 +73,17 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
                 return res.status(500).json({ error: 'Failed to create user' });
             }
         } else {
-            // user exists, update the user
+            // user exists, update the user and ensure that bypass levels are preserved
+            const bypassLevels = user.levels.filter(level => level.startsWith('L-BYPASS-'));
+            const newLevels = [...bypassLevels, ...levels.filter((level: string) => !level.startsWith('L-BYPASS-'))];
+
             user = await prisma.user.update({
                 where: {
                     discordId: discordId,
                 },
                 data: {
                     username: sanitizedUsername,
-                    levels: sanitizedLevels,
+                    levels: newLevels,
                     auth: hashedAuth,
                     avatar: sanitizedAvatar,
                     nickname: sanitizedNickname,

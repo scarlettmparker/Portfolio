@@ -4,36 +4,42 @@ import adminstyles from '../styles/admin.module.css';
 import permissions from '../../data/permissions.json';
 
 // permission item component
-const PermissionItem = ({ permissionKey, permissionValue, userPermissions, parentKey, isActive, onToggleActive, }: {
-    permissionKey: string; permissionValue: any; userPermissions: string[];
-    parentKey: string; isActive: boolean; onToggleActive: (key: string) => void;
+const PermissionItem = ({ permissionKey, permissionValue, userPermissions, parentKey, isActive, onToggleActive, setCurrentPermission }: {
+    permissionKey: string; permissionValue: any; userPermissions: string[]; parentKey: string; isActive: boolean;
+    onToggleActive: (key: string) => void; setCurrentPermission: (value: string) => void;
 }) => {
     const hasPermission = (perm: string) => {
         return userPermissions.includes(perm) || userPermissions.includes('*') || userPermissions.includes(parentKey);
     };
 
     // handle toggling nested menu for nested permissions
-    const handleToggleNested = () => {
-        onToggleActive(`${parentKey}.${permissionKey}`);
+    const handlePermissionClick = () => {
+        const fullPermissionName = `${parentKey}.${permissionKey}`;
+        if (typeof permissionValue === 'object' && Object.keys(permissionValue).some(key => key !== 'description')) {
+            onToggleActive(fullPermissionName);
+        } else {
+            // set the permission name if it is a leaf node
+            setCurrentPermission(fullPermissionName);
+        }
     };
 
     // render logic for permissions
     if (typeof permissionValue === 'string') {
         return hasPermission(`${parentKey}.${permissionKey}`) ? (
-            <span className={`${adminstyles.adminMenu} ${styles.adminMenu}`}>{permissionValue}</span>
+            <span className={`${adminstyles.adminMenu} ${styles.adminMenu}`} onClick={handlePermissionClick}>{permissionValue}</span>
         ) : null;
     } else if (typeof permissionValue === 'object') {
         return hasPermission(`${parentKey}.${permissionKey}`) ? (
             <>
-                <span className={`${adminstyles.adminMenu} ${styles.adminMenu}`} onClick={handleToggleNested}>
+                <span className={`${adminstyles.adminMenu} ${styles.adminMenu}`} onClick={handlePermissionClick}>
                     {permissionValue.description}
                 </span>
                 {isActive && (
                     <>
                         {Object.keys(permissionValue).map((nestedKey) => (
                             nestedKey !== 'description' && (
-                                <PermissionItem key={nestedKey} permissionKey={nestedKey} permissionValue={permissionValue[nestedKey]}
-                                    userPermissions={userPermissions} parentKey={`${parentKey}.${permissionKey}`} isActive={true} onToggleActive={onToggleActive} />
+                                <PermissionItem key={nestedKey} permissionKey={nestedKey} permissionValue={permissionValue[nestedKey]} userPermissions={userPermissions}
+                                    parentKey={`${parentKey}.${permissionKey}`} isActive={isActive} onToggleActive={onToggleActive} setCurrentPermission={setCurrentPermission} />
                             )
                         ))}
                     </>
@@ -46,7 +52,7 @@ const PermissionItem = ({ permissionKey, permissionValue, userPermissions, paren
 };
 
 // sidebar component
-const Sidebar = ({ userPermissions, parentKey }: { userPermissions: string[], parentKey: string }) => {
+const Sidebar = ({ userPermissions, parentKey, setCurrentPermission }: { userPermissions: string[], parentKey: string, setCurrentPermission(value: string): void }) => {
     const [activeKey, setActiveKey] = useState<string>('');
     const permissionValues: { [key: string]: any } = permissions[parentKey as keyof typeof permissions];
 
@@ -60,7 +66,7 @@ const Sidebar = ({ userPermissions, parentKey }: { userPermissions: string[], pa
             {permissionValues && Object.keys(permissionValues).map((key) => (
                 (activeKey === '' || activeKey.startsWith(`${parentKey}.${key}`)) && (
                     <PermissionItem key={key} permissionKey={key} permissionValue={permissionValues[key]} userPermissions={userPermissions}
-                        parentKey={parentKey} isActive={activeKey === `${parentKey}.${key}`} onToggleActive={handleToggleActive} />
+                        parentKey={parentKey} isActive={activeKey === `${parentKey}.${key}`} onToggleActive={handleToggleActive} setCurrentPermission={setCurrentPermission} />
                 )
             ))}
         </div>

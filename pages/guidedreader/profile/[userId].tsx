@@ -43,7 +43,11 @@ const ProfilePage = () => {
         setUsername(userDetails.username);
         setAvatar(userDetails.avatar);
         setNickname(userDetails.nickname);
-        setLevel(userDetails.levels[0]);
+
+        // set user level & ensure bypass takes effect
+        const userLevel = userDetails.levels[0];
+        setLevel(userLevel.startsWith("L-BYPASS-") ? userLevel.replace("L-BYPASS-", "") : userLevel);
+
         setNumAnnotations(userDetails.numAnnotations);
         setVotes(userDetails.totalVotes);
     }, [userDetails]);
