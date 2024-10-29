@@ -1,27 +1,37 @@
+const helper: React.FC = () => {
+    return null;
+};
+
+export default helper;
+
+// ban user type
 type BanUserData = {
     discordId: string;
     banned: boolean;
     reason?: string;
 };
 
+// restricted user type
 type RestrictedUserData = {
     discordId: string;
     restricted: boolean;
     reason?: string;
 };
 
+// is banned type (dunno why this is here)
 export type isBanned = {
     banned: boolean;
     reason?: string;
 };
 
+// i gotta move this stuff
 export type isRestricted = {
     restricted: boolean;
     reason?: string;
 };
 
 // either ban or unban user
-async function handleBanUser(data: BanUserData): Promise<{ banned: boolean; reason?: string }> {
+export async function handleBanUser(data: BanUserData): Promise<{ banned: boolean; reason?: string }> {
     return fetch('/api/guidedreader/admin/user/banuser', {
         method: 'POST',
         headers: {
@@ -82,5 +92,3 @@ export const getIsRestricted = ({ discordId }: { discordId: string }, setRestric
             setRestricted({ restricted: data.restricted, reason: data.reason });
         });
 }
-
-export default handleBanUser;

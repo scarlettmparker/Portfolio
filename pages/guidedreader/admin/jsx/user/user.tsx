@@ -6,8 +6,8 @@ import Sidebar from '../sidebar';
 import levels from '../../../data/roles.json';
 import ChangeListButton from './listbutton';
 import { fetchNumUsers, fetchUserData } from '../../utils/user/userutils';
-import handleBanUser, { getIsBanned, getIsRestricted, handleRestrictUser, isBanned, isRestricted } from '../../utils/user/banuser';
-import handleLevelChange from '../../utils/user/changelevel';
+import { getIsBanned, getIsRestricted, handleBanUser, handleRestrictUser, isBanned, isRestricted } from '../../utils/user/banuser';
+import { handleLevelChange } from '../../utils/user/changelevel';
 
 const SIZE = 50;
 

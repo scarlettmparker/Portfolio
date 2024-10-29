@@ -1,9 +1,16 @@
 import levels from '../../../data/roles.json';
 
+const helper: React.FC = () => {
+    return null;
+};
+
+export default helper;
+
+
 // change the level of a user
-async function handleLevelChange(user: any, userlevels: string[], level: number, override: boolean) {
+export async function handleLevelChange(user: any, userlevels: string[], level: number, override: boolean): Promise<{ success: boolean; error?: string }> {
     // filter levels based on level roles.json
-    const filteredLevel = userlevels.find((userLevelId: string) => 
+    const filteredLevel = userlevels.find((userLevelId: string) =>
         levels.some(role => role.id === userLevelId)
     );
 
@@ -27,5 +34,3 @@ async function handleLevelChange(user: any, userlevels: string[], level: number,
             return Promise.reject('An error occurred: ' + error);
         });
 };
-
-export default handleLevelChange;
