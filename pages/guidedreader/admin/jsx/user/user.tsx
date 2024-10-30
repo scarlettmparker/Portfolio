@@ -4,7 +4,7 @@ import returnAvatar from '../../../utils/avatarutils';
 import Image from 'next/image';
 import Sidebar from '../sidebar';
 import levels from '../../../data/roles.json';
-import ChangeListButton from './listbutton';
+import ChangeListButton from '../listbutton';
 import { fetchNumUsers, fetchUserData } from '../../utils/user/userutils';
 import { getIsBanned, getIsRestricted, handleBanUser, handleRestrictUser, isBanned, isRestricted } from '../../utils/user/banuser';
 import { handleLevelChange } from '../../utils/user/changelevel';
@@ -51,7 +51,9 @@ const UserData = ({ users, userPermissions }: { users: any[], userPermissions: s
     // banned/restricted status
     const [banned, setBanned] = useState<isBanned>({ banned: false });
     const [restricted, setRestricted] = useState<isRestricted>({ restricted: false });
-    const [changeLevel, setChangeLevel] = useState<boolean>(false);
+
+    // menus
+    const [changeLevelMenu, setChangeLevelMenu] = useState<boolean>(false);
 
     // parent key for permissions
     const parentKey = 'user';
@@ -81,11 +83,9 @@ const UserData = ({ users, userPermissions }: { users: any[], userPermissions: s
                 });
                 break;
             case 'user.changeLevel':
-                setChangeLevel(!changeLevel);
+                setChangeLevelMenu(!changeLevelMenu);
                 break;
-            case 'user.viewUserAnnotation.editUserAnnotation':
-                break;
-            case 'user.viewUserAnnotation.deleteUserAnnotation':
+            case 'user.viewUserAnnotation':
                 break;
             case 'user.viewUserTexts':
                 break;
@@ -121,7 +121,7 @@ const UserData = ({ users, userPermissions }: { users: any[], userPermissions: s
                             REASON: {restricted.reason}
                         </div>
                     )}
-                    {changeLevel && (
+                    {changeLevelMenu && (
                         <ChangeLevel selectedUser={selectedUser} />
                     )}
                     <span className={styles.selectedUsername}>{selectedUser.username}</span>

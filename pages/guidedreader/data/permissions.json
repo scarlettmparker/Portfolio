@@ -9,17 +9,15 @@
         "viewUserTexts": "View User's Texts"
     },
     "annotation": {
-        "listAllAnnotations": "View Annotations on Text",
-        "removeAnnotation": "Remove Annotations on Text",
-        "editAnnotation": "Edit Annotation",
-        "deleteAnnotation": "Delete Annotation"
+        "deleteAnnotation": "Delete Annotation",
+        "editAnnotation": "Edit Annotation"
     },
     "text": {
         "viewByGroup": "View Texts by Group",
         "changeGroup": "Change Text Group",
-        "deleteText": "Delete Text",
-        "editText": "Edit Text",
         "changeTextLevel": "Change Text Level",
+        "editText": "Edit Text",
+        "deleteText": "Delete Text",
         "addVoiceOver": "Add VTT to Text"
     }
 }

@@ -17,10 +17,8 @@ const PermissionItem = ({ permissionKey, permissionValue, userPermissions, paren
         const fullPermissionName = `${parentKey}.${permissionKey}`;
         if (typeof permissionValue === 'object' && Object.keys(permissionValue).some(key => key !== 'description')) {
             onToggleActive(fullPermissionName);
-        } else {
-            // set the permission name if it is a leaf node
-            setCurrentPermission(fullPermissionName);
         }
+        setCurrentPermission(fullPermissionName);
     };
 
     // render logic for permissions
