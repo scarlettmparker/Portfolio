@@ -180,6 +180,7 @@ function Home({ user }: any) {
         }
     }, [acceptedPolicy])
 
+    // scroll to each level in the text list
     const scrollToLevel = (level: string) => {
         const levelElement = textListRef.current?.querySelector(`[data-level="${level}"]`);
         if (levelElement) {

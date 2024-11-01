@@ -29,6 +29,12 @@ const WordReferenceModal = ({ wordReferenceMenuVisible, setWordReferenceMenuVisi
         };
     }, [inputWord]);
 
+    // get the definition from wordreference
+    const getWordReferenceEntry = async () => {
+        const definition = await defineWord(debouncedInputWord, DICTIONARY);
+        setDefinition(definition);
+    }
+
     useEffect(() => {
         const fetchWord = async () => {
             if (wordReferenceMenuVisible) {
@@ -36,13 +42,12 @@ const WordReferenceModal = ({ wordReferenceMenuVisible, setWordReferenceMenuVisi
                     setDefinition(null);
                 } else {
                     // get the definition from wordreference
-                    const definition = await defineWord(debouncedInputWord, DICTIONARY);
-                    setDefinition(definition);
+                    getWordReferenceEntry();
                 }
             }
         };
         fetchWord();
-    }, [debouncedInputWord]);
+    }, [wordReferenceMenuVisible, debouncedInputWord]);
 
     // refs for wikt menu for defocusing
     const wordReferenceMenuRef = useRef<HTMLDivElement>(null);
