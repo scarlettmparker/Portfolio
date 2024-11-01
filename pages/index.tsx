@@ -134,10 +134,10 @@ const Home = () => {
             </Head>
             <div className={styles.pageWrapper}>
                 <TitleModal windowWidth={windowWidth} />
-                <div className={cstyles.modalWrapper}>
+                {/*<div className={cstyles.modalWrapper}>
                     <ProfessionModal developerMenu={developerMenu} setDeveloperMenu={setDeveloperMenu} mobileDesign={mobileDesign} />
                     <PortfolioModal portfolioMenu={portfolioMenu} setPortfolioMenu={setPortfolioMenu} mobileDesign={mobileDesign} />
-                </div>
+                </div>*/}
             </div>
             <div className={styles.background} />
         </>
