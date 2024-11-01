@@ -6,7 +6,6 @@ import prisma from '../pages/api/prismaclient';
 export default function rateLimitMiddleware(handler, options = {}) {
     const { limit = 10, windowMs = 1000, privacy = false } = options;
 
-    console.log(privacy);
     return async (req, res) => {
         const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
         
@@ -50,7 +49,6 @@ export default function rateLimitMiddleware(handler, options = {}) {
             return res.status(401).json({ error: 'Please accept the Terms of Service.' });
         }
 
-        // Continue with the rest of the middleware logic
         return handler(req, res);
     };
 }
