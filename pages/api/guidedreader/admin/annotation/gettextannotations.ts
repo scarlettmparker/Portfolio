@@ -38,4 +38,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 }
 
-export default rateLimitMiddleware(handler);
+export default rateLimitMiddleware(handler, { privacy: true });

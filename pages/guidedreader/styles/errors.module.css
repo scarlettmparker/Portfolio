@@ -17,8 +17,17 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    font-family: 'Open Sans', sans-serif;
     width: 85%;
     height: 80%;
+}
+
+.privacyInnerWrapper {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 10px;
+    width: 100%;
 }
 
 .errorText, .errorTitle {
@@ -50,8 +59,8 @@
 }
 
 .errorClose {
-    color: white;
     right: 5px;
+    color: white;
 }
 
 .errorButton {
@@ -59,6 +68,27 @@
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
+}
+
+.privacySmallText {
+    font-size: 0.9rem;
+}
+
+.privacySmallWrapper {
+    margin-top: 5px;
+}
+
+.policyBanner {
+    position: fixed;
+    font-family: 'Open Sans', sans-serif;
+    cursor: pointer;
+    padding-left: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: rgb(241, 241, 241);
+    width: 100%;
+    z-index: 11;
+    bottom: 0;
 }
 
 @media screen and (max-width: 480px) {

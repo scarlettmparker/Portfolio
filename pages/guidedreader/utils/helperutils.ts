@@ -57,6 +57,16 @@ export async function getSuperUser(auth: string, req: IncomingMessage, discordId
     });
 }
 
+// accept privacy policy and tos
+export async function acceptPolicy() {
+    return fetch('/api/guidedreader/acceptpolicy', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+}
+
 // helper function
 export const getRoleByLevel = (level: string) => {
     return roles.find(role => role.id === level);

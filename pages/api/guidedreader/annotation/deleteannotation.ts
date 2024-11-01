@@ -65,4 +65,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(200).json({ message: 'Annotation deleted successfully!' });
 }
 
-export default rateLimitMiddleware(handler);
+export default rateLimitMiddleware(handler, { privacy: true });

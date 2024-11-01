@@ -1,7 +1,13 @@
 const rateLimitMap = new Map();
 
-export default function rateLimitMiddleware(handler, limit=10, windowMs=1000) {
-    return (req, res) => {
+import { parse } from 'cookie';
+import prisma from '../pages/api/prismaclient';
+
+export default function rateLimitMiddleware(handler, options = {}) {
+    const { limit = 10, windowMs = 1000, privacy = false } = options;
+
+    console.log(privacy);
+    return async (req, res) => {
         const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
         
         if (!rateLimitMap.has(ip)) {
@@ -24,6 +30,27 @@ export default function rateLimitMiddleware(handler, limit=10, windowMs=1000) {
         
         ipData.count += 1;
         
+        if (!privacy) {
+            return handler(req, res);
+        }
+        
+        // get token from request
+        const cookies = parse(req.headers.cookie || '');
+        const token = cookies.token;
+
+        if (!token) {
+            return res.status(401).json({ error: 'Unauthorized! Please try logging in again.' });
+        }
+
+        const user = await prisma.user.findFirst({
+            where: { auth: token },
+        });
+
+        if (user && !user.acceptedPolicy) {
+            return res.status(401).json({ error: 'Please accept the Terms of Service.' });
+        }
+
+        // Continue with the rest of the middleware logic
         return handler(req, res);
     };
 }

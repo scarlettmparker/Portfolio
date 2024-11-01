@@ -1,6 +1,7 @@
 import './styles/global.css';
 import Head from 'next/head';
 import styles from './styles/index.module.css';
+import errorstyles from './styles/errors.module.css';
 import themestyles from './styles/theme.module.css';
 import themejson from './data/theme.json';
 import Image from 'next/image';
@@ -11,14 +12,14 @@ import { renderAnnotatedText } from './utils/render/renderutils';
 import { handleAnnotationClick, hideAnnotationAnimation } from './utils/annotation/annotationutils';
 import { handleTextSelection } from './utils/charutils';
 import { fetchData, fetchCurrentTextData } from './utils/textutils';
-import { getUserDetails, findLevelSeparators } from './utils/helperutils';
+import { getUserDetails, findLevelSeparators, acceptPolicy } from './utils/helperutils';
 import { IndexUser, NotLoggedIn } from './jsx/indexuserjsx';
 import { LevelNavigation, TextList, TextModule } from './jsx/text/textjsx';
 import { AnnotationModal, CreatingAnnotationModal, CreateAnnotationButton, CorrectingAnnotationModal } from './jsx/text/annotationjsx';
 import { Toolbar } from './jsx/toolbarjsx';
 import { GetServerSideProps } from 'next';
 import { parse } from 'cookie';
-import { ErrorBox } from './jsx/errorjsx';
+import { ErrorBox, PolicyBox } from './jsx/errorjsx';
 
 // get server side props for user details
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -46,6 +47,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 // home page component
 function Home({ user }: any) {
+    // ensure users read the tos and privacy policy
+    const [acceptedPolicy, setAcceptedPolicy] = useState<boolean | null>(null);
+    const [popupVisible, setPopupVisible] = useState<boolean | null>(null);
+
     // react states yahoooo
     const [textData, setTextData] = useState<TextObject[]>([]);
     const [currentText, setCurrentText] = useState<number>(textData[0]?.id || 0);
@@ -94,6 +99,10 @@ function Home({ user }: any) {
         if (user) {
             setUserDetails(user);
             setIsLoggedIn(true);
+            if (!user.user.acceptedPolicy) {
+                setAcceptedPolicy(false);
+                setPopupVisible(true);
+            }
         }
     }, []);
 
@@ -165,6 +174,12 @@ function Home({ user }: any) {
         }
     }, [currentText, textData]);
 
+    useEffect(() => {
+        if (acceptedPolicy && acceptedPolicy == true) {
+            acceptPolicy();
+        }
+    }, [acceptedPolicy])
+
     const scrollToLevel = (level: string) => {
         const levelElement = textListRef.current?.querySelector(`[data-level="${level}"]`);
         if (levelElement) {
@@ -180,6 +195,14 @@ function Home({ user }: any) {
             </Head>
             {errorBox && (
                 <ErrorBox error={errorMessage} setError={setErrorBox} />
+            )}
+            {acceptedPolicy == false && popupVisible == true && (
+                <PolicyBox setAcceptedPolicy={setAcceptedPolicy} setPopupVisible={setPopupVisible} />
+            )}
+            {acceptedPolicy == false && popupVisible == false && (
+                <div className={errorstyles.policyBanner} onClick={() => setPopupVisible(true)}>
+                    <span className={errorstyles.policyText}>You must accept our <a href="/guidedreader/consent/terms" target="_blank">Terms of Service</a> and <a href="/guidedreader/consent/privacy" target="_blank">Privacy Policy</a>.</span>
+                </div>
             )}
             {currentAnnotation && (
                 <>
