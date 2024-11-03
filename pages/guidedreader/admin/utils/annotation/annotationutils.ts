@@ -21,7 +21,24 @@ export const fetchNumAnnotations = async (setNumAnnotations: (value: number) => 
     }
 }
 
-export const fetchAllAnnotations = async (textId: number, setAnnotations: (value: any[]) => void) => {
+export const fetchAllAnnotations = async (pageIndex: number, setAnnotations: (value: any[]) => void) => {
+    try {
+        // fetch annotation data
+        const response = await fetch(`/api/guidedreader/admin/annotation/getannotations?pageIndex=${pageIndex}&pageLength=${PAGE_LENGTH}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        // get response and update annotations
+        const data = await response.json();
+        setAnnotations(data);
+    } catch (error) {
+        console.error('Error fetching annotation data:', error);
+    }
+}
+
+export const fetchTextAnnotations = async (textId: number, setAnnotations: (value: any[]) => void) => {
     try {
         // fetch annotation data
         const response = await fetch(`/api/guidedreader/admin/annotation/gettextannotations?textId=${textId}`, {
