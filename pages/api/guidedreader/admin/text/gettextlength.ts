@@ -13,8 +13,20 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         return;
     }
 
-    // get the number of texts
-    const textCount = await prisma.text.count();
+    // extract search query from headers
+    const searchQuery = req.query.filter as string;
+    console.log(searchQuery);
+
+    // get the number of texts that match the search query
+    const textCount = await prisma.textObject.count({
+        where: {
+            title: {
+                contains: searchQuery,
+                mode: 'insensitive'
+            }
+        }
+    });
+
     return res.status(200).json({ textCount });
 }
 

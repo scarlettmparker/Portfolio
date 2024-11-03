@@ -38,4 +38,35 @@ export const fetchAllAnnotations = async (textId: number, setAnnotations: (value
     }
 }
 
+// numbers: [annotation id, text id]
+export const handleDeleteAnnotationAdmin = async (annotations: Set<[number, number]>) => {
+    try {
+        // delete selected annotations
+        await fetch('/api/guidedreader/admin/annotation/deleteannotation', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ annotations: Array.from(annotations) }),
+        });
+    } catch (error) {
+        console.error('Error deleting annotation:', error);
+    }
+}
+
+export const editAnnotation = async (annotationId: number, description: string) => {
+    try {
+        // edit annotation
+        await fetch('/api/guidedreader/admin/annotation/editannotation', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ annotationId, description }),
+        });
+    } catch (error) {
+        console.error('Error editing annotation:', error);
+    }
+}
+
 export default helper;

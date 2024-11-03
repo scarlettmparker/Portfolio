@@ -160,7 +160,7 @@ export const CreateAnnotationButton = ({ buttonPosition, isLoggedIn, setCreating
 }
 
 // annotation modal for creating and correcting annotations
-const WritingAnnotationModal = ({ title, selectedText, annotationText, setAnnotationText, onSubmit, onClose }:
+export const WritingAnnotationModal = ({ title, selectedText, annotationText, setAnnotationText, onSubmit, onClose }:
     { title: string, selectedText: string | null, annotationText: string, setAnnotationText: (value: string) => void, onSubmit: () => void, onClose: () => void }
 ) => {
     const [preview, setPreview] = useState(false);

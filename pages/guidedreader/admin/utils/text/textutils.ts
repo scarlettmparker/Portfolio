@@ -6,10 +6,10 @@ export default helper;
 
 export const PAGE_LENGTH: number = 10;
 
-export const fetchAllTexts = async (setNumTexts: (value: number) => void) => {
+export const fetchAllTexts = async (setNumTexts: (value: number) => void, filter: string) => {
     try {
         // fetch number of texts available
-        const response = await fetch('/api/guidedreader/admin/text/gettextlength', {
+        const response = await fetch(`/api/guidedreader/admin/text/gettextlength?filter=${filter}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -23,10 +23,10 @@ export const fetchAllTexts = async (setNumTexts: (value: number) => void) => {
     }
 }
 
-export const fetchTextData = async (pageIndex: number, setTexts: (value: any[]) => void) => {
+export const fetchTextData = async (pageIndex: number, setTexts: (value: any[]) => void, filter: string) => {
     try {
         // fetch text data
-        const response = await fetch(`/api/guidedreader/admin/text/gettexts?pageIndex=${pageIndex}&pageLength=${PAGE_LENGTH}`, {
+        const response = await fetch(`/api/guidedreader/admin/text/gettexts?pageIndex=${pageIndex}&pageLength=${PAGE_LENGTH}&filter=${filter}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

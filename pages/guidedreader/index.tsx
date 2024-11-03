@@ -99,10 +99,8 @@ function Home({ user }: any) {
         if (user) {
             setUserDetails(user);
             setIsLoggedIn(true);
-            if (!user.user.acceptedPolicy) {
-                setAcceptedPolicy(false);
-                setPopupVisible(true);
-            }
+            setAcceptedPolicy(user.user.acceptedPolicy);
+            setPopupVisible(!user.user.acceptedPolicy);
         }
     }, []);
 

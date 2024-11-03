@@ -16,6 +16,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     // parse query parameters
     const pageIndex = parseInt(req.query.pageIndex as string, 10);
     const pageLength = parseInt(req.query.pageLength as string, 10);
+    const searchQuery = req.query.filter as string;
 
     if (isNaN(pageIndex) || isNaN(pageLength) || pageIndex < 0 || pageLength <= 0) {
         return res.status(400).json({ error: "Invalid query parameters" });
@@ -28,6 +29,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             take: pageLength,
             orderBy: {
                 id: 'asc'
+            },
+            where: {
+                title: {
+                    contains: searchQuery,
+                    mode: 'insensitive'
+                }
             },
             include: {
                 text: {
