@@ -1,3 +1,8 @@
+const helper: React.FC = () => {
+    return null;
+};
+
+export default helper;
 
 // handle clearing annotations
 export const clearAnnotations = (setAnnotations: (value: any[]) => void) => {
