@@ -50,6 +50,8 @@ export interface AnnotationModalProps {
     setErrorMessage: (value: string) => void;
 }
 
+/* textjsx.tsx stuff */
+
 // props for text list
 export interface TextListProps {
     textData: TextData[];
@@ -62,6 +64,30 @@ export interface TextListProps {
     setCurrentLevel: (level: string) => void;
     hasURLData: boolean;
 }
+
+// side bar header props
+export interface SidebarHeaderProps {
+    hiddenSidebar: boolean;
+    toggleSidebar: () => void;
+    windowWidth: number;
+    isMounted: boolean;
+}
+
+// text item props
+export interface TextItemProps {
+    title: string;
+    isSelected: boolean;
+    onClick: () => void;
+}
+
+// level separator props
+export interface LevelSeparatorProps {
+    level: string;
+    textIndex: number;
+    levelRefs: React.RefObject<{ [key: string]: HTMLDivElement | null }>;
+}
+
+/* end of textjsx.tsx stuff */
 
 // props for toolbar
 export interface ToolbarProps {

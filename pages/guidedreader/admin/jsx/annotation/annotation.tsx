@@ -1,32 +1,13 @@
 import ChangeListButton from "../listbutton";
 import styles from "../../styles/admin.module.css";
+import Sidebar from "../sidebar";
 import { useEffect, useRef, useState } from "react";
 import { editAnnotation, fetchAllAnnotations, fetchNumAnnotations, fetchTextAnnotations, handleDeleteAnnotationAdmin } from "../../utils/annotation/annotationutils";
-import Sidebar from "../sidebar";
 import { fetchAllTexts, fetchTextData } from "../../utils/text/textutils";
 import { WritingAnnotationModal } from "@/pages/guidedreader/jsx/text/annotationjsx";
-import { hideAnnotationAnimation } from "@/pages/guidedreader/utils/annotation/annotationutils";
 import { toggleAnnotationSelection, changeMenus, clearTexts, clearAnnotations } from "../../utils/annotation/jsxutils";
-
-// text list component containing all texts (still not styled!!!)
-const TextList = ({ texts, onTextSelect, handleBack, pageIndex, setPageIndex, numTexts, setSearchInput }: {
-    texts: any[]; onTextSelect: (text: any) => void; handleBack: () => void; pageIndex: number; setPageIndex: (value: number) => void; numTexts: number; setSearchInput: (value: string) => void;
-}) => (
-    <div className={styles.allTextsWrapper}>
-        <button onClick={handleBack}>Back</button>
-        <div className={styles.searchBarWrapper}>
-            <input type="text" placeholder="Search texts..." className={styles.searchBar} onChange={(e) => setSearchInput(e.target.value)} />
-        </div>
-        {texts.map((text, index) => (
-            <div className={styles.individualTextWrapper} key={index}>
-                <span className={styles.textSelectMenu} onClick={() => onTextSelect(text)}>{text.title}</span>
-            </div>
-        ))}
-        <ChangeListButton direction="left" pageIndex={pageIndex} setPageIndex={setPageIndex} numUsers={numTexts} />
-        <ChangeListButton direction="right" pageIndex={pageIndex} setPageIndex={setPageIndex} numUsers={numTexts} />
-        {pageIndex + "/" + numTexts}
-    </div>
-);
+import { hideAnnotationAnimation } from "@/pages/guidedreader/utils/annotation/annotationutils";
+import { TextList } from "../text/text";
 
 // textdetails component (shows all annotation for text)
 const TextDetail = ({ currentText, handleBack, userPermissions, parentKey, setCurrentPermission, annotations, setAnnotations, selectedAnnotations, setSelectedAnnotations }: {

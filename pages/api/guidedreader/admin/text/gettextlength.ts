@@ -15,17 +15,21 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     // extract search query from headers
     const searchQuery = req.query.filter as string;
-    console.log(searchQuery);
 
     // get the number of texts that match the search query
-    const textCount = await prisma.textObject.count({
+    const textObjects = await prisma.textObject.findMany({
         where: {
             title: {
                 contains: searchQuery,
                 mode: 'insensitive'
             }
+        },
+        include: {
+            text: true
         }
     });
+
+    const textCount = textObjects.reduce((count, textObject) => count + textObject.text.length, 0);
 
     return res.status(200).json({ textCount });
 }

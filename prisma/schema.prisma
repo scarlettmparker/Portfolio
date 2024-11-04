@@ -73,6 +73,7 @@ model User {
   SuperUser           SuperUser?
   BannedUser          BannedUser?
   BypassUser          BypassUser?
+  Text                Text[]
 
   @@unique([username, auth])
 }
@@ -109,7 +110,13 @@ model TextObject {
   title String
   level String
   text  Text[]
-  textGroup Int   @default(0)
+}
+
+model TextGroup {
+  id        Int     @id @default(autoincrement())
+  groupName String
+  groupLink String?
+  texts     Text[]
 }
 
 model Text {
@@ -121,10 +128,14 @@ model Text {
   annotations  Annotation[]
   audio        Audio?       @relation(fields: [audioId], references: [id])
   audioId      Int?         @unique
+  textGroupId  Int?         @default(0)
+  textGroup    TextGroup?   @relation(fields: [textGroupId], references: [id])
+  authorId     String?
+  author       User?        @relation(fields: [authorId], references: [discordId])
 }
 
 model Audio {
-  id             Int    @id @default(autoincrement())
+  id             Int     @id @default(autoincrement())
   audioFile      String
   vttFile        String
   submissionName String

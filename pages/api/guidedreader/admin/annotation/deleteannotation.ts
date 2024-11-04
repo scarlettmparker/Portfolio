@@ -35,10 +35,18 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     let requiredPermissions = getRequiredPermissions(annotationCount, totalAnnotations);
 
-    // verify user is a superuser
-    const user = await verifyUser(req, res, requiredPermissions);
+    // verify user has the base permission
+    const user = await verifyUser(req, res, PERMISSIONS);
     if (!user) {
         return;
+    }
+
+    // verify user has bulk permissions if needed
+    if (annotationCount > 1) {
+        const bulkUser = await verifyUser(req, res, PERMISSIONS_BULK);
+        if (!bulkUser) {
+            return res.status(403).json({ error: 'Insufficient permissions for bulk delete!' });
+        }
     }
 
     try {

@@ -39,3 +39,33 @@ export const fetchTextData = async (pageIndex: number, setTexts: (value: any[]) 
         console.error('Error fetching text data:', error);
     }
 }
+
+export const changeTextLevel = async (textId: number[], level: number) => {
+    try {
+        // update text level
+        await fetch(`/api/guidedreader/admin/text/changetextlevel`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ textId, level })
+        });
+    } catch (error) {
+        console.error('Error changing text level:', error);
+    }
+}
+
+export const handleDeleteText = async (textId: number[]) => {
+    try {
+        // delete text
+        await fetch(`/api/guidedreader/admin/text/deletetext`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ textId })
+        });
+    } catch (error) {
+        console.error('Error deleting text:', error);
+    }
+}

@@ -10,6 +10,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         title: true,
         level: true,
       },
+      orderBy: {
+        id: 'asc',
+      },
     });
     res.status(200).json(textObjects);
   } catch (error) {

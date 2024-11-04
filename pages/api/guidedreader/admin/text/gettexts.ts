@@ -24,7 +24,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     // fetch texts from the database with pagination
     try {
-        const texts = await prisma.textObject.findMany({
+        const textObjects = await prisma.textObject.findMany({
             skip: pageIndex,
             take: pageLength,
             orderBy: {
@@ -40,11 +40,20 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
                 text: {
                     select: {
                         id: true,
-                        audio: true
+                        audio: true,
+                        language: true
                     }
                 }
             }
         });
+
+        const texts = textObjects.flatMap(textObject => 
+            textObject.text.map(text => ({
+                ...textObject,
+                ...text,
+                textObjectId: textObject.id
+            }))
+        );
 
         return res.status(200).json(texts);
     } catch (error) {

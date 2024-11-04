@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styles from '../styles/admin.module.css';
 import User from './user/user';
 import Annotation, { EditAnnotationModal } from './annotation/annotation';
+import Text from './text/text';
 
 // menu type for admin panel loading api stuff
 type MenuType = {
@@ -19,7 +20,7 @@ const AdminPanel = ({ userPermissions }: { userPermissions: string[] }) => {
     const MENUS: MenuType = {
         "User": <User userPermissions={userPermissions} />,
         "Annotation": <Annotation userPermissions={userPermissions} setCurrentAnnotation={setCurrentAnnotation} setCreatingAnnotation={setCreatingAnnotation} />,
-        "Text": <div>Text Component</div>
+        "Text": <Text userPermissions={userPermissions} />
     };
 
     return (

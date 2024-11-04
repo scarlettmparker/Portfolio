@@ -1,6 +1,6 @@
 import styles from '../../styles/index.module.css';
 import React, { useRef, useState, useEffect } from 'react';
-import { Theme } from '../../types/types';
+import { LevelSeparatorProps, SidebarHeaderProps, TextItemProps, Theme } from '../../types/types';
 import { TextListProps } from '../../types/types';
 import { sortTextData as sortTextDataUtil, filterTextData, observeLevelSeparators } from '../../utils/textutils';
 import { ButtonWithAltText } from './../toolbar/fontsizejsx';
@@ -17,19 +17,53 @@ export default helper;
 const SORT_OPTIONS = ['Level A-C', 'Level C-A'];
 const LEVELS = ['Α1', 'Α2', 'Β1', 'Β2', 'Γ1', 'Γ2'];
 
-// text list component (left bar)
+// sidebar header, has filters etc
+const SidebarHeader: React.FC<SidebarHeaderProps> = ({ hiddenSidebar, toggleSidebar, windowWidth, isMounted }) => (
+    <div className={styles.sideTitleWrapper}>
+        <span className={styles.sideTitle}>Texts (κείμενα)</span>
+        {isMounted && (
+            <ButtonWithAltText label={windowWidth > 1150 ? ">" : "<"} altText="Hide Sidebar" className={styles.hideButton} onClick={toggleSidebar} />
+        )}
+    </div>
+);
+
+// individual text item
+const TextItem: React.FC<TextItemProps> = ({ title, isSelected, onClick }) => (
+    <div onClick={onClick} className={`${styles.textItem} ${isSelected ? styles.selectedTextItem : ''}`}>
+        {title}
+    </div>
+);
+
+// level separator
+const LevelSeparator: React.FC<LevelSeparatorProps> = ({ level, textIndex, levelRefs }) => (
+    <div key={"levelSeparator" + textIndex} data-index={textIndex} data-level={level}
+        className={`${styles.levelSeparator} levelSeparator`} ref={el => { if (levelRefs.current) levelRefs.current[level] = el; }} >
+        {level}
+    </div>
+);
+
+// shows all the texts, main component
 export const TextList: React.FC<TextListProps> = ({ textData, levelSeparators, setCurrentText, setCurrentAnnotation, setCurrentLanguage, currentText, textListRef, setCurrentLevel, hasURLData }) => {
     const [sortedData, setSortedData] = useState({ sortedTextData: textData, sortedLevelSeparators: levelSeparators });
     const [sortOption, setSortOption] = useState(SORT_OPTIONS[0]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedLevels, setSelectedLevels] = useState(LEVELS);
     const [hiddenSidebar, setHiddenSidebar] = useState(false);
-
     const [isMounted, setIsMounted] = useState(false);
     const [windowWidth, setWindowWidth] = useState(0);
 
     const levelRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
     const { filteredTextData } = filterTextData(sortedData.sortedTextData, selectedLevels, searchTerm);
+
+    const toggleSidebar = () => setHiddenSidebar(!hiddenSidebar);
+
+    // individual text item handling
+    const textItemClick = (index: number) => {
+        if (windowWidth < 1150) toggleSidebar();
+        setCurrentLanguage(0);
+        setCurrentAnnotation('');
+        setCurrentText(index);
+    }
 
     useEffect(() => {
         // sort the text data based on the selected sort option
@@ -46,22 +80,17 @@ export const TextList: React.FC<TextListProps> = ({ textData, levelSeparators, s
         setWindowWidth(window.innerWidth);
 
         // get window width for responsive design
-        const handleResize = () => {
-            setWindowWidth(window.innerWidth);
-        };
-
+        const handleResize = () => setWindowWidth(window.innerWidth);
         window.addEventListener('resize', handleResize);
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    })
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         // if the user loads on a specific text and may be on mobile
         if (hasURLData && window.innerWidth < 1150) {
             setHiddenSidebar(true);
         }
-    }, [hasURLData])
+    }, [hasURLData]);
 
     useEffect(() => {
         // change the margin of the main wrapper based on the sidebar visibility
@@ -73,65 +102,50 @@ export const TextList: React.FC<TextListProps> = ({ textData, levelSeparators, s
         } else if (!hiddenSidebar && windowWidth < 1560) {
             document.getElementById('mainWrapper')?.setAttribute('style', 'margin-right: 0');
         }
-    }, [hiddenSidebar, windowWidth])
+    }, [hiddenSidebar, windowWidth]);
 
     return (
         <>
             {!hiddenSidebar ? (
                 <div className={styles.sideWrapper}>
-                    <div className={styles.sideTitleWrapper}>
-                        <span className={styles.sideTitle}>Texts (κείμενα)</span>
-                        {isMounted && (
-                            <>
-                                <ButtonWithAltText label={windowWidth > 1150 ? ">" : "<"} altText="Hide Sidebar" className={styles.hideButton} onClick={() => setHiddenSidebar(!hiddenSidebar)} />
-                            </>
-                        )}
-                    </div>
+                    <SidebarHeader hiddenSidebar={hiddenSidebar} toggleSidebar={toggleSidebar} windowWidth={windowWidth} isMounted={isMounted} />
                     <div className={styles.textList} ref={textListRef}>
-                        <TextFilter sortOptions={SORT_OPTIONS} onSortChange={(newSortOption) => setSortOption(newSortOption)} searchTerm={searchTerm}
+                        <TextFilter sortOptions={SORT_OPTIONS} onSortChange={setSortOption} searchTerm={searchTerm}
                             onSearchChange={setSearchTerm} selectedLevels={selectedLevels} onLevelChange={setSelectedLevels} />
                         <div className={styles.textItemWrapper}>
                             {filteredTextData.map(({ title, level }, index) => {
+                                // get the index of the text in the original data
                                 const originalIndex = sortedData.sortedTextData.findIndex(text => text.title === title && text.level === level);
+                                const textIndex = sortedData.sortedTextData[originalIndex].id - 1;
 
-                                // check if the current text is the first in its level
+                                // get the level of the previous text to determine if a level separator should be shown
                                 const previousTextLevel = index > 0 ? filteredTextData[index - 1].level : null;
                                 const shouldShowLevelSeparator = previousTextLevel !== level;
 
                                 return (
                                     <React.Fragment key={index}>
-                                        {shouldShowLevelSeparator ? (
-                                            <div key={"levelSeparator" + originalIndex} data-index={originalIndex} data-level={level}
-                                                className={`${styles.levelSeparator} levelSeparator`} ref={el => { levelRefs.current[level] = el; }} >
-                                                {level}
-                                            </div>
-                                        ) : null}
-                                        <div key={"textModule" + originalIndex} onClick={() => {
-                                            let textIndex = sortedData.sortedTextData[originalIndex].id - 1;
-                                            if (windowWidth < 1150) {
-                                                setHiddenSidebar(!hiddenSidebar);
-                                            }
-                                            setCurrentLanguage(0);
-                                            setCurrentAnnotation('');
-                                            setCurrentText(textIndex);
-                                        }}>
-                                            {TitleModule(title, currentText === originalIndex)}
-                                        </div>
+                                        {shouldShowLevelSeparator && (
+                                            <LevelSeparator level={level} textIndex={textIndex} levelRefs={levelRefs} />
+                                        )}
+                                        <TextItem title={title} isSelected={currentText === textIndex}
+                                            onClick={() => textItemClick(textIndex)} />
                                     </React.Fragment>
                                 );
                             })}
                         </div>
                     </div>
                 </div>
-            ) : <ButtonWithAltText label={windowWidth > 1150 ? "<" : ">"} altText="Show Sidebar" className={styles.showButton} onClick={() => setHiddenSidebar(!hiddenSidebar)} />}
+            ) : (
+                <ButtonWithAltText label={windowWidth > 1150 ? "<" : ">"} altText="Show Sidebar" className={styles.showButton} onClick={toggleSidebar} />
+            )}
         </>
     );
 };
 
 // text filter component
 const TextFilter: React.FC<{
-    sortOptions: string[], onSortChange: (sortOption: string) => void, searchTerm: string, onSearchChange: (term: string) => void,
-    selectedLevels: string[], onLevelChange: (levels: string[]) => void
+    sortOptions: string[], onSortChange: (sortOption: string) => void, searchTerm: string,
+    onSearchChange: (term: string) => void, selectedLevels: string[], onLevelChange: (levels: string[]) => void
 }> = ({ searchTerm, onSearchChange, selectedLevels, onLevelChange }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -174,13 +188,8 @@ const TextFilter: React.FC<{
                     <div className={styles.levelCheckboxes}>
                         {LEVELS.map((level) => (
                             <label key={level} className={styles.levelCheckboxLabel}>
-                                <input
-                                    type="checkbox"
-                                    value={level}
-                                    checked={selectedLevels.includes(level)}
-                                    onChange={() => handleLevelChange(level)}
-                                    className={styles.levelCheckbox}
-                                />
+                                <input type="checkbox" value={level} checked={selectedLevels.includes(level)}
+                                    onChange={() => handleLevelChange(level)} className={styles.levelCheckbox} />
                                 {level}
                             </label>
                         ))}
@@ -247,14 +256,5 @@ export const TextModule: React.FC<{
             </div>
             */}
         </>
-    );
-}
-
-// title module component
-const TitleModule = (title: string, currentText: boolean) => {
-    return (
-        <div className={`${styles.textItem} ${currentText ? styles.selectedTextItem : ''}`}>
-            <span className={styles.textTitle}>{title}</span>
-        </div>
     );
 }
