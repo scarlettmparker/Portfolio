@@ -68,7 +68,9 @@ const Text = ({ userPermissions }: { userPermissions: string[] }) => {
 
     return (
         <>
-            <Sidebar userPermissions={userPermissions} parentKey={parentKey} setCurrentPermission={setCurrentPermission} />
+            {Array.isArray(userPermissions) ? (
+                <Sidebar userPermissions={userPermissions} parentKey={parentKey} setCurrentPermission={setCurrentPermission} />)
+            : null}
             {currentText && (
                 <TextDetail currentText={currentText} handleBack={handleBack} userPermissions={userPermissions} parentKey={parentKey} setCurrentPermission={setCurrentPermission} />
             )}
@@ -119,6 +121,7 @@ export const TextList = ({ texts, setAllSelectedTexts, onTextSelect, handleBack,
     texts: any[]; setAllSelectedTexts?: (texts: any[]) => void; onTextSelect: (text: any) => void; handleBack?: () => void; pageIndex: number; setPageIndex: (value: number) => void; numTexts: number; setSearchInput: (value: string) => void;
 }) => {
     const [selectedTexts, setSelectedTexts] = useState<any[]>([]);
+
 
     useEffect(() => {
         if (setAllSelectedTexts) {
