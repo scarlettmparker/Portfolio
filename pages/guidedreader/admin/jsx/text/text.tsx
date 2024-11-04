@@ -22,6 +22,10 @@ const Text = ({ userPermissions }: { userPermissions: string[] }) => {
     const [currentPermission, setCurrentPermission] = useState<string>('');
     const [groups, setGroups] = useState<any[]>([]);
 
+    useEffect(() => {
+        getTextGroups(setGroups);
+    }, []);
+
     // other menus yayy
     const [changeLevelMenu, setChangeLevelMenu] = useState<boolean>(false);
     const [changeGroupMenu, setChangeGroupMenu] = useState<boolean>(false);
@@ -36,12 +40,6 @@ const Text = ({ userPermissions }: { userPermissions: string[] }) => {
     const [searchInput, setSearchInput] = useState('');
 
     const parentKey = 'text';
-
-    useEffect(() => {
-        if (groups.length === 0) {
-            getTextGroups(setGroups);
-        }
-    })
 
     useEffect(() => {
         currentText && setAllSelectedTexts([currentText]);
@@ -91,12 +89,6 @@ const Text = ({ userPermissions }: { userPermissions: string[] }) => {
             {Array.isArray(userPermissions) ? (
                 <Sidebar userPermissions={userPermissions} parentKey={parentKey} setCurrentPermission={setCurrentPermission} />)
                 : null}
-            {currentText && (
-                <TextDetail currentText={currentText} handleBack={handleBack} userPermissions={userPermissions} parentKey={parentKey} setCurrentPermission={setCurrentPermission} />
-            )}
-            {!currentText && (
-                <TextList texts={texts} setAllSelectedTexts={setAllSelectedTexts} onTextSelect={setCurrentText} pageIndex={pageIndex} setPageIndex={setPageIndex} numTexts={numTexts} setSearchInput={setSearchInput} />
-            )}
             {changeLevelMenu && (
                 <ChangeLevel allSelectedTexts={allSelectedTexts} />
             )}
@@ -105,6 +97,12 @@ const Text = ({ userPermissions }: { userPermissions: string[] }) => {
             )}
             {changeGroupMenu && (
                 <ChangeGroup groups={groups} allSelectedTexts={allSelectedTexts} />
+            )}
+            {currentText && (
+                <TextDetail currentText={currentText} handleBack={handleBack} userPermissions={userPermissions} parentKey={parentKey} setCurrentPermission={setCurrentPermission} />
+            )}
+            {!currentText && (
+                <TextList texts={texts} setAllSelectedTexts={setAllSelectedTexts} onTextSelect={setCurrentText} pageIndex={pageIndex} setPageIndex={setPageIndex} numTexts={numTexts} setSearchInput={setSearchInput} />
             )}
         </>
     );
