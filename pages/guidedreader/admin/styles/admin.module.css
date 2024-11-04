@@ -65,4 +65,9 @@
     padding-left: 15px;
 }
 
+.currentMenu {
+    height: 85%;
+    width: 50%;
+}
+
 /* toolbar stuff */

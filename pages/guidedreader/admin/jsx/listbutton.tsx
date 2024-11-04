@@ -1,5 +1,5 @@
-import { PAGE_LENGTH } from "../utils/user/userutils";
 import styles from "../styles/admin.module.css";
+import { PAGE_LENGTH } from "../utils/consts";
 
 const ChangeListButton = ({ direction, pageIndex, setPageIndex, numUsers }: { direction: string, pageIndex: number, setPageIndex: (value: number) => void, numUsers: number }) => {
     const handleClick = () => {

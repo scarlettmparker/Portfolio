@@ -1,11 +1,10 @@
+import { PAGE_LENGTH } from "../consts";
+
 const helper: React.FC = () => {
     return null;
 };
 
 export default helper;
-
-export const PAGE_LENGTH: number = 10;
-
 export const fetchNumAnnotations = async (setNumAnnotations: (value: number) => void) => {
     try {
         // fetch number of annotations available

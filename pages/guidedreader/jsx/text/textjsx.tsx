@@ -221,40 +221,62 @@ export const LevelNavigation: React.FC<{ currentLevel: string, currentTheme: The
 
 // text module component
 export const TextModule: React.FC<{
-    currentText: number, textContentRef: any, textData: any, renderAnnotatedText: any,
-    currentLanguage: number
+    currentText: number, textContentRef: any, textData: any, renderAnnotatedText: any, currentLanguage: number
 }> = ({ currentText, textContentRef, textData, renderAnnotatedText, currentLanguage }) => {
     const [currentTime, setCurrentTime] = useState(0);
     const [vttEntries, setVttEntries] = useState<VTTEntry[]>([]);
     const [isPlaying, setIsPlaying] = useState(false);
+    const [audioVisible, setAudioVisible] = useState(false);
+
+    let currentTextData = textData[currentText]?.text?.[currentLanguage] ?? null;
+    let textGroup = currentTextData?.textGroup ?? null;
+
+    // get vtt files and audio
+    let vttFile = currentTextData?.audio?.vttFile ?? null;
+    let audioFile = currentTextData?.audio?.audioFile ?? null;
 
     useEffect(() => {
         const loadVTT = async () => {
-            const entries = await parseVTT('/assets/guidedreader/audios/vtt/157.vtt');
+            const entries = await parseVTT(vttFile);
             setVttEntries(entries);
+            if (entries.length > 0) {
+                setAudioVisible(true);
+            }
         };
-        loadVTT();
-    }, []);
+        vttFile && loadVTT();
+    }, [vttFile]);
 
     return (
         <>
-            <div className={styles.textContentWrapper} id="textContentWrapper" ref={textContentRef}>
-                <div className={styles.textContent} id="textContent">
+            <div className={styles.textContentWrapper} id="textContentWrapper">
+                <div className={styles.textContent} id="textContent" ref={textContentRef}>
                     {currentText < textData.length && textData[currentText].text?.length > 0 ? (
                         <div key={"textContent0"} className={styles.textContentItem}>
                             <div dangerouslySetInnerHTML={{
-                                __html: renderAnnotatedText(textData[currentText].text[currentLanguage].text,
-                                    textData[currentText].text[currentLanguage].annotations, currentTime, vttEntries, isPlaying)
+                                __html: renderAnnotatedText(currentTextData.text,
+                                    currentTextData.annotations, currentTime, vttEntries, isPlaying)
                             }} />
                         </div>
                     ) : null}
                 </div>
+                <div className={styles.textInfo} style={{ marginBottom: audioFile && vttFile ? '50px' : '0' }}>
+                    {textGroup?.groupName && textGroup.groupName != "user" &&
+                        <span className={styles.playbackAuthor}>Text Group: <a href={textGroup.groupLink} target="_blank">{textGroup.groupName}</a></span>
+                    }
+                    {audioFile && vttFile &&
+                        <span className={styles.playbackAuthor}>Audio: <a href={currentTextData.audio?.submissionLink} target="_blank">{currentTextData.audio.submissionName}</a></span>
+                    }
+                </div>
             </div>
-            {/*
-            <div className={styles.playbackWrapper}>
-                <Playback audioSrc={"/assets/guidedreader/audios/raw/157.mp3"} onTimeUpdate={setCurrentTime} setIsPlaying={setIsPlaying} />
-            </div>
-            */}
+            {audioFile && vttFile &&
+                <div className={`${styles.playbackWrapper} ${audioVisible ? '' : styles.hiddenPlaybackWrapper}`} onClick={() => setAudioVisible(!audioVisible)}>
+                    {audioVisible ? (
+                        <Playback audioSrc={audioFile} className={styles.playback} onTimeUpdate={setCurrentTime} setIsPlaying={setIsPlaying} />
+                    ) : (
+                        'Show Playback'
+                    )}
+                </div>
+            }
         </>
     );
 }

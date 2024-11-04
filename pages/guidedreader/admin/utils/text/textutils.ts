@@ -1,10 +1,10 @@
+import { PAGE_LENGTH } from "../consts";
+
 const helper: React.FC = () => {
     return null;
 };
 
 export default helper;
-
-export const PAGE_LENGTH: number = 10;
 
 export const fetchAllTexts = async (setNumTexts: (value: number) => void, filter: string) => {
     try {
@@ -67,5 +67,58 @@ export const handleDeleteText = async (textId: number[]) => {
         });
     } catch (error) {
         console.error('Error deleting text:', error);
+    }
+}
+
+// add VTT to text
+export const addVTTtoText = async (textId: number, audioFile: File, vttFile: File) => {
+    try {
+        const formData = new FormData();
+
+        // add each file to form data
+        formData.append('textId', textId.toString());
+        formData.append('author', 'Learning Greek Server'); // temporary will add a field for this
+        formData.append('link', 'https://discord.gg/greek'); // temporary will add a field for this
+        formData.append('audio', audioFile);
+        formData.append('vtt', vttFile);
+
+        await fetch(`/api/guidedreader/admin/text/addvtt`, {
+            method: 'POST',
+            body: formData
+        });
+    } catch (error) {
+        console.error('Error adding VTT to text:', error);
+    }
+}
+
+export const getTextGroups = async (setGroups: (value: any[]) => void) => {
+    try {
+        // fetch text groups
+        const response = await fetch(`/api/guidedreader/admin/text/gettextgroups`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        // get response and update groups
+        const data = await response.json();
+        setGroups(data);
+    } catch (error) {
+        console.error('Error fetching text groups:', error);
+    }
+}
+
+export const changeTextGroup = async (textId: number[], groupId: number) => {
+    try {
+        // update text group
+        await fetch(`/api/guidedreader/admin/text/changetextgroup`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ textId, groupId })
+        });
+    } catch (error) {
+        console.error('Error changing text group:', error);
     }
 }

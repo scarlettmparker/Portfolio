@@ -1,0 +1,14 @@
+.vttSubmit {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.allTextsWrapper {
+    height: 100%;
+}
+
+.textList {
+    height: 100%;
+    overflow-y: auto;
+}

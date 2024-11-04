@@ -40,9 +40,9 @@ const AdminPanel = ({ userPermissions }: { userPermissions: string[] }) => {
                 </div>
                 <div className={styles.adminFlexWrapper}>
                     <div className={styles.adminToolbarWrapper} />
-                    <div>
-                        {currentMenu && MENUS[currentMenu]}
-                    </div>
+                </div>
+                <div className={styles.currentMenu}>
+                    {currentMenu && MENUS[currentMenu]}
                 </div>
             </div>
         </>

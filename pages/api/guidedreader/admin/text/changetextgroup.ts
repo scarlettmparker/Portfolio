@@ -4,19 +4,15 @@ import rateLimitMiddleware from "@/middleware/rateLimiter";
 import { verifyUser } from '../verify';
 
 // permissions needed to access this path
-const PERMISSIONS = ["user.changeTextLevel"];
-const PERMISSIONS_BULK = ["user.changeTextLevel.bulk", "user.changeTextLevel.*"];
+const PERMISSIONS = ["user.changeTextGroup"];
+const PERMISSIONS_BULK = ["user.changeTextGroup.bulk", "user.changeTextGroup.*"];
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const { textId, level } = req.body;
-
-    if (!textId || !level) {
-        return res.status(400).json({ error: 'Text ID and level are required!' });
-    }
+    const { textId, groupId } = req.body;
 
     const bulkChange = Array.isArray(textId) && textId.length > 1;
 
-    // Verify user permissions
+    // verify user permissions
     const user = await verifyUser(req, res, PERMISSIONS);
     if (!user) {
         return;
@@ -32,23 +28,23 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
         if (bulkChange) {
             for (const id of textId) {
-                await updateTextLevel(id, level);
+                await updateTextGroup(id, groupId);
             }
         } else {
-            await updateTextLevel(textId[0], level);
+            await updateTextGroup(textId[0], groupId);
         }
 
-        return res.status(200).json({ success: 'Text level(s) updated successfully!' });
+        return res.status(200).json({ success: 'Text group(s) updated successfully!' });
     } catch (error) {
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
 
-async function updateTextLevel(textId: number, level: string) {
-    // update the textObject level
-    await prisma.textObject.updateMany({
-        where: { text: { some: { id: textId } } },
-        data: { level: level },
+async function updateTextGroup(textId: number, group: number) {
+    // update the text group
+    await prisma.text.updateMany({
+        where: { id: textId },
+        data: { textGroupId: group },
     });
 }
 

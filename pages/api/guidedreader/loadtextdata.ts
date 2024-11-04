@@ -33,7 +33,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
                             include: {
                                 user: true
                             }
-                        }
+                        },
+                        audio: true,
+                        author: true,
+                        textGroup: true
                     }
                 }
             }

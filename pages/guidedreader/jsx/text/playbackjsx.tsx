@@ -2,11 +2,12 @@ import { useEffect, useRef } from "react";
 
 interface PlayerProps {
     audioSrc: string;
+    className?: string;
     setIsPlaying: (value: boolean) => void;
     onTimeUpdate: (currentTime: number) => void;
 }
 
-const Playback: React.FC<PlayerProps> = ({ audioSrc, setIsPlaying, onTimeUpdate }) => {
+const Playback: React.FC<PlayerProps> = ({ audioSrc, className, setIsPlaying, onTimeUpdate }) => {
     const playerRef = useRef<HTMLAudioElement>(null);
 
     useEffect(() => {
@@ -29,7 +30,7 @@ const Playback: React.FC<PlayerProps> = ({ audioSrc, setIsPlaying, onTimeUpdate 
         };
     }, []);
 
-    return <audio controls src={audioSrc} ref={playerRef} />;
+    return <audio controls src={audioSrc} ref={playerRef} className={className} />;
 };
 
 export default Playback;

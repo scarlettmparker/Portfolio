@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { changeTextLevel, fetchAllTexts, fetchTextData, handleDeleteText } from "../../utils/text/textutils";
+import { addVTTtoText, changeTextGroup, changeTextLevel, fetchAllTexts, fetchTextData, getTextGroups, handleDeleteText } from "../../utils/text/textutils";
 import ChangeListButton from "../listbutton";
 import styles from '../../styles/admin.module.css';
+import textstyles from '../../styles/text.module.css';
 import levels from '../../../data/roles_texts.json';
 import Sidebar from "../sidebar";
 
@@ -12,7 +13,6 @@ const TextDetail = ({ currentText, handleBack }: { currentText: any; handleBack:
             <button onClick={handleBack}>Back</button>
             <div>{currentText.title}</div>
             <div>{currentText.level}</div>
-
         </div>
     );
 };
@@ -20,7 +20,12 @@ const TextDetail = ({ currentText, handleBack }: { currentText: any; handleBack:
 const Text = ({ userPermissions }: { userPermissions: string[] }) => {
     const [pageIndex, setPageIndex] = useState(0);
     const [currentPermission, setCurrentPermission] = useState<string>('');
+    const [groups, setGroups] = useState<any[]>([]);
+
+    // other menus yayy
     const [changeLevelMenu, setChangeLevelMenu] = useState<boolean>(false);
+    const [changeGroupMenu, setChangeGroupMenu] = useState<boolean>(false);
+    const [addVTTMenu, setAddVTTMenu] = useState<boolean>(false);
 
     // text stuff
     const [texts, setTexts] = useState<any[]>([]);
@@ -46,10 +51,17 @@ const Text = ({ userPermissions }: { userPermissions: string[] }) => {
         if (currentText) {
             setCurrentText(null);
         }
+        setAddVTTMenu(false);
     }
 
     useEffect(() => {
+        if (allSelectedTexts.length === 0) {
+            return;
+        }
         switch (currentPermission) {
+            case 'text.changeTextGroup':
+                setChangeGroupMenu(!changeGroupMenu);
+                break;
             case 'text.changeTextLevel':
                 setChangeLevelMenu(!changeLevelMenu);
                 break;
@@ -60,6 +72,8 @@ const Text = ({ userPermissions }: { userPermissions: string[] }) => {
                 handleDeleteText(allSelectedTexts.map(text => text.id));
                 break;
             case 'text.addVoiceOver':
+                if (allSelectedTexts.length > 1) return;
+                setAddVTTMenu(!addVTTMenu);
                 break;
             default:
                 break;
@@ -70,7 +84,7 @@ const Text = ({ userPermissions }: { userPermissions: string[] }) => {
         <>
             {Array.isArray(userPermissions) ? (
                 <Sidebar userPermissions={userPermissions} parentKey={parentKey} setCurrentPermission={setCurrentPermission} />)
-            : null}
+                : null}
             {currentText && (
                 <TextDetail currentText={currentText} handleBack={handleBack} userPermissions={userPermissions} parentKey={parentKey} setCurrentPermission={setCurrentPermission} />
             )}
@@ -80,9 +94,59 @@ const Text = ({ userPermissions }: { userPermissions: string[] }) => {
             {changeLevelMenu && (
                 <ChangeLevel allSelectedTexts={allSelectedTexts} />
             )}
+            {addVTTMenu && (
+                <AddVTT allSelectedTexts={allSelectedTexts} />
+            )}
+            {changeGroupMenu && (
+                <ChangeGroup groups={groups} setGroups={setGroups} allSelectedTexts={allSelectedTexts} />
+            )}
         </>
     );
 }
+
+// change the text group of a text
+const ChangeGroup = ({ groups, setGroups, allSelectedTexts }: { groups: any[]; setGroups: (value: any[]) => void; allSelectedTexts: any[] }) => {
+    useEffect(() => {
+        if (groups.length === 0) {
+            getTextGroups(setGroups);
+        }
+    });
+
+    useEffect(() => {
+        console.log(allSelectedTexts);
+    }, [allSelectedTexts]);
+
+    const currentGroupIndex = 0;
+    const [groupIndex, setGroupIndex] = useState(currentGroupIndex);
+
+    const handleNextGroup = () => {
+        setGroupIndex((prevIndex) => (prevIndex + 1) % groups.length);
+    };
+
+    const handlePrevGroup = () => {
+        setGroupIndex((prevIndex) => (prevIndex - 1 + groups.length) % groups.length);
+    };
+
+    // change the text group
+    const handleChangeGroup = () => {
+        const ids = allSelectedTexts.map(text => text.id);
+        changeTextGroup(ids, groups[groupIndex].id);
+    };
+
+    return (
+        <div>
+            {groups.length !== 0 && (
+                <>
+                    <button onClick={handlePrevGroup}>Previous Group</button>
+                    <span>{groups[groupIndex].id} | {groups[groupIndex].groupName}</span>
+                    <button onClick={handleNextGroup}>Next Group</button>
+                    <button onClick={handleChangeGroup}>Change Group</button>
+                </>
+            )}
+        </div>
+    );
+};
+
 
 // change level component
 const ChangeLevel = ({ allSelectedTexts }: { allSelectedTexts: any[] }) => {
@@ -112,6 +176,43 @@ const ChangeLevel = ({ allSelectedTexts }: { allSelectedTexts: any[] }) => {
             <span>{levels[levelIndex].shortname}</span>
             <button onClick={handleNextLevel}>Next Level</button>
             <button onClick={handleChangeLevel}>Change Level</button>
+        </div>
+    );
+};
+
+// add a vtt file to a text
+const AddVTT = ({ allSelectedTexts }: { allSelectedTexts: any[] }) => {
+    const [audioFile, setAudioFile] = useState<File | null>(null);
+    const [vttFile, setVttFile] = useState<File | null>(null);
+
+    const handleAudioFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setAudioFile(e.target.files[0]);
+        }
+    };
+
+    const handleVttFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setVttFile(e.target.files[0]);
+        }
+    };
+
+    // handle submitting the audio and vtt files
+    const handleSubmit = () => {
+        if (audioFile && vttFile) {
+            addVTTtoText(allSelectedTexts[0].id, audioFile, vttFile);
+        } else {
+            alert('Please select both an audio file and a VTT file.');
+        }
+    };
+
+    return (
+        <div className={textstyles.vttSubmit}>
+            <label>Audio File</label>
+            <input type="file" accept="audio/*" onChange={handleAudioFileChange} />
+            <label>VTT File</label>
+            <input type="file" accept=".vtt" onChange={handleVttFileChange} />
+            <button onClick={handleSubmit}>Submit</button>
         </div>
     );
 };
@@ -148,7 +249,7 @@ export const TextList = ({ texts, setAllSelectedTexts, onTextSelect, handleBack,
     };
 
     return (
-        <div className={styles.allTextsWrapper}>
+        <div className={textstyles.allTextsWrapper}>
             {handleBack && <button onClick={handleBack}>Back</button>}
             <div className={styles.searchBarWrapper}>
                 <input type="text" placeholder="Search texts..." className={styles.searchBar} onChange={(e) => setSearchInput(e.target.value)} />
@@ -159,14 +260,16 @@ export const TextList = ({ texts, setAllSelectedTexts, onTextSelect, handleBack,
                     <label>Select All/Deselect All</label>
                 </div>
             )}
-            {texts.map((text, index) => (
-                <div className={styles.individualTextWrapper} key={index}>
-                    {setAllSelectedTexts && (
-                        <input type="checkbox" checked={selectedTexts.includes(text)} onChange={() => handleCheckboxChange(text)} />
-                    )}
-                    <span className={styles.textSelectMenu} onClick={() => onTextSelect(text)}>{text.title + " (" + text.language + ")"}</span>
-                </div>
-            ))}
+            <div className={textstyles.textList}>
+                {texts.map((text, index) => (
+                    <div className={styles.individualTextWrapper} key={index}>
+                        {setAllSelectedTexts && (
+                            <input type="checkbox" checked={selectedTexts.includes(text)} onChange={() => handleCheckboxChange(text)} />
+                        )}
+                        <span className={styles.textSelectMenu} onClick={() => onTextSelect(text)}>{text.title + " (" + text.language + ")"}</span>
+                    </div>
+                ))}
+            </div>
             <ChangeListButton direction="left" pageIndex={pageIndex} setPageIndex={setPageIndex} numUsers={numTexts} />
             <ChangeListButton direction="right" pageIndex={pageIndex} setPageIndex={setPageIndex} numUsers={numTexts} />
             {pageIndex + "/" + numTexts}

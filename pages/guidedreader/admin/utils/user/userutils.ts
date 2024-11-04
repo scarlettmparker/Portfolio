@@ -1,10 +1,10 @@
+import { PAGE_LENGTH } from "../consts";
+
 const helper: React.FC = () => {
     return null;
 };
 
 export default helper;
-
-export const PAGE_LENGTH: number = 10;
 
 export const fetchNumUsers = async (setNumUsers: (value: number) => void) => {
     try {
