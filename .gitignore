@@ -41,3 +41,4 @@ next-env.d.ts
 
 # audio stuff
 /assets/guidedreader/audios/*
+public/assets/guidedreader/audios/*

@@ -15,6 +15,7 @@ const MAX_AUDIO_SIZE = 5 * 1024 * 1024; // 5MB
 export const config = {
     api: {
         bodyParser: false,
+        sizeLimit: '20mb',
     },
 };
 
