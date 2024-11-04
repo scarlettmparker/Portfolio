@@ -38,6 +38,12 @@ const Text = ({ userPermissions }: { userPermissions: string[] }) => {
     const parentKey = 'text';
 
     useEffect(() => {
+        if (groups.length === 0) {
+            getTextGroups(setGroups);
+        }
+    })
+
+    useEffect(() => {
         currentText && setAllSelectedTexts([currentText]);
     }, [currentText]);
 
@@ -98,24 +104,14 @@ const Text = ({ userPermissions }: { userPermissions: string[] }) => {
                 <AddVTT allSelectedTexts={allSelectedTexts} />
             )}
             {changeGroupMenu && (
-                <ChangeGroup groups={groups} setGroups={setGroups} allSelectedTexts={allSelectedTexts} />
+                <ChangeGroup groups={groups} allSelectedTexts={allSelectedTexts} />
             )}
         </>
     );
 }
 
 // change the text group of a text
-const ChangeGroup = ({ groups, setGroups, allSelectedTexts }: { groups: any[]; setGroups: (value: any[]) => void; allSelectedTexts: any[] }) => {
-    useEffect(() => {
-        if (groups.length === 0) {
-            getTextGroups(setGroups);
-        }
-    });
-
-    useEffect(() => {
-        console.log(allSelectedTexts);
-    }, [allSelectedTexts]);
-
+const ChangeGroup = ({ groups, allSelectedTexts }: { groups: any[]; allSelectedTexts: any[] }) => {
     const currentGroupIndex = 0;
     const [groupIndex, setGroupIndex] = useState(currentGroupIndex);
 
@@ -222,7 +218,6 @@ export const TextList = ({ texts, setAllSelectedTexts, onTextSelect, handleBack,
     texts: any[]; setAllSelectedTexts?: (texts: any[]) => void; onTextSelect: (text: any) => void; handleBack?: () => void; pageIndex: number; setPageIndex: (value: number) => void; numTexts: number; setSearchInput: (value: string) => void;
 }) => {
     const [selectedTexts, setSelectedTexts] = useState<any[]>([]);
-
 
     useEffect(() => {
         if (setAllSelectedTexts) {
