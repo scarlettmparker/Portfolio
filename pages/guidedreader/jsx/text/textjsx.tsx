@@ -28,11 +28,14 @@ const SidebarHeader: React.FC<SidebarHeaderProps> = ({ hiddenSidebar, toggleSide
 );
 
 // individual text item
-const TextItem: React.FC<TextItemProps> = ({ title, isSelected, onClick }) => (
-    <div onClick={onClick} className={`${styles.textItem} ${isSelected ? styles.selectedTextItem : ''}`}>
-        {title}
-    </div>
-);
+const TextItem: React.FC<TextItemProps> = ({ title, isSelected, onClick, audio }) => {
+    return (
+        <div onClick={onClick} className={`${styles.textItem} ${isSelected ? styles.selectedTextItem : ''}`}>
+            {audio && <span className={styles.audioIcon}>🔊</span>}
+            {title}
+        </div>
+    );
+};
 
 // level separator
 const LevelSeparator: React.FC<LevelSeparatorProps> = ({ level, textIndex, levelRefs }) => (
@@ -47,6 +50,7 @@ export const TextList: React.FC<TextListProps> = ({ textData, levelSeparators, s
     const [sortedData, setSortedData] = useState({ sortedTextData: textData, sortedLevelSeparators: levelSeparators });
     const [sortOption, setSortOption] = useState(SORT_OPTIONS[0]);
     const [searchTerm, setSearchTerm] = useState('');
+
     const [selectedLevels, setSelectedLevels] = useState(LEVELS);
     const [hiddenSidebar, setHiddenSidebar] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
@@ -113,7 +117,7 @@ export const TextList: React.FC<TextListProps> = ({ textData, levelSeparators, s
                         <TextFilter sortOptions={SORT_OPTIONS} onSortChange={setSortOption} searchTerm={searchTerm}
                             onSearchChange={setSearchTerm} selectedLevels={selectedLevels} onLevelChange={setSelectedLevels} />
                         <div className={styles.textItemWrapper}>
-                            {filteredTextData.map(({ title, level }, index) => {
+                            {filteredTextData.map(({ title, level, audio }, index) => {
                                 // get the index of the text in the original data
                                 const originalIndex = sortedData.sortedTextData.findIndex(text => text.title === title && text.level === level);
                                 const textIndex = sortedData.sortedTextData[originalIndex].id - 1;
@@ -128,7 +132,7 @@ export const TextList: React.FC<TextListProps> = ({ textData, levelSeparators, s
                                             <LevelSeparator level={level} textIndex={textIndex} levelRefs={levelRefs} />
                                         )}
                                         <TextItem title={title} isSelected={currentText === textIndex}
-                                            onClick={() => textItemClick(textIndex)} />
+                                            onClick={() => textItemClick(textIndex)} audio={audio} />
                                     </React.Fragment>
                                 );
                             })}
@@ -236,6 +240,7 @@ export const TextModule: React.FC<{
     let audioFile = currentTextData?.audio?.audioFile ?? null;
 
     useEffect(() => {
+        // loading the vtt stuff
         const loadVTT = async () => {
             const entries = await parseVTT(vttFile);
             setVttEntries(entries);

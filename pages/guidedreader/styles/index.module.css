@@ -397,6 +397,10 @@
 
 /* playback stuff */
 
+.audioIcon {
+    margin-right: 5px;
+}
+
 .playbackWrapper {
     position: absolute;
     display: flex;

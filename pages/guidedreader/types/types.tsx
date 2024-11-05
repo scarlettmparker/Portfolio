@@ -78,6 +78,7 @@ export interface TextItemProps {
     title: string;
     isSelected: boolean;
     onClick: () => void;
+    audio: boolean;
 }
 
 // level separator props

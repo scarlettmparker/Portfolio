@@ -14,7 +14,25 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         id: 'asc',
       },
     });
-    res.status(200).json(textObjects);
+
+    const textObjectsWithAudio = await Promise.all(
+      textObjects.map(async textObject => {
+        const textCount = await prisma.text.count({
+          where: {
+            textObjectId: textObject.id,
+            audio: {
+              isNot: null,
+            },
+          },
+        });
+        return {
+          ...textObject,
+          audio: textCount > 0,
+        };
+      })
+    );
+
+    res.status(200).json(textObjectsWithAudio);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch text objects' });
   }
