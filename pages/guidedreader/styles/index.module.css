@@ -2,10 +2,14 @@
 
 .pageWrapper {
     width: fit-content;
+    overflow-y: hidden;
+    overflow-x: hidden;
 }
 
 .mainWrapper {
     position: absolute;
+    overflow-y: hidden;
+    overflow-x: hidden;
     right: 50%;
     transform: translateX(50%);
     margin-top: 60px;
@@ -119,6 +123,8 @@
     width: 750px;
     height: 650px;
     content: '';
+    overflow-y: auto;
+    overflow-x: hidden;
     border-style: none solid solid none;
     background-color: #f2f2f2;
     border-radius: 10px 10px 10px 0;
@@ -363,6 +369,7 @@
 .textContentWrapper {
     position: relative;
     overflow-y: auto;
+    overflow-x: hidden;
     margin-top: 150px;
     height: 75%;
     width: 90%;
@@ -371,6 +378,8 @@
 }
 
 .textContentItem {
+    overflow-y: auto;
+    overflow-x: hidden;
     display: inline;
 }
 
@@ -389,6 +398,8 @@
 }
 
 .textContent {
+    overflow-y: auto;
+    overflow-x: hidden;
     display: inline;
     font-family: 'Open Sans', sans-serif;
     margin-top: -25px;
@@ -549,6 +560,15 @@
 }
 
 @media screen and (max-width: 540px) {
+    .playbackWrapper {
+        position: fixed;
+        transform: none;
+        width: 100%;
+        bottom: 0.5%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 0;
+    }
     .navWrapper {
         display: none;
     }
