@@ -88,8 +88,6 @@ const AnnotationItem = ({ annotation, handleVote, userDetails, setCurrentAnnotat
         deleteTimer(isDeleteConfirmationActive, setDeleteConfirmationActive);
     }, [isDeleteConfirmationActive]);
 
-    console.log(annotation.author);
-
     return (
         <div className={annotationStyles.singleAnnotationWrapper}>
             <span className={annotationStyles.annotationModalText}>

@@ -15,7 +15,6 @@ export const handleTextSelection = ({
 
     // get the selected text
     const selection = window.getSelection();
-    console.log(selection);
     const textContentElement = textContentRef.current;
     
     // store the selected text in local storage
