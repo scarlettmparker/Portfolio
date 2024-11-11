@@ -57,7 +57,7 @@ export const renderAnnotatedText = (text: string, annotations: Annotation[], cur
 			const textContent = node.textContent || '';
 	
 			// highlight the text if it matches the current vtt entry
-			if (textContent.includes(highlightText) && highlightText) {
+			if (textContent.includes(highlightText)) {
 				const regex = new RegExp(`(\\s*${highlightText}\\s*)`, 'gi');
 				const newTextContent = textContent.replace(regex, (match) => {
 					return `<span class="${styles.highlight}">${match}</span>`; // add to highlight class

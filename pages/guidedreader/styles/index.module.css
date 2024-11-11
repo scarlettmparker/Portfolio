@@ -8,8 +8,6 @@
 
 .mainWrapper {
     position: absolute;
-    overflow-y: hidden;
-    overflow-x: hidden;
     right: 50%;
     transform: translateX(50%);
     margin-top: 60px;
