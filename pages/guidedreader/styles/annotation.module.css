@@ -87,11 +87,16 @@
 }
 
 .annotationModalText {
+    line-height: 1rem;
     position: relative;
     font-family: 'Open Sans', sans-serif;
     font-size: 1.2rem;
     white-space: pre-wrap;
     word-wrap: break-word;
+}
+
+.annotationModalTextInner {
+    line-height: 0.3rem;
 }
 
 .annotationModalText img {

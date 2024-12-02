@@ -91,7 +91,7 @@ const AnnotationItem = ({ annotation, handleVote, userDetails, setCurrentAnnotat
     return (
         <div className={annotationStyles.singleAnnotationWrapper}>
             <span className={annotationStyles.annotationModalText}>
-                <Markdown remarkPlugins={[remarkGfm]}>
+                <Markdown remarkPlugins={[remarkGfm]} className={annotationStyles.annotationModalTextInner}>
                     {annotation.description}
                 </Markdown>
             </span>

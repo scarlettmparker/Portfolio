@@ -28,7 +28,7 @@ export class AnnotationHelper {
             if (width / height > 3 || height / width > 3) {
                 return { isValid: false, message: 'Image dimensions ratio should not exceed 1:4 (w:h) or 4:1 (h:w)!' };
             }
-
+u
             return { isValid: true };
         } catch (error) {
             return { isValid: false, message: 'Failed to fetch image dimensions!' };
