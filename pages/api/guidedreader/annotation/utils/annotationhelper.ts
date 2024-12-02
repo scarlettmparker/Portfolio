@@ -9,7 +9,7 @@ export class AnnotationHelper {
     static readonly MAX_IMAGE_COUNT = 3;
 
     static readonly MIN_CHARACTERS = 10;
-    static readonly MAX_CHARACTERS = 750;
+    static readonly MAX_CHARACTERS = 5000;
     
     // helper function to fetch a small part of the image and check dimensions
     static async fetchImageDimensions(imageUrl: string) {
