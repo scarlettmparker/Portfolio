@@ -26,3 +26,7 @@ a:active {
     text-decoration: none;
 }
 
+p {
+    margin: 0;
+    line-height: 1.5;
+}

@@ -96,7 +96,8 @@
 }
 
 .annotationModalTextInner {
-    line-height: 0.3rem;
+    line-height: 1.6rem;
+    display: inline-block;
 }
 
 .annotationModalText img {
