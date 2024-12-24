@@ -9,6 +9,17 @@
     overflow-x: hidden;
 }
 
+.pageInfoWrapper {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+}
+
 .background {
     position: fixed;
     width: 100vw;

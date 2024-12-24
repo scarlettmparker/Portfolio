@@ -6,8 +6,11 @@ import './styles/global.css';
 import Head from 'next/head';
 
 // constants
+const GITHUB_LINK = "https://github.com/scarlettmparker";
 const EXTENSION_LINK = "https://github.com/scarlettmparker/Accessibility-Toolbar";
 const GUIDED_READER_LINK = "https://scarlettparker.co.uk/guidedreader";
+const SPELL_BEE_LINK = "https://scarlettparker.co.uk/spellbee/play";
+const SECRET_LIFE_LINK = "https://scarlettparker.co.uk/minecraft";
 
 const TitleModal = ({ windowWidth }: { windowWidth: number }) => {
     const [titleWidth, setTitleWidth] = useState(396);
@@ -133,11 +136,21 @@ const Home = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div className={styles.pageWrapper}>
-                <TitleModal windowWidth={windowWidth} />
+                <div className={styles.pageInfoWrapper}>
+                    Page under construction while migrating to a new stack. Please check back later.<br />
+                    While you wait, check out some of my projects:<br /><br />
+
+                    <a href={EXTENSION_LINK} target="_blank">Accessibility Toolbar</a>
+                    <a href={GUIDED_READER_LINK} target="_blank">Guided Reader</a>
+                    <a href={SPELL_BEE_LINK} target="_blank">Spell Bee</a>
+                    <a href={SECRET_LIFE_LINK} target="_blank">Secret Life</a>
+                    <a href={GITHUB_LINK} target="_blank">GitHub Page</a>
+                { /* <TitleModal windowWidth={windowWidth} /> */ }
                 {/*<div className={cstyles.modalWrapper}>
                     <ProfessionModal developerMenu={developerMenu} setDeveloperMenu={setDeveloperMenu} mobileDesign={mobileDesign} />
                     <PortfolioModal portfolioMenu={portfolioMenu} setPortfolioMenu={setPortfolioMenu} mobileDesign={mobileDesign} />
                 </div>*/}
+                </div>
             </div>
             <div className={styles.background} />
         </>
