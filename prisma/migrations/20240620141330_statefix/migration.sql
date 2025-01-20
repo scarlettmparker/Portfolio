@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "Game" ALTER COLUMN "state" SET NOT NULL,
-ALTER COLUMN "state" SET DATA TYPE TEXT;

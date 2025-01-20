@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+.spell_bee_wrapper {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  left: 50%;
+  top: 40%;
+  gap: 5px;
+  width: 500px;
+  height: 500px;
+
+  transform: translate(-50%, -50%);
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  color: #070A0E;
+}
+
+.spell_bee_row {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.hex:before {
+  content: " ";
+  width: 0; height: 0;
+  border-bottom: 30px solid #E8EBF7;
+  border-left: 52px solid transparent;
+  border-right: 52px solid transparent;
+  top: -30px;
+  position: absolute;
+}
+
+.hex {
+  margin-top: 30px;
+  width: 104px;
+  height: 60px;
+  background-color: #E8EBF7;
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 24px;
+  font-weight: 600;
+  user-select: none;
+  cursor: pointer;
+}
+
+.hex:after {
+  content: "";
+  width: 0;
+  left: 0;
+  bottom: -30px;
+  border-top: 30px solid #E8EBF7;
+  border-left: 52px solid transparent;
+  border-right: 52px solid transparent;
+  position: absolute;
+}
+
+.hex:hover {
+  background-color: #C3CCE9;
+}
+
+.hex:hover:before {
+  border-bottom: 30px solid #C3CCE9;
+}
+
+.hex:hover:after {
+  border-top: 30px solid #C3CCE9;
+}
+
+.answer {
+  margin-bottom: 2rem;
+}
+
+.answer_box {
+  outline: none;
+  text-align: center;
+  border: none;
+
+  font-size: 24px;
+  color: #070A0E;
+  font-family: 'Open Sans', sans-serif;
+}

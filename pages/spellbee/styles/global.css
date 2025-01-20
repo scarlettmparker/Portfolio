@@ -1,6 +1,0 @@
-.dragging {
-    user-select: none;
-}
-.draggable {
-    transition: left 0.1s linear, top 0.1s linear;
-}
